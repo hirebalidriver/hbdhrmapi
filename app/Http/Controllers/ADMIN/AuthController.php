@@ -4,11 +4,13 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Jobs\ResetMailJob;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -70,5 +72,45 @@ class AuthController extends Controller
                 'error' => $error,
             ], 'Authentication Failed', 404);
         }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $rules = [
+            'email' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return ResponseFormatter::error(null, 'Email belum terdaftar');
+        }
+
+        // SEND EMAIL
+        $otp = substr(md5(uniqid(mt_rand(), true)) , 0, 20);
+        $link = "https://hrm.hirebalidriver.com/forgot/password/".$otp;
+
+        $user->code = strval($otp);
+
+        $details = [
+            'title' => 'Atur Ulang Kata Sandi',
+            'to' => $user->email,
+            'link' => $link,
+            'name' => $user->name,
+        ];
+
+        if($user->save()){
+            \App\Jobs\ResetMailJob::dispatch($details);
+
+            return ResponseFormatter::success($link, 'Reset password');
+        }else{
+            return ResponseFormatter::error(null, 'please try again');
+        }
+
+
     }
 }

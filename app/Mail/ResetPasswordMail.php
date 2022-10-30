@@ -22,6 +22,6 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
 
     public function build()
     {
-        return $this->subject('Atur Ulang Sandi Hire Bali Driver HRM')->view('emails.reset');
+        return $this->subject('Hire Bali Driver ' . $this->details['title'])->view('emails.reset');
     }
 }

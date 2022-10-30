@@ -5,25 +5,37 @@
         <title>{{$details['title']}}</title>
         <style>
             .container {
-                padding: 20px;
-                background: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            }
+            .header p {
+            color: #28A802;
+            margin-bottom: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            font-size: 24px;
             }
             .btn {
-                background-color: #2f3134;
-                color: #fff;
-                padding: 10px 20px;
-                display:inline-block;
-                border-radius: 5px;
-                text-decoration: none;
+            background-color: #28A802;
+            color: #fff;
+            padding: 10px 20px;
+            display:inline-block;
+            border-radius: 5px;
+            text-decoration: none;
             }
         </style>
     </head>
     <body>
       <div class="container">
+        <div class="header">
+            <p>Hirebalidriver HRM</p>
+        </div>
         <strong>Hello {{$details['name']}}!</strong>
         <p>Atur ulang kata sandi Anda, klik link dibawah ini.</p>
 
-        <a href="{{$details['link']}}" class="btn">Verify</a>
+        <a href="{{$details['link']}}" class="btn">Reset Password</a>
 
         <p>Thank You,</p>
         <p>Hirebalidriver.com</p>

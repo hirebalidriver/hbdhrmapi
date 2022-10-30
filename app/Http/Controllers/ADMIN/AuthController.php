@@ -8,6 +8,7 @@ use App\Jobs\ResetMailJob;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -112,5 +113,51 @@ class AuthController extends Controller
         }
 
 
+    }
+
+    public function changePass(Request $request)
+    {
+        $rules = [
+            'code' => ['required', 'max:255'],
+            'password' => ['required', 'confirmed', 'max:255'],
+            'password_confirmation' => ['required', 'max:255'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+        $user = User::where('code', $request->code)->first();
+
+        if ($user) {
+            $user->password = Hash::make($request->password);
+            $user->code = null;
+            if($user->save()){
+                return ResponseFormatter::success($user, 'Password success');
+            }
+        } else {
+            return ResponseFormatter::error(null, 'Password failed');
+        }
+    }
+
+    public function changeProfilePass(Request $request)
+    {
+        $rules = [
+            'password' => ['required', 'confirmed', 'max:255'],
+            'password_confirmation' => ['required', 'max:255'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+        $user = Auth::user();
+        $user->password = Hash::make($request->password);
+
+        if ($user->save()) {
+            return ResponseFormatter::success($user, 'Password Berhasil Disimpan');
+        } else {
+            return ResponseFormatter::error(null, 'Password Gagal Disimpan');
+        }
     }
 }

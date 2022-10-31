@@ -3,6 +3,7 @@
 use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\InclusionController;
+use App\Http\Controllers\ADMIN\ToursController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,5 +37,12 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('exclusion/add', 'add');
         Route::post('exclusion/update', 'update');
         Route::post('exclusion/delete', 'delete');
+    });
+
+    Route::controller(ToursController::class)->group(function() {
+        Route::post('tours', 'index');
+        Route::post('tour/add', 'add');
+        Route::post('tour/update', 'update');
+        Route::post('tour/delete', 'delete');
     });
 });

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Guides extends Authenticate
+class Guides extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 

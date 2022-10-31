@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\ExclusionController;
+use App\Http\Controllers\ADMIN\GuidesController;
 use App\Http\Controllers\ADMIN\InclusionController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ToursRelationController;
@@ -56,5 +57,12 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('tourrelation/exclusion', 'exclusions');
         Route::post('tourrelation/exclusion/add', 'addExclusion');
         Route::post('tourrelation/exclusion/del', 'delExclusion');
+    });
+
+    Route::controller(GuidesController::class)->group(function() {
+        Route::post('guides', 'index');
+        Route::post('guide/add', 'add');
+        Route::post('guide/update', 'update');
+        Route::post('guide/delete', 'delete');
     });
 });

@@ -4,6 +4,7 @@ use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\InclusionController;
 use App\Http\Controllers\ADMIN\ToursController;
+use App\Http\Controllers\ToursRelationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,5 +45,16 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('tour/add', 'add');
         Route::post('tour/update', 'update');
         Route::post('tour/delete', 'delete');
+    });
+
+    Route::controller(ToursRelationController::class)->group(function() {
+        Route::post('tourrelation/inclusion', 'inclusions');
+        Route::post('tourrelation/inclusion/add', 'addInclusion');
+        Route::post('tourrelation/inclusion/del', 'delInclusion');
+
+        // Exclusion
+        Route::post('tourrelation/exclusion', 'exclusions');
+        Route::post('tourrelation/exclusion/add', 'addExclusion');
+        Route::post('tourrelation/exclusion/del', 'delExclusion');
     });
 });

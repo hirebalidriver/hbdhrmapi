@@ -11,6 +11,6 @@ class ExclusionRelations extends Model
 
     protected $fillable = [
         'tour_id',
-        'inclusion_id',
+        'exclusion_id',
     ];
 }

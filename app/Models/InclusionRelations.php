@@ -13,4 +13,8 @@ class InclusionRelations extends Model
         'tour_id',
         'inclusion_id',
     ];
+
+    public function inclusions() {
+        return $this->hasOne(Inclusions::class,'id', 'inclusion_id');
+    }
 }

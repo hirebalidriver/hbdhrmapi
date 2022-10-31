@@ -4,11 +4,11 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\Inclusions;
+use App\Models\Exclusions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class InclusionController extends Controller
+class ExclusionController extends Controller
 {
     public function index(Request $request)
     {
@@ -26,7 +26,7 @@ class InclusionController extends Controller
         $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
-        $inc = Inclusions::orderBy($sortBy, $direction)
+        $inc = Exclusions::orderBy($sortBy, $direction)
                             ->paginate($pages);
 
         if($inc){
@@ -48,7 +48,7 @@ class InclusionController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $create = Inclusions::create([
+        $create = Exclusions::create([
             'description' => $request->description,
             'note' => $request->note,
         ]);
@@ -73,7 +73,7 @@ class InclusionController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $update = Inclusions::where('id', $request->id)->update([
+        $update = Exclusions::where('id', $request->id)->update([
             'description' => $request->description,
             'note' => $request->note,
         ]);
@@ -96,7 +96,7 @@ class InclusionController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $del = Inclusions::where('id', $request->id)->delete();
+        $del = Exclusions::where('id', $request->id)->delete();
 
         if($del) {
             return ResponseFormatter::success($del, 'success');

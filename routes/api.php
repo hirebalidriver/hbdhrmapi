@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ADMIN\AuthController;
+use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\InclusionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,5 +26,15 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(InclusionController::class)->group(function() {
         Route::post('inclusion', 'index');
+        Route::post('inclusion/add', 'add');
+        Route::post('inclusion/update', 'update');
+        Route::post('inclusion/delete', 'delete');
+    });
+
+    Route::controller(ExclusionController::class)->group(function() {
+        Route::post('exclusion', 'index');
+        Route::post('exclusion/add', 'add');
+        Route::post('exclusion/update', 'update');
+        Route::post('exclusion/delete', 'delete');
     });
 });

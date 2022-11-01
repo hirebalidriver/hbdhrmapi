@@ -7,7 +7,10 @@ use App\Http\Controllers\ADMIN\InclusionController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ToursRelationController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Auth::routes();
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

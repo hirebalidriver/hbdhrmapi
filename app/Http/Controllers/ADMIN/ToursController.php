@@ -76,18 +76,21 @@ class ToursController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $create = Tours::where('id', $request->id)->update([
-            'title' => $request->title,
-            'itinerary' => $request->itinerary,
-            'price_tour' => $request->price_tour,
-            'price_guide' => $request->price_guide,
-            'note' => $request->note,
-        ]);
+        $tour = Tours::find($request->id);
 
-        if($create) {
-            return ResponseFormatter::success($create, 'success');
+        if(!$tour) return ResponseFormatter::error(null, 'tour not found');
+
+        $tour->title = $request->title;
+        $tour->itinerary = $request->itinerary;
+        $tour->price_tour = $request->price_tour;
+        $tour->price_guide = $request->price_guide;
+        $tour->note = $request->note;
+
+
+        if($tour->save()) {
+            return ResponseFormatter::success($tour, 'success');
         }else{
-            return ResponseFormatter::error(null, 'failed');
+            return ResponseFormatter::error($tour, 'failed');
         }
     }
 

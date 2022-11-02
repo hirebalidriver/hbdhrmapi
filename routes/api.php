@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('tour/add', 'add');
         Route::post('tour/update', 'update');
         Route::post('tour/delete', 'delete');
+        Route::post('tour/find', 'find');
     });
 
     Route::controller(ToursRelationController::class)->group(function() {

@@ -99,6 +99,26 @@ class ToursController extends Controller
         }
     }
 
+    public function find(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $tour = Tours::find($request->id);
+
+        if($tour) {
+            return ResponseFormatter::success($tour, 'success');
+        }else{
+            return ResponseFormatter::error($tour, 'failed');
+        }
+    }
+
     public function delete(Request $request)
     {
         $rules = [

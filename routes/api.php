@@ -4,6 +4,7 @@ use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
 use App\Http\Controllers\ADMIN\InclusionController;
+use App\Http\Controllers\ADMIN\StatistikController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ToursRelationController;
 use Illuminate\Http\Request;
@@ -68,5 +69,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('guide/add', 'add');
         Route::post('guide/update', 'update');
         Route::post('guide/delete', 'delete');
+    });
+
+    Route::controller(StatistikController::class)->group(function() {
+        Route::post('count', 'count');
     });
 });

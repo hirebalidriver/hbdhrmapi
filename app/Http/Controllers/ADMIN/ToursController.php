@@ -53,7 +53,7 @@ class ToursController extends Controller
             'itinerary' => $request->itinerary,
             'price_tour' => $request->price_tour,
             'price_guide' => $request->price_guide,
-            'status' => 0,
+            'status' => $request->status,
             'note' => $request->note,
             'inclusions' => $request->inclusions,
             'exclusions' => $request->exclusions,

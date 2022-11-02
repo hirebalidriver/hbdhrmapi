@@ -41,9 +41,6 @@ class ToursController extends Controller
     {
         $rules = [
             'title' => ['required'],
-            'itinerary' => ['required'],
-            'price_tour' => ['required'],
-            'price_guide' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -72,9 +69,6 @@ class ToursController extends Controller
         $rules = [
             'id' => ['required'],
             'title' => ['required'],
-            'itinerary' => ['required'],
-            'price_tour' => ['required'],
-            'price_guide' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);

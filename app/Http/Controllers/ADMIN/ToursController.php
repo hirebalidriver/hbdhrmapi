@@ -55,6 +55,8 @@ class ToursController extends Controller
             'price_guide' => $request->price_guide,
             'status' => 0,
             'note' => $request->note,
+            'inclusions' => $request->inclusions,
+            'exclusions' => $request->exclusions,
         ]);
 
         if($create) {
@@ -86,6 +88,8 @@ class ToursController extends Controller
         $tour->price_guide = $request->price_guide;
         $tour->status = $request->status;
         $tour->note = $request->note;
+        $tour->inclusions = $request->inclusions;
+        $tour->exclusions = $request->exclusions;
 
 
         if($tour->save()) {

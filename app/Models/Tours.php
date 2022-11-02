@@ -16,5 +16,7 @@ class Tours extends Model
         'status',
         'price_tour',
         'price_guide',
+        'inclusions',
+        'exclusions'
     ];
 }

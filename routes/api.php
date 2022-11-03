@@ -67,6 +67,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
     Route::controller(GuidesController::class)->group(function() {
         Route::post('guides', 'index');
         Route::post('guide/add', 'add');
+        Route::post('guide/find', 'find');
         Route::post('guide/update', 'update');
         Route::post('guide/delete', 'delete');
     });

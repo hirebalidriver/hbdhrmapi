@@ -66,6 +66,26 @@ class GuidesController extends Controller
         }
     }
 
+    public function find(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $find = Guides::find($request->id);
+
+        if($find) {
+            return ResponseFormatter::success($find, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
     public function update(Request $request)
     {
         $rules = [

@@ -102,7 +102,6 @@ class GuidesController extends Controller
         $update = Guides::where('id', $request->id)->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
             'phone' => $request->phone,
             'ktp_number' => $request->ktp_number,
             'ktp_url' => $request->ktp_url,

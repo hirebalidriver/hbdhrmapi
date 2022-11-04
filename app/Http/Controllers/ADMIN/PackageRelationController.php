@@ -49,6 +49,11 @@ class PackageRelationController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
+        $find = PackageRelations::where('package_id', $request->package_id)
+                        ->where('tour_id', $request->tour_id,)->first();
+
+        if($find) return ResponseFormatter::error($find, 'found the same name');
+
         $create = PackageRelations::create([
             'package_id' => $request->package_id,
             'tour_id' => $request->tour_id,
@@ -72,6 +77,8 @@ class PackageRelationController extends Controller
         if ($validator->fails()){
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
+
+
 
         $delete = PackageRelations::where('package_id', $request->package_id)
                                     ->where('tour_id', $request->tour_id,)

@@ -4,6 +4,8 @@ use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
 use App\Http\Controllers\ADMIN\InclusionController;
+use App\Http\Controllers\ADMIN\PackageController;
+use App\Http\Controllers\ADMIN\PackageRelationController;
 use App\Http\Controllers\ADMIN\StatistikController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ToursRelationController;
@@ -74,5 +76,19 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(StatistikController::class)->group(function() {
         Route::post('count', 'count');
+    });
+
+    Route::controller(PackageController::class)->group(function() {
+        Route::post('packages', 'index');
+        Route::post('package/add', 'add');
+        Route::post('package/update', 'update');
+        Route::post('package/find', 'find');
+        Route::post('package/delete', 'delete');
+    });
+
+    Route::controller(PackageRelationController::class)->group(function() {
+        Route::post('package/relations', 'index');
+        Route::post('package/relation/add', 'add');
+        Route::post('package/relation/delete', 'delete');
     });
 });

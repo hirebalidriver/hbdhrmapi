@@ -4,16 +4,15 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\Tours;
+use App\Models\Packages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class ToursController extends Controller
+class PackageController extends Controller
 {
-
     public function index(Request $request)
     {
-
         $rules = [
             'pages' => ['required'],
         ];
@@ -27,11 +26,16 @@ class ToursController extends Controller
         $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
-        $tour = Tours::orderBy($sortBy, $direction)
+        // $packages = DB::table('packages')->select('packages.*')
+        //                 ->join('package_relations', 'package_relations.package_id', 'packages.id')
+        //                 ->join('tours', 'tours.id', 'package_relations.tour_id')
+        //                 ->where('packages.id', '=', $re)
+
+        $packages = Packages::orderBy($sortBy, $direction)
                             ->paginate($pages);
 
-        if($tour){
-            return ResponseFormatter::success($tour, 'success');
+        if($packages){
+            return ResponseFormatter::success($packages, 'success');
         }else{
             return ResponseFormatter::error(null, 'success');
         }
@@ -48,14 +52,11 @@ class ToursController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $create = Tours::create([
+        $create = Packages::create([
             'title' => $request->title,
-            'itinerary' => $request->itinerary,
-            'price_tour' => $request->price_tour,
-            'status' => $request->status,
             'note' => $request->note,
-            'inclusions' => $request->inclusions,
-            'exclusions' => $request->exclusions,
+            'price_guide' => $request->price_guide,
+            'status' => $request->status,
         ]);
 
         if($create) {
@@ -69,7 +70,6 @@ class ToursController extends Controller
     {
         $rules = [
             'id' => ['required'],
-            'title' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -77,25 +77,20 @@ class ToursController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $tour = Tours::find($request->id);
-
-        if(!$tour) return ResponseFormatter::error(null, 'tour not found');
-
-        $tour->title = $request->title;
-        $tour->itinerary = $request->itinerary;
-        $tour->price_tour = $request->price_tour;
-        $tour->status = $request->status;
-        $tour->note = $request->note;
-        $tour->inclusions = $request->inclusions;
-        $tour->exclusions = $request->exclusions;
+        $update = Packages::find($request->id);
+        $update->title = $request->title;
+        $update->note = $request->note;
+        $update->price_guide = $request->price_guide;
+        $update->status = $request->status;
 
 
-        if($tour->save()) {
-            return ResponseFormatter::success($tour, 'success');
+        if($update->save()) {
+            return ResponseFormatter::success($update, 'success');
         }else{
-            return ResponseFormatter::error($tour, 'failed');
+            return ResponseFormatter::error(null, 'failed');
         }
     }
+
 
     public function find(Request $request)
     {
@@ -108,12 +103,12 @@ class ToursController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $tour = Tours::find($request->id);
+        $find = Packages::find($request->id);
 
-        if($tour) {
-            return ResponseFormatter::success($tour, 'success');
+        if($find) {
+            return ResponseFormatter::success($find, 'success');
         }else{
-            return ResponseFormatter::error($tour, 'failed');
+            return ResponseFormatter::error(null, 'failed');
         }
     }
 
@@ -128,12 +123,15 @@ class ToursController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $del = Tours::where('id', $request->id)->delete();
+        $delete = Packages::where('id',$request->id)->delete();
 
-        if($del) {
-            return ResponseFormatter::success($del, 'success');
+        if($delete) {
+            return ResponseFormatter::success($delete, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }
     }
+
+
+
 }

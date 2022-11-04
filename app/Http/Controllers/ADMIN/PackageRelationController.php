@@ -26,6 +26,7 @@ class PackageRelationController extends Controller
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
         $packages = PackageRelations::where('package_id', $request->package_id)
+                                    ->with('tour')
                                     ->orderBy($sortBy, $direction)
                                     ->paginate($pages);
 

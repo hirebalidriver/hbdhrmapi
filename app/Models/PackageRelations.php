@@ -13,4 +13,8 @@ class PackageRelations extends Model
         'package_id',
         'tour_id',
     ];
+
+    public function tour() {
+        return $this->hasOne(Tours::class, 'id', 'tour_id');
+    }
 }

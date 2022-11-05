@@ -14,7 +14,7 @@ class StatistikController extends Controller
     {
         // dd('count');
         $guides = DB::table('guides')->count();
-        $tours = DB::table('tours')->count();
+        $tours = DB::table('packages')->count();
         $bookings = DB::table('bookings')->count();
 
         $data = [

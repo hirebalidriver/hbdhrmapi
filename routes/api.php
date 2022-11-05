@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ADMIN\AuthController;
+use App\Http\Controllers\ADMIN\BookingController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
 use App\Http\Controllers\ADMIN\InclusionController;
@@ -90,5 +91,13 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('package/relations', 'index');
         Route::post('package/relation/add', 'add');
         Route::post('package/relation/delete', 'delete');
+    });
+
+    Route::controller(BookingController::class)->group(function() {
+        Route::post('bookings', 'index');
+        Route::post('booking/add', 'add');
+        Route::post('booking/update', 'update');
+        Route::post('booking/delete', 'delete');
+        Route::post('booking/find', 'find');
     });
 });

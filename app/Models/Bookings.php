@@ -20,10 +20,12 @@ class Bookings extends Model
         'status',
     ];
 
-    // public function getTimeAttribute($date)
-    // {
-    //     return Carbon::createFromFormat('H:i', $date)->format('h:m');
-    // }
+    // public function setDateAttribute( $value ) {
+    //     $this->attributes['date'] = (new Carbon($value))->format('d M Y');
+    //   }
+    protected $casts = [
+        'date' => 'datetime:d M Y',
+    ];
 
     public function packages() {
         return $this->hasOne(Packages::class, 'id', 'package_id');

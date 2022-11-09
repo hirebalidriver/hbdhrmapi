@@ -99,5 +99,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('booking/update', 'update');
         Route::post('booking/delete', 'delete');
         Route::post('booking/find', 'find');
+        Route::post('booking/find/date', 'findByDate');
     });
 });

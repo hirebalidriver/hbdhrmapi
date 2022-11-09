@@ -164,4 +164,30 @@ class BookingController extends Controller
             return ResponseFormatter::error(null, 'failed');
         }
     }
+
+    public function findByDate(Request $request)
+    {
+        $rules = [
+            'date' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $pages = $request->pages != null ? $request->pages : 10;
+        $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
+        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+
+        $find = Bookings::where('date', $request->date)->with('packages', 'guides')
+                            ->orderBy($sortBy, $direction)
+                            ->paginate($pages);
+
+        if($find) {
+            return ResponseFormatter::success($find, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
 }

@@ -100,5 +100,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('booking/delete', 'delete');
         Route::post('booking/find', 'find');
         Route::post('booking/find/date', 'findByDate');
+        Route::post('booking/options', 'getOptions');
     });
 });

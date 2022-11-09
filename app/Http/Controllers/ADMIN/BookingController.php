@@ -6,9 +6,12 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Bookings;
 use App\Models\Guides;
+use App\Models\PackageRelations;
 use App\Models\Packages;
+use App\Models\Tours;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -188,6 +191,29 @@ class BookingController extends Controller
             return ResponseFormatter::success($find, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function getOptions(Request $request)
+    {
+        $rules = [
+            'package_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $options = DB::table('tours')->select('tours.*')
+                        ->join('package_relations', 'package_relations.tour_id', 'tours.id')
+                        ->where('package_relations.package_id', $request->package_id)
+                        ->get();
+
+        if($options) {
+            return ResponseFormatter::success($options, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'success');
         }
     }
 }

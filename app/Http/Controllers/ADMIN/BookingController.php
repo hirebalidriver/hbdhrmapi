@@ -87,6 +87,7 @@ class BookingController extends Controller
             'status_payment' => $request->status_payment,
             'collect' => $request->collect,
             'created_by' => $user->id,
+            'people' => $request->people,
         ]);
 
 
@@ -135,6 +136,7 @@ class BookingController extends Controller
         $booking->status_payment = $request->status_payment;
         $booking->collect = $request->collect;
         $booking->option_id = $request->option_id;
+        $booking->people = $request->people;
 
         if($booking->save()) {
             return ResponseFormatter::success($booking, 'success');

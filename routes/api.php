@@ -97,9 +97,11 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('bookings', 'index');
         Route::post('booking/add', 'add');
         Route::post('booking/update', 'update');
+        Route::post('booking/update/guide', 'updateGuide');
         Route::post('booking/delete', 'delete');
         Route::post('booking/find', 'find');
         Route::post('booking/find/date', 'findByDate');
         Route::post('booking/options', 'getOptions');
+        Route::post('booking/find/ref', 'findByRefId');
     });
 });

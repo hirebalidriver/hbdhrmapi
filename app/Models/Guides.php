@@ -22,7 +22,11 @@ class Guides extends Authenticatable
         'ktp_url',
         'code',
         'address',
-        'status'
+        'status',
+        'profile',
+        'car_photo',
+        'car_type',
+        'plat_number',
     ];
 
     protected $hidden = [

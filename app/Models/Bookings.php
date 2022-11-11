@@ -18,11 +18,16 @@ class Bookings extends Model
         'date',
         'note',
         'status',
+        'ref_id',
+        'name',
+        'phone',
+        'hotel',
+        'status_payment',
+        'collect',
+        'option_id',
+        'created_by',
     ];
 
-    // public function setDateAttribute( $value ) {
-    //     $this->attributes['date'] = (new Carbon($value))->format('d M Y');
-    //   }
     protected $casts = [
         'date' => 'datetime:d M Y',
     ];
@@ -33,5 +38,13 @@ class Bookings extends Model
 
     public function guides() {
         return $this->hasOne(Guides::class, 'id', 'guide_id');
+    }
+
+    public function options() {
+        return $this->hasOne(Tours::class, 'id', 'option_id');
+    }
+
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
 }

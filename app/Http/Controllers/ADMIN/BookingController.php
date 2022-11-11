@@ -202,7 +202,8 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $booking = Bookings::find($request->id);
+        $booking = Bookings::where('id', $request->id)
+                    ->with('packages', 'guides', 'user', 'options')->first();
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
         if($booking) {
@@ -224,6 +225,7 @@ class BookingController extends Controller
         }
 
         $booking = Bookings::where('ref_id', $request->ref_id)->get();
+
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
         if($booking) {

@@ -264,6 +264,50 @@ class BookingController extends Controller
         }
     }
 
+    public function filter(Request $request)
+    {
+
+        $pages = $request->pages != null ? $request->pages : 10;
+        $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
+        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+
+        $start = $request->date_from;
+        $end = $request->date_end;
+        $guest_name = $request->guest_name;
+        $supplier = $request->supplier;
+        $status = $request->status;
+
+        if($request->ref_id != '' || $request->ref_id != null) {
+            $find = Bookings::where('ref_id', $request->ref_id)
+                    ->with('packages', 'guides')
+                    ->orderBy($sortBy, $direction)
+                    ->paginate($pages);
+        }else{
+
+            $find = Bookings::when($start, function($query) use ($start, $end){
+                            return $query->whereBetween('date', [$start, $end]);
+                        })
+                        ->when($supplier, function($query) use ($supplier){
+                            return $query->where('supplier', $supplier);
+                        })
+                        ->when($status, function($query) use ($status){
+                            return $query->where('status', $status);
+                        })
+                        ->when($guest_name, function($query) use ($guest_name){
+                            return $query->where('name', 'LIKE', '%'.$guest_name.'%');
+                        })
+                        ->with('packages', 'guides')
+                        ->orderBy($sortBy, $direction)
+                        ->paginate($pages);
+        }
+
+        if($find) {
+            return ResponseFormatter::success($find, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
     public function getOptions(Request $request)
     {
         $rules = [

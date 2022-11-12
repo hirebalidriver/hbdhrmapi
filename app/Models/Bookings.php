@@ -17,7 +17,7 @@ class Bookings extends Model
         'supplier',
         'date',
         'note',
-        'status',
+        'status', //0 = all, 1 = success, 2 = cancel
         'ref_id',
         'name',
         'phone',

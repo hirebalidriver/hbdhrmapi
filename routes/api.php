@@ -103,5 +103,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('booking/find/date', 'findByDate');
         Route::post('booking/options', 'getOptions');
         Route::post('booking/find/ref', 'findByRefId');
+        Route::post('booking/filter', 'filter');
     });
 });

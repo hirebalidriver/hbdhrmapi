@@ -52,6 +52,7 @@ class ToursController extends Controller
             'title' => $request->title,
             'itinerary' => $request->itinerary,
             'price_tour' => $request->price_tour,
+            'guide_fee' => $request->guide_fee,
             'status' => $request->status,
             'note' => $request->note,
             'inclusions' => $request->inclusions,
@@ -84,6 +85,7 @@ class ToursController extends Controller
         $tour->title = $request->title;
         $tour->itinerary = $request->itinerary;
         $tour->price_tour = $request->price_tour;
+        $tour->guide_fee = $request->guide_fee;
         $tour->status = $request->status;
         $tour->note = $request->note;
         $tour->inclusions = $request->inclusions;

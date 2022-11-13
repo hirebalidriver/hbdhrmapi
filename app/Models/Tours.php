@@ -15,6 +15,7 @@ class Tours extends Model
         'note',
         'status',
         'price_tour',
+        'guide_fee',
         'inclusions',
         'exclusions'
     ];

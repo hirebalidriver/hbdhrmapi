@@ -55,7 +55,6 @@ class PackageController extends Controller
         $create = Packages::create([
             'title' => $request->title,
             'note' => $request->note,
-            'price_guide' => $request->price_guide,
             'status' => $request->status,
         ]);
 
@@ -80,7 +79,6 @@ class PackageController extends Controller
         $update = Packages::find($request->id);
         $update->title = $request->title;
         $update->note = $request->note;
-        $update->price_guide = $request->price_guide;
         $update->status = $request->status;
 
 

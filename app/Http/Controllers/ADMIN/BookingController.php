@@ -271,8 +271,14 @@ class BookingController extends Controller
         $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
-        $start = $request->date_from;
-        $end = $request->date_end;
+        if($request->date_from > $request->date_end){
+            $start = $request->date_end;
+            $end = $request->date_from;
+        }else{
+            $start = $request->date_from;
+            $end = $request->date_end;
+        }
+
         $guest_name = $request->guest_name;
         $supplier = $request->supplier;
         $status = $request->status;

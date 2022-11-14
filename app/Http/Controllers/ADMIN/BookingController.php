@@ -78,7 +78,7 @@ class BookingController extends Controller
             'date' => Carbon::parse($request->date)->format('Y-m-d'),
             'time' => $request->time,
             'supplier' => $request->supplier,
-            'status' => $request->status,
+            'status' => 2,
             'note' => $request->note,
             'note' => $request->note,
             'name' => $request->name,

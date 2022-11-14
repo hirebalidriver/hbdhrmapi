@@ -87,7 +87,11 @@ class BookingController extends Controller
             'status_payment' => $request->status_payment,
             'collect' => $request->collect,
             'created_by' => $user->id,
-            'people' => $request->people,
+            'country' => $request->country,
+            'adult' => $request->adult,
+            'child' => $request->child,
+            'price' => $request->price,
+            'down_payment' => $request->down_payment,
         ]);
 
 
@@ -136,7 +140,11 @@ class BookingController extends Controller
         $booking->status_payment = $request->status_payment;
         $booking->collect = $request->collect;
         $booking->option_id = $request->option_id;
-        $booking->people = $request->people;
+        $booking->country = $request->country;
+        $booking->adult = $request->adult;
+        $booking->child = $request->child;
+        $booking->price = $request->price;
+        $booking->down_payment = $request->down_payment;
 
         if($booking->save()) {
             return ResponseFormatter::success($booking, 'success');
@@ -164,6 +172,30 @@ class BookingController extends Controller
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
         $booking->guide_id = $request->guide_id;
+
+        if($booking->save()) {
+            return ResponseFormatter::success($booking, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+            'status' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $booking = Bookings::find($request->id);
+        if(!$booking) return ResponseFormatter::error(null, 'not found');
+
+        $booking->status = $request->status;
 
         if($booking->save()) {
             return ResponseFormatter::success($booking, 'success');

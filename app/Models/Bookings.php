@@ -26,7 +26,11 @@ class Bookings extends Model
         'collect',
         'option_id',
         'created_by',
-        'people',
+        'country',
+        'adult',
+        'child',
+        'price',
+        'down_payment',
     ];
 
     protected $casts = [

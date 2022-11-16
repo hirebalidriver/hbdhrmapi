@@ -48,7 +48,7 @@ class BookingController extends Controller
             'package_id' => ['required'],
             'option_id' => ['required'],
             'date' => ['required'],
-            'time' => ['required', 'date_format:H:i'],
+            'time' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -109,7 +109,7 @@ class BookingController extends Controller
             'package_id' => ['required'],
             'guide_id' => ['required'],
             'date' => ['required'],
-            'time' => ['required', 'date_format:H:i'],
+            'time' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);

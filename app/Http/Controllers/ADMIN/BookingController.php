@@ -45,10 +45,7 @@ class BookingController extends Controller
     public function add(Request $request)
     {
         $rules = [
-            'package_id' => ['required'],
-            'option_id' => ['required'],
             'date' => ['required'],
-            'time' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);

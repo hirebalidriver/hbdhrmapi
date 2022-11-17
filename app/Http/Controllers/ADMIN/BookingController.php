@@ -53,12 +53,6 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $guide = Guides::find($request->guide_id);
-        if(!$guide) return ResponseFormatter::error(null, 'guide not found');
-
-        $package = Packages::find($request->package_id);
-        if(!$package) return ResponseFormatter::error(null, 'tour not found');
-
         $check = Bookings::where('package_id', $request->package_id)
                             ->where('guide_id', $request->guide_id)
                             ->where('date', $request->date)

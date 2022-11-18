@@ -97,22 +97,13 @@ class BookingController extends Controller
     {
         $rules = [
             'id' => ['required'],
-            'package_id' => ['required'],
-            'guide_id' => ['required'],
             'date' => ['required'],
-            'time' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()){
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
-
-        $guide = Guides::find($request->guide_id);
-        if(!$guide) return ResponseFormatter::error(null, 'guide not found');
-
-        $package = Packages::find($request->package_id);
-        if(!$package) return ResponseFormatter::error(null, 'tour not found');
 
         $booking = Bookings::find($request->id);
         if(!$booking) return ResponseFormatter::error(null, 'not found');

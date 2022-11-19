@@ -14,21 +14,13 @@ class ToursController extends Controller
     public function index(Request $request)
     {
 
-        $rules = [
-            'pages' => ['required'],
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
-            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
-        }
-
-        $pages = $request->pages != null ? $request->pages : 10;
-        $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
+        $per_page = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
         $tour = Tours::orderBy($sortBy, $direction)
-                            ->paginate($pages);
+                            ->paginate($per_page, ['*'], 'page', $page);
 
         if($tour){
             return ResponseFormatter::success($tour, 'success');

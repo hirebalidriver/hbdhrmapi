@@ -13,26 +13,13 @@ class PackageController extends Controller
 {
     public function index(Request $request)
     {
-        $rules = [
-            'pages' => ['required'],
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
-            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
-        }
-
-        $pages = $request->pages != null ? $request->pages : 10;
-        $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
+        $per_page = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
-        // $packages = DB::table('packages')->select('packages.*')
-        //                 ->join('package_relations', 'package_relations.package_id', 'packages.id')
-        //                 ->join('tours', 'tours.id', 'package_relations.tour_id')
-        //                 ->where('packages.id', '=', $re)
-
         $packages = Packages::orderBy($sortBy, $direction)
-                            ->paginate($pages);
+                        ->paginate($per_page, ['*'], 'page', $page);
 
         if($packages){
             return ResponseFormatter::success($packages, 'success');

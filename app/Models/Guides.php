@@ -12,6 +12,8 @@ class Guides extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 
+    protected $guard = "guide";
+
     protected $fillable = [
         'name',
         'email',

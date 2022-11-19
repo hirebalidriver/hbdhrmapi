@@ -38,7 +38,7 @@ class BookingController extends Controller
         if($bookings){
             return ResponseFormatter::success($bookings, 'success');
         }else{
-            return ResponseFormatter::error(null, 'success');
+            return ResponseFormatter::error(null, 'failed');
         }
     }
 
@@ -347,7 +347,7 @@ class BookingController extends Controller
         if($options) {
             return ResponseFormatter::success($options, 'success');
         }else{
-            return ResponseFormatter::error(null, 'success');
+            return ResponseFormatter::error(null, 'failed');
         }
     }
 }

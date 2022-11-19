@@ -44,7 +44,7 @@ return [
             'driver' => 'sanctum',
             'provider' => 'users',
         ],
-        'guides' => [
+        'guide' => [
             'driver' => 'sanctum',
             'provider' => 'guides',
         ],
@@ -75,7 +75,7 @@ return [
 
         'guides' => [
             'driver' => 'eloquent',
-            'table' => App\Models\Guides::class,
+            'model' => App\Models\Guides::class,
         ],
     ],
 

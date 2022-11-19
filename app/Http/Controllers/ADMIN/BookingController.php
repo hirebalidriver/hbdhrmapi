@@ -299,7 +299,7 @@ class BookingController extends Controller
 
         if($request->ref_id != '' || $request->ref_id != null) {
             $find = Bookings::where('ref_id', $request->ref_id)
-                    ->with('packages', 'guides')
+                    ->with('packages', 'guides', 'user', 'options')
                     ->orderBy($sortBy, $direction)
                     ->paginate($pages);
         }else{
@@ -316,7 +316,7 @@ class BookingController extends Controller
                         ->when($guest_name, function($query) use ($guest_name){
                             return $query->where('name', 'LIKE', '%'.$guest_name.'%');
                         })
-                        ->with('packages', 'guides')
+                        ->with('packages', 'guides', 'user', 'options')
                         ->orderBy($sortBy, $direction)
                         ->paginate($pages);
         }

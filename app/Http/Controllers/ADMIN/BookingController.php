@@ -46,6 +46,7 @@ class BookingController extends Controller
     {
         $rules = [
             'date' => ['required'],
+            'ref_id' => ['unique:bookings,ref_id']
         ];
 
         $validator = Validator::make($request->all(), $rules);

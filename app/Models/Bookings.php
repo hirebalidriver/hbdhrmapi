@@ -35,6 +35,7 @@ class Bookings extends Model
 
     protected $casts = [
         'date' => 'datetime:d M Y',
+        'time' => 'datetime:H:i',
     ];
 
     public function packages() {

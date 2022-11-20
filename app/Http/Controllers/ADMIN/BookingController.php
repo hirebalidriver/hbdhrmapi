@@ -274,8 +274,9 @@ class BookingController extends Controller
     public function filter(Request $request)
     {
 
-        $pages = $request->pages != null ? $request->pages : 10;
-        $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
+        $per_page = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
         if($request->date_from > $request->date_end){
@@ -294,7 +295,7 @@ class BookingController extends Controller
             $find = Bookings::where('ref_id', $request->ref_id)
                     ->with('packages', 'guides', 'user', 'options')
                     ->orderBy($sortBy, $direction)
-                    ->paginate($pages);
+                    ->paginate($per_page, ['*'], 'page', $page);
         }else{
 
             $find = Bookings::when($start, function($query) use ($start, $end){
@@ -311,7 +312,7 @@ class BookingController extends Controller
                         })
                         ->with('packages', 'guides', 'user', 'options')
                         ->orderBy($sortBy, $direction)
-                        ->paginate($pages);
+                        ->paginate($per_page, ['*'], 'page', $page);
         }
 
         if($find) {

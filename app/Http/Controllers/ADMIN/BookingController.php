@@ -46,7 +46,7 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $check = Bookings::where('package_id', $request->package_id)
+        $check = Bookings::where('ref_id', $request->ref_id)
                             ->where('guide_id', $request->guide_id)
                             ->where('date', $request->date)
                             ->first();

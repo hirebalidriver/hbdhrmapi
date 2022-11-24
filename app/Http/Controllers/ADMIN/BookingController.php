@@ -47,8 +47,6 @@ class BookingController extends Controller
         }
 
         $check = Bookings::where('ref_id', $request->ref_id)
-                            ->where('guide_id', $request->guide_id)
-                            ->where('date', $request->date)
                             ->first();
         if($check) return ResponseFormatter::error(null, 'booking have been registered');
 

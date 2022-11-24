@@ -46,10 +46,6 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $check = Bookings::where('ref_id', $request->ref_id)
-                            ->first();
-        if($check) return ResponseFormatter::error(null, 'booking have been registered');
-
         $user = Auth::user();
 
         $create = Bookings::create([

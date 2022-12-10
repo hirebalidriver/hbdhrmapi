@@ -151,7 +151,7 @@ class AuthController extends Controller
         if ($validator->fails())
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
 
-        $user = Auth::user();
+        $user = Auth::user()->id;
         $user->password = Hash::make($request->password);
 
         if ($user->save()) {

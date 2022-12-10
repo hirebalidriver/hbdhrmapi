@@ -31,6 +31,7 @@ class Bookings extends Model
         'child',
         'price',
         'down_payment',
+        'guide_fee'
     ];
 
     protected $casts = [

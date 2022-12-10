@@ -4,8 +4,11 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Balances;
 use App\Models\Guides;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GuidesController extends Controller
@@ -39,21 +42,35 @@ class GuidesController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $create = Guides::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-            'phone' => $request->phone,
-            'ktp_number' => $request->ktp_number,
-            'ktp_url' => $request->ktp_url,
-            'code' => $request->code,
-            'address' => $request->address,
-            'status' => $request->status,
-        ]);
+        DB::beginTransaction();
 
-        if($create) {
-            return ResponseFormatter::success($create, 'success');
-        }else{
+        try{
+            $guide = Guides::insertGetId([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'phone' => $request->phone,
+                'ktp_number' => $request->ktp_number,
+                'ktp_url' => $request->ktp_url,
+                'code' => $request->code,
+                'address' => $request->address,
+                'status' => $request->status,
+            ]);
+
+            Balances::create([
+                'guide_id' => $guide,
+                'trx_id' => 0,
+                'in' => 0,
+                'out' => 0,
+                'type' => 'begin',
+            ]);
+
+            DB::commit();
+
+            return ResponseFormatter::success(null, 'success');
+
+        }catch(Exception) {
+            DB::rollback();
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -91,20 +108,37 @@ class GuidesController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $update = Guides::where('id', $request->id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'ktp_number' => $request->ktp_number,
-            'ktp_url' => $request->ktp_url,
-            'code' => $request->code,
-            'address' => $request->address,
-            'status' => $request->status,
-        ]);
+        DB::beginTransaction();
 
-        if($update) {
-            return ResponseFormatter::success($update, 'success');
-        }else{
+        try{
+
+            $guide = Guides::where('id', $request->id)->first();
+            $guide->name = $request->name;
+            $guide->email = $request->email;
+            $guide->phone = $request->phone;
+            $guide->ktp_number = $request->ktp_number;
+            $guide->ktp_url = $request->ktp_url;
+            $guide->code = $request->code;
+            $guide->address = $request->address;
+            $guide->status = $request->status;
+
+            $balance = Balances::where('guide_id', $guide->id)->first();
+            if(!$balance) {
+                Balances::create([
+                    'guide_id' => $guide->id,
+                    'trx_id' => 0,
+                    'in' => 0,
+                    'out' => 0,
+                    'type' => 'begin',
+                ]);
+            }
+
+            DB::commit();
+
+            return ResponseFormatter::success(null, 'success');
+
+        }catch(Exception) {
+            DB::rollBack();
             return ResponseFormatter::error(null, 'failed');
         }
     }

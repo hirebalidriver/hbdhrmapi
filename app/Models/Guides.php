@@ -29,6 +29,7 @@ class Guides extends Authenticatable
         'car_photo',
         'car_type',
         'plat_number',
+        'car_color',
     ];
 
     protected $hidden = [

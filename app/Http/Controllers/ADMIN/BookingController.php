@@ -48,6 +48,8 @@ class BookingController extends Controller
 
         $user = Auth::user();
 
+        $option = Tours::where('id', $request->option_id)->first();
+
         $create = Bookings::create([
             'ref_id' => $request->ref_id,
             'package_id' => $request->package_id,
@@ -69,6 +71,7 @@ class BookingController extends Controller
             'adult' => $request->adult,
             'child' => $request->child,
             'price' => $request->price,
+            'guide_fee' => $option->guide_fee,
             'down_payment' => $request->down_payment,
         ]);
 

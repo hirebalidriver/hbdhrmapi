@@ -9,6 +9,7 @@ use App\Http\Controllers\ADMIN\PackageController;
 use App\Http\Controllers\ADMIN\PackageRelationController;
 use App\Http\Controllers\ADMIN\StatistikController;
 use App\Http\Controllers\ADMIN\ToursController;
+use App\Http\Controllers\ADMIN\TrxController;
 use App\Http\Controllers\ToursRelationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -105,5 +106,10 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('booking/find/ref', 'findByRefId');
         Route::post('booking/filter', 'filter');
         Route::post('booking/update/status', 'updateStatus');
+    });
+
+    Route::controller(TrxController::class)->group(function() {
+        Route::post('trx/approve/tour', 'bookingApprove');
+        Route::post('trx/notapprove/tour', 'trxNotApprove');
     });
 });

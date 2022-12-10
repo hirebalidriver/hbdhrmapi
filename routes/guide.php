@@ -3,6 +3,7 @@
 use App\Http\Controllers\Guide\AuthController;
 use App\Http\Controllers\Guide\BalanceController;
 use App\Http\Controllers\GUIDE\BookingController;
+use App\Http\Controllers\Guide\TrxController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,13 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
     });
 
     Route::controller(BookingController::class)->group(function(){
+        Route::post('bookings', 'index');
+        Route::post('booking/detail', 'detail');
         Route::post('tour/completed', 'complateTour');
+    });
+
+    Route::controller(TrxController::class)->group(function(){
+        Route::post('transactions', 'index');
+        Route::post('transaction/detail', 'detail');
     });
 });

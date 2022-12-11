@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Guide\AuthController;
-use App\Http\Controllers\Guide\BalanceController;
+use App\Http\Controllers\GUIDE\AuthController;
+use App\Http\Controllers\GUIDE\BalanceController;
 use App\Http\Controllers\GUIDE\BookingController;
-use App\Http\Controllers\Guide\TrxController;
+use App\Http\Controllers\GUIDE\TrxController;
 use Illuminate\Support\Facades\Route;
 
 /*

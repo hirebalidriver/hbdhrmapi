@@ -27,6 +27,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('change/password', 'changePassword');
 });
 
+
 Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
     Route::controller(AuthController::class)->group(function() {
         Route::post('me', 'me');

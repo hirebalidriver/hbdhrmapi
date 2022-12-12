@@ -32,7 +32,11 @@ class AuthController extends Controller
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 
         if ($tokenResult) {
-            return response()->json(['access_token' => $tokenResult, 'user'=>$user], 200);
+            return response()->json(['access_token' => $tokenResult, 'user'=>new GuideResource($user)], 200);
+            // return ResponseFormatter::success([
+            //     'access_token' => $tokenResult,
+            //     'user' => new GuideResource($user)
+            // ], 'User Login');
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -72,8 +76,7 @@ class AuthController extends Controller
 
             return ResponseFormatter::success([
                 'access_token' => $tokenResult,
-                'token_type' => 'Bearer',
-                'user' => $guide
+                'user' => new GuideResource($guide)
             ], 'User Registered');
 
         } catch (Exception $error) {

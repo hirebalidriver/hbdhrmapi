@@ -35,13 +35,46 @@ class BookingController extends Controller
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction = $request->direction!= null ? 'DESC' : 'ASC';
 
-        $bookings = Bookings::with('packages', 'guides', 'user', 'options')
+        if($request->date_from > $request->date_end){
+            $start = $request->date_end;
+            $end = $request->date_from;
+        }else{
+            $start = $request->date_from;
+            $end = $request->date_end;
+        }
+
+        $guest_name = $request->guest_name;
+        $supplier = $request->supplier;
+        $status = $request->status;
+
+        if($request->ref_id != '' || $request->ref_id != null) {
+            $find = Bookings::where('ref_id', $request->ref_id)
+                    ->with('packages', 'guides', 'user', 'options')
+                    ->where('guide_id', $user->id)
+                    ->orderBy($sortBy, $direction)
+                    ->paginate($per_page, ['*'], 'page', $page);
+        }else{
+
+            $find = Bookings::when($start, function($query) use ($start, $end){
+                            return $query->whereBetween('date', [$start, $end]);
+                        })
+                        ->when($supplier, function($query) use ($supplier){
+                            return $query->where('supplier', $supplier);
+                        })
+                        ->when($status, function($query) use ($status){
+                            return $query->where('status', $status);
+                        })
+                        ->when($guest_name, function($query) use ($guest_name){
+                            return $query->where('name', 'LIKE', '%'.$guest_name.'%');
+                        })
                         ->where('guide_id', $user->id)
+                        ->with('packages', 'guides', 'user', 'options')
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
+        }
 
-        if($bookings){
-            return ResponseFormatter::success($bookings, 'success');
+        if($find){
+            return ResponseFormatter::success($find, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

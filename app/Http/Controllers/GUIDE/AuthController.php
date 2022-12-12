@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guide;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\GENERAL\ImageUploadController;
+use App\Http\Resources\GuideResource;
 use App\Models\Balances;
 use App\Models\Guides;
 use Exception;
@@ -89,7 +90,7 @@ class AuthController extends Controller
         $query = auth()->guard('guide')->user();
 
         if($query) {
-            return ResponseFormatter::success($query, 'success');
+            return ResponseFormatter::success(new GuideResource($query), 'success');
         }
 
         return ResponseFormatter::error(null, 'failed');

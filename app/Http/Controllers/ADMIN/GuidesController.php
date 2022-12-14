@@ -9,6 +9,7 @@ use App\Models\Guides;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class GuidesController extends Controller
@@ -48,7 +49,7 @@ class GuidesController extends Controller
             $guide = Guides::insertGetId([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->password,
+                'password' => Hash::make($request->password),
                 'phone' => $request->phone,
                 'ktp_number' => $request->ktp_number,
                 'ktp_url' => $request->ktp_url,

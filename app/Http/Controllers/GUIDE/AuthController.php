@@ -194,29 +194,32 @@ class AuthController extends Controller
         $user = auth()->guard('guide')->user();
         if (!$user) return ResponseFormatter::error(null, 'not found user');
 
+        $query = Guides::find($user->id);
+
         if($request->ktp_url != null || $request->ktp_url != ''){
             $uploadKTP = ImageUploadController::upload($request->ktp_url, $user->id, 'ktp');
+            $query->ktp_url = $uploadKTP;
         }
 
         if($request->profile != null || $request->profile != ''){
             $uploadProfile = ImageUploadController::upload($request->profile, $user->id, 'profile');
+            $query->profile = $uploadProfile;
+
         }
 
         if($request->car_photo != null || $request->car_photo != ''){
             $uploadCar = ImageUploadController::upload($request->car_photo, $user->id, 'car');
+            $query->car_photo = $uploadCar;
         }
 
         $phone = (int)$request->phone;
         $phone = (string)$phone;
 
-        $query = Guides::find($user->id);
+
         $query->name = $request->name;
         $query->email = $request->email;
         $query->phone = $phone;
         $query->ktp_number = $request->ktp_number;
-        $query->ktp_url = $uploadKTP;
-        $query->profile = $uploadProfile;
-        $query->car_photo = $uploadCar;
         $query->car_type = $request->car_type;
         $query->plat_number = $request->plat_number;
         $query->car_color = $request->car_color;

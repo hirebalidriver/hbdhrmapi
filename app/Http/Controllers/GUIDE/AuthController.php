@@ -224,6 +224,9 @@ class AuthController extends Controller
         $query->plat_number = $request->plat_number;
         $query->car_color = $request->car_color;
         $query->address = $request->address;
+        $query->bank_name = $request->bank_name;
+        $query->bank_number = $request->bank_number;
+        $query->bank_account = $request->bank_account;
 
         if ($query->save()) {
             return ResponseFormatter::success(null, 'success');

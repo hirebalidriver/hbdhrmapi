@@ -4,7 +4,10 @@ namespace App\Http\Controllers\GUIDE;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\GENERAL\ImageUploadController;
+use App\Models\Bills;
 use App\Models\Bookings;
+use App\Models\Guides;
 use App\Models\Transactions;
 use Exception;
 use Illuminate\Http\Request;
@@ -137,5 +140,61 @@ class BookingController extends Controller
             return ResponseFormatter::error(null, 'failed');
         }
 
+    }
+
+    public function uploadBill(Request $request)
+    {
+        $rules = [
+            'booking_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+        $user = auth()->guard('guide')->user();
+        if (!$user) return ResponseFormatter::error(null, 'not found user');
+
+        if($request->photo != null || $request->photo != ''){
+            $upload = ImageUploadController::upload($request->photo, $user->id, 'bill');
+            $create = Bills::create([
+                'booking_id' => $request->booking_id,
+                'photo' => $upload,
+                'price' => $request->price,
+                'note' => $request->note,
+            ]);
+        }else{
+            $create = Bills::create([
+                'booking_id' => $request->booking_id,
+                'price' => $request->price,
+                'note' => $request->note,
+            ]);
+        }
+
+        if ($create) {
+            return ResponseFormatter::success($create, 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function bills(Request $request)
+    {
+        $rules = [
+            'booking_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+
+        $query = Bills::where('booking_id', $request->booking_id)->get();
+
+        if ($query) {
+            return ResponseFormatter::success($query, 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
     }
 }

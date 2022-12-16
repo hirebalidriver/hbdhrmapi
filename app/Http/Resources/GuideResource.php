@@ -34,6 +34,9 @@ class GuideResource extends JsonResource
             'car_type' => $this->car_type,
             'plat_number' => $this->plat_number,
             'car_color' => $this->car_color,
+            'bank_name' => $this->bank_name,
+            'bank_number' => $this->bank_number,
+            'bank_account' => $this->bank_account,
         ];
     }
 }

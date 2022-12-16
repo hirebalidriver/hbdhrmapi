@@ -229,7 +229,6 @@ class AuthController extends Controller
         $query->bank_account = $request->bank_account;
 
         if ($query->save()) {
-            $user = auth()->guard('guide')->user();
             $data = Guides::where('id', $user->id)->first();
             return ResponseFormatter::success(new GuideResource($data), 'success');
         } else {

@@ -197,4 +197,16 @@ class BookingController extends Controller
             return ResponseFormatter::error(null, 'failed');
         }
     }
+
+    public function billDelete(Request $request)
+    {
+
+        $query = Bills::find($request->id);
+
+        if ($query->delete()) {
+            return ResponseFormatter::success(null, 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
 }

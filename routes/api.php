@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ADMIN\AuthController;
+use App\Http\Controllers\ADMIN\BillController;
 use App\Http\Controllers\ADMIN\BookingController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
@@ -110,6 +111,10 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(TrxController::class)->group(function() {
         Route::post('trx/approve/tour', 'bookingApprove');
-        Route::post('trx/notapprove/tour', 'trxNotApprove');
+        Route::post('trx/notapprove/tour', 'bookingNotApprove');
+    });
+
+    Route::controller(BillController::class)->group(function() {
+        Route::post('bills', 'index');
     });
 });

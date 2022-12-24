@@ -118,18 +118,6 @@ class BookingController extends Controller
                             ->where('guide_id', $user->id)->first();
             if(!$booking) return ResponseFormatter::error(null, 'not found booking');
 
-            $check = Transactions::where('booking_id', $request->booking_id)
-                        ->where('guide_id', $user->id)->first();
-            if($check) return ResponseFormatter::error(null, 'failed');
-
-            Transactions::create([
-                'booking_id' => $booking->id,
-                'guide_id' => $booking->guide_id,
-                'user_id' => 0,
-                'price' => $booking->guide_fee,
-                'status' => 0,
-            ]);
-
             $booking->status = 3;
             $booking->save();
 
@@ -152,28 +140,48 @@ class BookingController extends Controller
         if ($validator->fails())
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
 
-        $user = auth()->guard('guide')->user();
-        if (!$user) return ResponseFormatter::error(null, 'not found user');
 
-        if($request->photo != null || $request->photo != ''){
-            $upload = ImageUploadController::upload($request->photo, $user->id, 'bill');
-            $create = Bills::create([
-                'booking_id' => $request->booking_id,
-                'photo' => $upload,
-                'price' => $request->price,
-                'note' => $request->note,
-            ]);
-        }else{
-            $create = Bills::create([
-                'booking_id' => $request->booking_id,
-                'price' => $request->price,
-                'note' => $request->note,
-            ]);
-        }
+        DB::beginTransaction();
 
-        if ($create) {
+        try{
+
+            $user = auth()->guard('guide')->user();
+            if (!$user) return ResponseFormatter::error(null, 'not found user');
+
+            if($request->photo != null || $request->photo != ''){
+                $upload = ImageUploadController::upload($request->photo, $user->id, 'bill');
+                $create = Bills::create([
+                    'booking_id' => $request->booking_id,
+                    'photo' => $upload,
+                    'price' => $request->price,
+                    'note' => $request->note,
+                    'is_susuk' => $request->is_susuk,
+                ]);
+            }else{
+                $create = Bills::create([
+                    'booking_id' => $request->booking_id,
+                    'price' => $request->price,
+                    'note' => $request->note,
+                    'is_susuk' => $request->is_susuk,
+                ]);
+            }
+
+            $booking = Bookings::where('id', $request->booking_id)->first();
+            $booking->bill_total = $booking->bill_total + $request->price;
+            if($request->is_susuk) {
+                $booking->susuk_guide = $booking->susuk_guide + ($request->price/2);
+                $booking->susuk_hbd = $booking->susuk_hbd + ($request->price/2);
+            }else{
+                $booking->tiket_total = $booking->tiket_total + $request->price;
+            }
+            $booking->save();
+
+
+            DB::commit();
             return ResponseFormatter::success($create, 'success');
-        } else {
+
+        }catch (Exception $e) {
+            DB::rollBack();
             return ResponseFormatter::error(null, 'failed');
         }
     }

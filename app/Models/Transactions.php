@@ -9,7 +9,18 @@ class Transactions extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    // status : 0 = pending, 1 = success, 2 = reject
+
+    protected $fillable = [
+        'id',
+        'booking_id',
+        'guide_id',
+        'user_id',
+        'price',
+        'status',
+        'created_at',
+        'update_at',
+    ];
 
     public function booking() {
         return $this->hasOne(Bookings::class, 'id', 'booking_id');

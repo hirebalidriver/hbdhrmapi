@@ -17,7 +17,7 @@ class Bookings extends Model
         'supplier',
         'date',
         'note',
-        'status', //0 = all, 1 = success, 2 = cancel
+        'status', //0 = pending, 1 = confirm, 2 = cancel, 3 = need approve, 4 = completed, 5 = reject
         'ref_id',
         'name',
         'phone',
@@ -31,7 +31,11 @@ class Bookings extends Model
         'child',
         'price',
         'down_payment',
-        'guide_fee'
+        'guide_fee',
+        'bill_total',
+        'susuk_hbd',
+        'susuk_guide',
+        'tiket_total',
     ];
 
     protected $casts = [

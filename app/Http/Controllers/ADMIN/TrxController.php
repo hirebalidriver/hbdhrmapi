@@ -18,7 +18,7 @@ class TrxController extends Controller
     public function bookingApprove(Request $request)
     {
         $rules = [
-            'trx_id' => ['required'],
+            'booking_id' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -30,13 +30,24 @@ class TrxController extends Controller
         try{
             $user = Auth::user();
 
-            $trx = Transactions::where('id', $request->trx_id)->first();
-            $trx->user_id = $user->id;
-            $trx->status = 1;
-            $trx->save();
+            $booking = Bookings::where('id', $request->booking_id)
+                            ->where('status', 3)->first();
+            if(!$booking) return ResponseFormatter::error(null, 'not found booking or booking has been completed');
 
-            $balance = Balances::where('guide_id', $trx->guide_id)->latest()->first();
+            //TOTAL FEE
+            $total = ($booking->guide_fee + $booking->tiket_total) -  $booking->susuk_hbd;
 
+            $trxID =  Transactions::insertGetId([
+                'booking_id' => $booking->id,
+                'guide_id' => $booking->guide_id,
+                'user_id' => $user->id,
+                'price' => $total,
+                'status' => 1,
+            ]);
+
+            //BALANCE
+            $trx = Transactions::where('id', $trxID)->first();
+            $balance = Balances::where('guide_id', $booking->guide_id)->latest()->first();
             Balances::create([
                 'guide_id' => $trx->guide_id,
                 'balance' => $balance->balance+$trx->price,
@@ -47,9 +58,8 @@ class TrxController extends Controller
                 'type' => 'tour',
             ]);
 
-            Bookings::where('id', $trx->booking_id)->update([
-                'status' => 3
-            ]);
+            $booking->status = 4;
+            $booking->save();
 
             DB::commit();
             return ResponseFormatter::success(null, 'success');
@@ -61,10 +71,10 @@ class TrxController extends Controller
 
     }
 
-    public function trxNotApprove(Request $request)
+    public function bookingNotApprove(Request $request)
     {
         $rules = [
-            'trx_id' => ['required'],
+            'booking_id' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -76,10 +86,11 @@ class TrxController extends Controller
         try{
             $user = Auth::user();
 
-            $trx = Transactions::where('id', $request->trx_id)->first();
-            $trx->user_id = $user->id;
-            $trx->status = 2;
-            $trx->save();
+            $booking = Bookings::where('id', $request->booking_id)->first();
+            if(!$booking) return ResponseFormatter::error(null, 'not found booking');
+
+            $booking->status = 5;
+            $booking->save();
 
             DB::commit();
             return ResponseFormatter::success(null, 'success');

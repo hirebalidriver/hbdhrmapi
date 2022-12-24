@@ -14,5 +14,6 @@ class Bills extends Model
         'photo',
         'price',
         'note',
+        'is_susuk',
     ];
 }

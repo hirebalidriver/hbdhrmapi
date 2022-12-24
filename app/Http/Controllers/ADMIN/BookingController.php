@@ -164,6 +164,9 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
+        $check = Bookings::where('status', '>', 2)->first();
+        if(!$check) return ResponseFormatter::error(null, 'change status failed');
+
         $booking = Bookings::find($request->id);
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 

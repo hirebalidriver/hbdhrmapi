@@ -19,7 +19,7 @@ class GuidesController extends Controller
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
-        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+        $direction =$request->input('direction', 'DESC');
 
         $guide = Guides::orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);

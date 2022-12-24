@@ -17,7 +17,7 @@ class TrxController extends Controller
         $per_page = $request->input('per_page', 20);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
-        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+        $direction =$request->input('direction', 'DESC');
 
         $trx = Transactions::where('guide_id', $user->id)
                             ->with('booking')

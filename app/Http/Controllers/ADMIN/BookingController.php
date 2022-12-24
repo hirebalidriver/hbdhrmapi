@@ -22,7 +22,7 @@ class BookingController extends Controller
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
-        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+        $direction =$request->input('direction', 'DESC');
 
         $bookings = Bookings::with('packages', 'guides', 'user', 'options')->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
@@ -255,7 +255,7 @@ class BookingController extends Controller
 
         $pages = $request->pages != null ? $request->pages : 10;
         $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
-        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+        $direction =$request->input('direction', 'DESC');
 
         $find = Bookings::where('date', $request->date)->with('packages', 'guides')
                             ->orderBy($sortBy, $direction)
@@ -274,7 +274,7 @@ class BookingController extends Controller
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
-        $direction = $request->direction!= null ? 'DESC' : 'ASC';
+        $direction =$request->input('direction', 'DESC');
 
         if($request->date_from > $request->date_end){
             $start = $request->date_end;

@@ -116,5 +116,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(BillController::class)->group(function() {
         Route::post('bills', 'index');
+        Route::post('bill/detail', 'detail');
+        Route::post('bill/filter', 'filter');
     });
 });

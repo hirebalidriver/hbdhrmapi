@@ -42,7 +42,9 @@ class BillController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $booking = Bookings::where('id', $request->booking_id)->first();
+        $booking = Bookings::where('id', $request->booking_id)
+                            ->with('packages', 'guides', 'user', 'options')
+                            ->first();
 
         $query = Bills::where('booking_id', $request->booking_id)
                         ->orderBy('id', 'desc')

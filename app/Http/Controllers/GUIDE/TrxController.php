@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guide;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TrxResource;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class TrxController extends Controller
 
         $user = auth()->guard('guide')->user();
 
-        $per_page = $request->input('per_page', 20);
+        $per_page = $request->input('per_page', 50);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction =$request->input('direction', 'DESC');
@@ -25,7 +26,8 @@ class TrxController extends Controller
                             ->paginate($per_page, ['*'], 'page', $page);
 
         if($trx) {
-            return ResponseFormatter::success($trx, 'success');
+            // return ResponseFormatter::success($trx, 'success');
+            return TrxResource::collection($trx);
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

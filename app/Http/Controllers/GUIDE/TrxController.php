@@ -51,8 +51,8 @@ class TrxController extends Controller
                             ->paginate($per_page, ['*'], 'page', $page);
 
         if($trx) {
-            return ResponseFormatter::success($trx, 'success');
-            // return TrxResource::collection($trx);
+            // return ResponseFormatter::success($trx, 'success');
+            return TrxResource::collection($trx);
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

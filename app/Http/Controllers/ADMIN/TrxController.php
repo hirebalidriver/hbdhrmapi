@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Balances;
 use App\Models\Bookings;
 use App\Models\Transactions;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,7 @@ class TrxController extends Controller
                 'user_id' => $user->id,
                 'price' => $total,
                 'status' => 1,
+                'date' => Carbon::now(),
             ]);
 
             //BALANCE

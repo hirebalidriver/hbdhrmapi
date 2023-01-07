@@ -58,4 +58,8 @@ class Bookings extends Model
     public function user() {
         return $this->hasOne(User::class, 'id', 'created_by');
     }
+
+    public function trx() {
+        return $this->hasOne(Transactions::class, 'booking_id', 'id');
+    }
 }

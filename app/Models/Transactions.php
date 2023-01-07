@@ -18,8 +18,7 @@ class Transactions extends Model
         'user_id',
         'price',
         'status',
-        'created_at',
-        'update_at',
+        'date',
     ];
 
     public function booking() {

@@ -11,6 +11,8 @@ class Transactions extends Model
 
     // status : 0 = pending, 1 = success, 2 = reject
 
+    protected $dates = ['date'];
+
     protected $fillable = [
         'id',
         'booking_id',

@@ -164,7 +164,7 @@ class BookingController extends Controller
                 'note' => 'tour',
             ]);
 
-            DB::commit();
+
 
             // get a user to get the fcm_token that already sent. from mobile apps
             FCMService::send(
@@ -176,11 +176,11 @@ class BookingController extends Controller
                 [
                     'title' => 'New Booking Hire Bali Driver',
                     'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
-                    'route' => '/home',
+                    'route' => '/',
                 ]
             );
 
-
+            DB::commit();
 
             return ResponseFormatter::success($booking, 'success');
 

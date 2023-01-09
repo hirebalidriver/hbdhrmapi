@@ -21,7 +21,18 @@ class AvailabilityController extends Controller
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction =$request->input('direction', 'DESC');
 
-         $query = Availability::where('guide_id', $user->id)
+        if($request->date_from > $request->date_end){
+            $start = $request->date_end;
+            $end = $request->date_from;
+        }else{
+            $start = $request->date_from;
+            $end = $request->date_end;
+        }
+
+         $query = Availability::when($start, function($query) use ($start, $end){
+                                return $query->whereBetween('date', [$start, $end]);
+                            })
+                            ->where('guide_id', $user->id)
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 

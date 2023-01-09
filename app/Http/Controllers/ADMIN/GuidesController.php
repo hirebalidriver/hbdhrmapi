@@ -44,7 +44,9 @@ class GuidesController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $ava = DB::table('availabilities')->whereDate('date', $request->date)->pluck('guide_id')->toArray();
+        $date = date('Y-m-d', strtotime($request->date));;
+
+        $ava = DB::table('availabilities')->whereDate('date', $date)->pluck('guide_id')->toArray();
 
         $guides = Guides::whereNotIn('id',$ava)->get();
 

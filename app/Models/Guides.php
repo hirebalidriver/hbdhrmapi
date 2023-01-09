@@ -33,7 +33,7 @@ class Guides extends Authenticatable
         'bank_name',
         'bank_number',
         'bank_account',
-        'device_token',
+        'fcm_token',
     ];
 
     protected $hidden = [

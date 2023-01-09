@@ -164,8 +164,6 @@ class BookingController extends Controller
                 'note' => 'tour',
             ]);
 
-
-
             // get a user to get the fcm_token that already sent. from mobile apps
             FCMService::send(
                 $guide->fcm_token,

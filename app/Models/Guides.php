@@ -33,11 +33,16 @@ class Guides extends Authenticatable
         'bank_name',
         'bank_number',
         'bank_account',
+        'device_token',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    public function availabilities() {
+        return $this->hasMany(Availability::class, 'guide_id', 'id');
+    }
 
 }

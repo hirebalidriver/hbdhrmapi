@@ -75,6 +75,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('guide/find', 'find');
         Route::post('guide/update', 'update');
         Route::post('guide/delete', 'delete');
+
+        Route::post('guides/availability', 'guideAvailability');
     });
 
     Route::controller(StatistikController::class)->group(function() {

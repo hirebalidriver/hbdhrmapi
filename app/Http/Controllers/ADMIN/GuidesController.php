@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Availability;
 use App\Models\Balances;
 use App\Models\Guides;
 use Exception;
@@ -26,6 +27,29 @@ class GuidesController extends Controller
 
         if($guide){
             return ResponseFormatter::success($guide, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'success');
+        }
+    }
+
+    public function guideAvailability(Request $request)
+    {
+
+        $rules = [
+            'date' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $ava = DB::table('availabilities')->whereDate('date', $request->date)->pluck('guide_id')->toArray();
+
+        $guides = Guides::whereNotIn('id',$ava)->get();
+
+        if($guides){
+            return ResponseFormatter::success($guides, 'success');
         }else{
             return ResponseFormatter::error(null, 'success');
         }

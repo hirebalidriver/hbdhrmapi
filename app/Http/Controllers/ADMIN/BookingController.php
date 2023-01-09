@@ -9,7 +9,9 @@ use App\Models\Guides;
 use App\Models\PackageRelations;
 use App\Models\Packages;
 use App\Models\Tours;
+use App\Services\FCMService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -54,7 +56,7 @@ class BookingController extends Controller
             'ref_id' => $request->ref_id,
             'package_id' => $request->package_id,
             'option_id' => $request->option_id,
-            'guide_id' => $request->guide_id,
+            'guide_id' => 0,
             'date' => Carbon::parse($request->date)->format('Y-m-d'),
             'time' => $request->time,
             'supplier' => $request->supplier,
@@ -99,7 +101,7 @@ class BookingController extends Controller
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
         $booking->package_id = $request->package_id;
-        $booking->guide_id = $request->guide_id;
+        // $booking->guide_id = $request->guide_id;
         $booking->date = Carbon::parse($request->date)->format('Y-m-d');
         $booking->time = $request->time;
         $booking->supplier = $request->supplier;
@@ -137,17 +139,36 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $guide = Guides::find($request->guide_id);
-        if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+        DB::beginTransaction();
+        try{
 
-        $booking = Bookings::find($request->id);
-        if(!$booking) return ResponseFormatter::error(null, 'not found');
+            $guide = Guides::find($request->guide_id);
+            if(!$guide) return ResponseFormatter::error(null, 'guide not found');
 
-        $booking->guide_id = $request->guide_id;
+            $booking = Bookings::find($request->id);
+            if(!$booking) return ResponseFormatter::error(null, 'not found');
 
-        if($booking->save()) {
+            $booking->guide_id = $request->guide_id;
+
+            $booking->save();
+
+            // get a user to get the fcm_token that already sent. from mobile apps
+            FCMService::send(
+                $guide->fcm_token,
+                [
+                    'title' => 'New Booking Hire Bali Driver',
+                    'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
+                ],
+                [
+                    'title' => 'New Booking Hire Bali Driver',
+                    'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
+                    'route' => '/home',
+                ]
+            );
+
             return ResponseFormatter::success($booking, 'success');
-        }else{
+
+        }catch(Exception $e){
             return ResponseFormatter::error(null, 'failed');
         }
     }

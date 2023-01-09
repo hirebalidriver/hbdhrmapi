@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GUIDE\AuthController;
+use App\Http\Controllers\GUIDE\AvailabilityController;
 use App\Http\Controllers\GUIDE\BalanceController;
 use App\Http\Controllers\GUIDE\BookingController;
 use App\Http\Controllers\GUIDE\TrxController;
@@ -32,6 +33,7 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
     Route::controller(AuthController::class)->group(function() {
         Route::post('me', 'me');
         Route::post('profile/update', 'updateProfile');
+        Route::post('profile/update/fcm/token', 'updateFCMToken');
     });
 
     Route::controller(BalanceController::class)->group(function(){
@@ -50,5 +52,11 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
     Route::controller(TrxController::class)->group(function(){
         Route::post('transactions', 'index');
         Route::post('transaction/detail', 'detail');
+    });
+
+    Route::controller(AvailabilityController::class)->group(function() {
+        Route::post('availability', 'index');
+        Route::post('availability/add', 'add');
+        Route::post('availability/delete', 'delete');
     });
 });

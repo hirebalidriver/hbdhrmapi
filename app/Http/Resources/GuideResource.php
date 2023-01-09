@@ -18,6 +18,7 @@ class GuideResource extends JsonResource
         $balance = Balances::where('guide_id', $this->id)->latest()->first();
 
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'balance' => 'IDR '.$balance->balance,
             'email' => $this->email,
@@ -37,6 +38,7 @@ class GuideResource extends JsonResource
             'bank_name' => $this->bank_name,
             'bank_number' => $this->bank_number,
             'bank_account' => $this->bank_account,
+            'fcm_token' => $this->fcm_token,
         ];
     }
 }

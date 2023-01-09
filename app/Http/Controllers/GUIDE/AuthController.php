@@ -235,4 +235,30 @@ class AuthController extends Controller
             return ResponseFormatter::error(null, 'failed');
         }
     }
+
+    public function updateFCMToken(Request $request)
+    {
+        $rules = [
+            'fcm' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+        $user = auth()->guard('guide')->user();
+        if (!$user) return ResponseFormatter::error(null, 'not found user');
+
+        $query = Guides::find($user->id);
+
+
+        $query->fcm_token = $request->fcm;
+
+        if ($query->save()) {
+            $data = Guides::where('id', $user->id)->first();
+            return ResponseFormatter::success(new GuideResource($data), 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
 }

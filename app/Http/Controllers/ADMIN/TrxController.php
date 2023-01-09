@@ -6,7 +6,9 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Balances;
 use App\Models\Bookings;
+use App\Models\Guides;
 use App\Models\Transactions;
+use App\Services\FCMService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -62,6 +64,7 @@ class TrxController extends Controller
 
             $booking->status = 4;
             $booking->save();
+
 
             DB::commit();
             return ResponseFormatter::success(null, 'success');

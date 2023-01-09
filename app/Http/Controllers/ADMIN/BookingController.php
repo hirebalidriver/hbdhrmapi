@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Availability;
 use App\Models\Bookings;
 use App\Models\Guides;
 use App\Models\PackageRelations;
@@ -152,6 +153,19 @@ class BookingController extends Controller
 
             $booking->save();
 
+            Availability::where('booking_id', $booking->id)
+                                    ->whereDate('date', $booking->date)
+                                    ->delete();
+
+            Availability::create([
+                'guide_id' => $guide->id,
+                'booking_id' => $booking->id,
+                'date' => $booking->date,
+                'note' => 'tour',
+            ]);
+
+            DB::commit();
+
             // get a user to get the fcm_token that already sent. from mobile apps
             FCMService::send(
                 $guide->fcm_token,
@@ -165,6 +179,8 @@ class BookingController extends Controller
                     'route' => '/home',
                 ]
             );
+
+
 
             return ResponseFormatter::success($booking, 'success');
 

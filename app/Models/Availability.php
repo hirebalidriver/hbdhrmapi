@@ -13,6 +13,7 @@ class Availability extends Model
         'guide_id',
         'date',
         'note',
+        'booking_id',
     ];
 
     protected $casts = [

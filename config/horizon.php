@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'horizonBasicAuth'],
 
     /*
     |--------------------------------------------------------------------------
@@ -208,5 +208,10 @@ return [
                 'maxProcesses' => 3,
             ],
         ],
+    ],
+
+    'basic_auth' => [
+        'username' => env('HORIZON_BASIC_AUTH_USERNAME', 'andrenata'),
+        'password' => env('HORIZON_BASIC_AUTH_PASSWORD', 'andrenata'),
     ],
 ];

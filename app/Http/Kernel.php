@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'auth.guide' => \App\Http\Middleware\GuideCheck::class,
+        'horizonBasicAuth' => \App\Http\Middleware\HorizonBasicAuthMiddleware::class,
     ];
 }

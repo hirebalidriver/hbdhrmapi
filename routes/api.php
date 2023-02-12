@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ADMIN\AuthController;
+use App\Http\Controllers\ADMIN\AvailabilityController;
 use App\Http\Controllers\ADMIN\BillController;
 use App\Http\Controllers\ADMIN\BookingController;
 use App\Http\Controllers\ADMIN\ExclusionController;
@@ -120,5 +121,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('bills', 'index');
         Route::post('bill/detail', 'detail');
         Route::post('bill/filter', 'filter');
+    });
+
+    Route::controller(AvailabilityController::class)->group(function() {
+        Route::post('availabilities', 'index');
     });
 });

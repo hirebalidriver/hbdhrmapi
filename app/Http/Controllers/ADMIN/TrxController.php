@@ -38,7 +38,7 @@ class TrxController extends Controller
             if(!$booking) return ResponseFormatter::error(null, 'not found booking or booking has been completed');
 
             //TOTAL FEE
-            $total = ($booking->guide_fee + $booking->tiket_total) -  $booking->susuk_hbd;
+            $total = ($booking->guide_fee + $booking->tiket_total) -  $booking->susuk_hbd - $booking->collect;
             // $total = $booking->guide_fee + ($booking->bill_total - $booking->susuk_hbd - $booking->collect);
 
             $trxID =  Transactions::insertGetId([

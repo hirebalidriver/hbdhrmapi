@@ -165,18 +165,18 @@ class BookingController extends Controller
             ]);
 
             // get a user to get the fcm_token that already sent. from mobile apps
-            FCMService::send(
-                $guide->fcm_token,
-                [
-                    'title' => 'New Booking Hire Bali Driver',
-                    'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
-                ],
-                [
-                    'title' => 'New Booking Hire Bali Driver',
-                    'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
-                    'route' => '/',
-                ]
-            );
+            // FCMService::send(
+            //     $guide->fcm_token,
+            //     [
+            //         'title' => 'New Booking Hire Bali Driver',
+            //         'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
+            //     ],
+            //     [
+            //         'title' => 'New Booking Hire Bali Driver',
+            //         'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
+            //         'route' => '/',
+            //     ]
+            // );
 
             $details = [
                 'title' => "Booking Hire Bali Driver ".Carbon::parse($booking->date)->format('Y-m-d'),
@@ -202,7 +202,7 @@ class BookingController extends Controller
 
             DB::commit();
 
-            \App\Jobs\BookingMailJob::dispatch($details);
+            // \App\Jobs\BookingMailJob::dispatch($details);
 
             return ResponseFormatter::success($booking, 'success');
 

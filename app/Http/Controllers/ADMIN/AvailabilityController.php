@@ -19,7 +19,7 @@ class AvailabilityController extends Controller
 
          $query = Availability::when($start, function($query) use ($start, $end){
                                 return $query->whereBetween('date', [$start, $end]);
-                            })->get();
+                            })->with('booking')->get();
 
         if($query) {
             return ResponseFormatter::success($query, 'success');

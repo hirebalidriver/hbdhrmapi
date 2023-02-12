@@ -19,4 +19,9 @@ class Availability extends Model
     protected $casts = [
         'date' => 'datetime:d M Y',
     ];
+
+
+    public function booking() {
+        return $this->hasOne(Bookings::class, 'id', 'booking_id');
+    }
 }

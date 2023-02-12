@@ -24,4 +24,7 @@ class Availability extends Model
     public function booking() {
         return $this->hasOne(Bookings::class, 'id', 'booking_id');
     }
+    public function guide() {
+        return $this->hasOne(Guides::class, 'id', 'guide_id');
+    }
 }

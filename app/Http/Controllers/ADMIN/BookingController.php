@@ -140,6 +140,8 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
+
+
         DB::beginTransaction();
         try{
 
@@ -148,6 +150,11 @@ class BookingController extends Controller
 
             $booking = Bookings::find($request->id);
             if(!$booking) return ResponseFormatter::error(null, 'not found');
+
+            $check = Availability::where('guide_id', $guide->id)
+                                    ->whereDate('date', $booking->date)
+                                    ->first();
+            if($check) return ResponseFormatter::error(null, 'not available');
 
             $booking->guide_id = $request->guide_id;
 

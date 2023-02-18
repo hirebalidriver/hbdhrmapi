@@ -37,6 +37,10 @@ class TrxResource extends JsonResource
             'susuk' => 'IDR '.number_format(($this->booking->susuk_guide+$this->booking->susuk_hbd), 0, '.', '.'),
             'cost' => 'IDR '.number_format($this->booking->tiket_total, 0, '.', '.'),
             'additional' => 'IDR '.number_format($this->booking->additional_price, 0, '.', '.'),
+            'totalGuideFee' => $this->booking->guide_fee,
+            'totalSusuk' => $this->booking->susuk_guide+$this->booking->susuk_hbd,
+            'totalCost' => $this->booking->tiket_total,
+            'totalAdditional' => $this->booking->additional_price,
             'status' => $status
         ];
     }

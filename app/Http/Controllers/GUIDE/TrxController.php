@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Guide;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TrxDetailResource;
 use App\Http\Resources\TrxResource;
+use App\Http\Resources\TrxTotalResource;
 use App\Models\Bookings;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
@@ -29,30 +31,46 @@ class TrxController extends Controller
             $end = $request->date_end;
         }
 
-        // $trx = Transactions::where('guide_id', $user->id)
-        //                     ->with('booking')
-        //                     ->orderBy($sortBy, $direction)
-        //                     ->paginate($per_page, ['*'], 'page', $page);
-
-        // $trx = Bookings::when($start, function($query) use ($start, $end){
-        //                         return $query->whereBetween('date', [$start, $end]);
-        //                     })
-        //                     ->where('guide_id', $user->id)
-        //                     ->with('trx')
-        //                     ->orderBy($sortBy, $direction)
-        //                     ->paginate($per_page, ['*'], 'page', $page);
-
          $trx = Transactions::when($start, function($query) use ($start, $end){
                                 return $query->whereBetween('date', [$start, $end]);
                             })
                             ->where('guide_id', $user->id)
                             ->with('booking')
+                            ->with('cost')
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 
+        $fee = 0;
+        $collect = 0;
+        $susuk = 0;
+        $cost = 0;
+        $add = 0;
+        foreach($trx as $item){
+            $guide_fee = $fee + $item->booking->guide_fee;
+            $collect = $collect + ($item->booking->collect*15000);
+            $additional = $add + $item->booking->additional_price;
+            foreach($item->cost as $bill){
+                if($bill->is_susuk == true){
+                    $susuk = $susuk + $bill->price;
+                }else{
+                    $cost = $cost + $bill->price;
+                }
+            }
+
+        }
+
+        $data = [
+            'guide_fee' => 'IDR '. number_format($guide_fee, 0, '.', '.'),
+            'collect' => 'IDR '.number_format($collect, 0, '.', '.'),
+            'cost' => 'IDR '.number_format($cost, 0, '.', '.'),
+            'susuk' => 'IDR '.number_format($susuk, 0, '.', '.'),
+            'additional' => 'IDR '.number_format($additional, 0, '.', '.'),
+            'transactions' => TrxResource::collection($trx),
+
+        ];
+
         if($trx) {
-            // return ResponseFormatter::success($trx, 'success');
-            return TrxResource::collection($trx);
+            return $data;
         }else{
             return ResponseFormatter::error(null, 'failed');
         }
@@ -69,7 +87,7 @@ class TrxController extends Controller
                             ->first();
 
         if($trx) {
-            return ResponseFormatter::success($trx, 'success');
+            return ResponseFormatter::success(new TrxDetailResource($trx), 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

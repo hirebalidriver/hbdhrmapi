@@ -31,7 +31,9 @@ class TrxResource extends JsonResource
             'dateRequest' => $this->date->format('d M Y'),
             'dateBooking' => $this->booking->date->format('d M Y'),
             'refid' => $this->booking->ref_id,
-            'price' => 'IDR '.$price,
+            'guestName' => $this->booking->name,
+            'hotel' => $this->booking->hotel,
+            'guideFee' => 'IDR '.$price,
             'status' => $status
         ];
     }

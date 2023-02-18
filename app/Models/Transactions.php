@@ -26,4 +26,7 @@ class Transactions extends Model
     public function booking() {
         return $this->hasOne(Bookings::class, 'id', 'booking_id');
     }
+    public function cost() {
+        return $this->hasMany(Bills::class, 'booking_id', 'booking_id');
+    }
 }

@@ -36,6 +36,8 @@ class Bookings extends Model
         'susuk_hbd',
         'susuk_guide',
         'tiket_total',
+        'additional_price',
+        'note_price',
     ];
 
     protected $casts = [

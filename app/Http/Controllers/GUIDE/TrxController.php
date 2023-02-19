@@ -40,24 +40,7 @@ class TrxController extends Controller
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 
-        $fee = 0;
-        $collect = 0;
-        $susuk = 0;
-        $cost = 0;
-        $add = 0;
-        foreach($trx as $item){
-            $guide_fee = $fee + $item->booking->guide_fee;
-            $collect = $collect + ($item->booking->collect*15000);
-            $additional = $add + $item->booking->additional_price;
-            foreach($item->cost as $bill){
-                if($bill->is_susuk == true){
-                    $susuk = $susuk + $bill->price;
-                }else{
-                    $cost = $cost + $bill->price;
-                }
-            }
 
-        }
 
         $data = [
             'transactions' => TrxResource::collection($trx),
@@ -97,38 +80,46 @@ class TrxController extends Controller
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 
-        $fee = 0;
-        $collect = 0;
-        $susuk = 0;
-        $cost = 0;
-        $add = 0;
-        foreach($trx as $item){
-            $guide_fee = $fee + $item->booking->guide_fee;
-            $collect = $collect + ($item->booking->collect*15000);
-            $additional = $add + $item->booking->additional_price;
-            foreach($item->cost as $bill){
-                if($bill->is_susuk == true){
-                    $susuk = $susuk + $bill->price;
-                }else{
-                    $cost = $cost + $bill->price;
+        if($trx->isNotEmpty()) {
+            $fee = 0;
+            $collect = 0;
+            $susuk = 0;
+            $cost = 0;
+            $add = 0;
+            foreach($trx as $item){
+                $guide_fee = $fee + $item->booking->guide_fee;
+                $collect = $collect + ($item->booking->collect*15000);
+                $additional = $add + $item->booking->additional_price;
+                foreach($item->cost as $bill){
+                    if($bill->is_susuk == true){
+                        $susuk = $susuk + $bill->price;
+                    }else{
+                        $cost = $cost + $bill->price;
+                    }
                 }
+
             }
 
-        }
+            $data = [
+                'guide_fee' => 'IDR '. number_format($guide_fee, 0, '.', '.'),
+                'collect' => 'IDR '.number_format($collect, 0, '.', '.'),
+                'cost' => 'IDR '.number_format($cost, 0, '.', '.'),
+                'susuk' => 'IDR '.number_format($susuk, 0, '.', '.'),
+                'additional' => 'IDR '.number_format($additional, 0, '.', '.'),
 
-        $data = [
-            'guide_fee' => 'IDR '. number_format($guide_fee, 0, '.', '.'),
-            'collect' => 'IDR '.number_format($collect, 0, '.', '.'),
-            'cost' => 'IDR '.number_format($cost, 0, '.', '.'),
-            'susuk' => 'IDR '.number_format($susuk, 0, '.', '.'),
-            'additional' => 'IDR '.number_format($additional, 0, '.', '.'),
+            ];
 
-        ];
-
-        if($trx) {
             return $data;
         }else{
-            return ResponseFormatter::error(null, 'failed');
+            $data = [
+                'guide_fee' => 'IDR 0',
+                'collect' => 'IDR 0',
+                'cost' => 'IDR 0',
+                'susuk' => 'IDR 0',
+                'additional' => 'IDR 0',
+
+            ];
+            return $data;
         }
     }
 

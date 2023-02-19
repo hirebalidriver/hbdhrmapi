@@ -39,15 +39,8 @@ class TrxController extends Controller
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 
-
-
-        $data = [
-            'transactions' => TrxResource::collection($trx),
-
-        ];
-
         if($trx) {
-            return $data;
+            return TrxResource::collection($trx);
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

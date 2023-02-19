@@ -67,20 +67,23 @@ class TrxController extends Controller
                                 return $query->whereBetween('date', [$start, $end]);
                             })
                             ->where('guide_id', $user->id)
+                            ->with('booking')
                             ->with('cost')
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 
-        if($trx->isNotEmpty()) {
-            $fee = 0;
+
+            $guide_fee = 0;
             $collect = 0;
             $susuk = 0;
             $cost = 0;
-            $add = 0;
+            $additional = 0;
+        if($trx->isNotEmpty()) {
+
             foreach($trx as $item){
-                $guide_fee = $fee + $item->booking->guide_fee;
+                $guide_fee = $guide_fee + $item->booking->guide_fee;
                 $collect = $collect + ($item->booking->collect*15000);
-                $additional = $add + $item->booking->additional_price;
+                $additional = $additional + $item->booking->additional_price;
                 foreach($item->cost as $bill){
                     if($bill->is_susuk == true){
                         $susuk = $susuk + $bill->price;
@@ -92,7 +95,7 @@ class TrxController extends Controller
             }
 
             $data = [
-                'guide_fee' => 'IDR '. number_format($guide_fee, 0, '.', '.'),
+                'guide_fee' => 'IDR '.number_format($guide_fee, 0, '.', '.'),
                 'collect' => 'IDR '.number_format($collect, 0, '.', '.'),
                 'cost' => 'IDR '.number_format($cost, 0, '.', '.'),
                 'susuk' => 'IDR '.number_format($susuk, 0, '.', '.'),

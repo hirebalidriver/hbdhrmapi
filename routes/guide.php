@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
 
     Route::controller(TrxController::class)->group(function(){
         Route::post('transactions', 'index');
+        Route::post('transactions/total', 'getTotal');
         Route::post('transaction/detail', 'detail');
     });
 

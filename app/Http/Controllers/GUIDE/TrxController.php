@@ -36,7 +36,6 @@ class TrxController extends Controller
                             })
                             ->where('guide_id', $user->id)
                             ->with('booking')
-                            ->with('cost')
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 
@@ -75,7 +74,6 @@ class TrxController extends Controller
                                 return $query->whereBetween('date', [$start, $end]);
                             })
                             ->where('guide_id', $user->id)
-                            ->with('booking')
                             ->with('cost')
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);

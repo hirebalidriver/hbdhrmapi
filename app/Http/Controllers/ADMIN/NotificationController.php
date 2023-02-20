@@ -6,6 +6,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Bookings;
 use App\Models\Guides;
+use App\Models\Notification;
 use App\Services\FCMService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -68,6 +69,16 @@ class NotificationController extends Controller
 
         \App\Jobs\BookingMailJob::dispatch($details);
 
-        return ResponseFormatter::success(null, 'success');
+        $query = Notification::create([
+            'booking_id' => $booking->id,
+            'guide_id' => $guide->id,
+        ]);
+
+        if($query) {
+            return ResponseFormatter::success(null, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+
     }
 }

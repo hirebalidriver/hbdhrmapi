@@ -7,6 +7,7 @@ use App\Http\Controllers\ADMIN\BookingController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
 use App\Http\Controllers\ADMIN\InclusionController;
+use App\Http\Controllers\ADMIN\NotificationController;
 use App\Http\Controllers\ADMIN\PackageController;
 use App\Http\Controllers\ADMIN\PackageRelationController;
 use App\Http\Controllers\ADMIN\StatistikController;
@@ -125,5 +126,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(AvailabilityController::class)->group(function() {
         Route::post('availabilities', 'index');
+    });
+
+    Route::controller(NotificationController::class)->group(function() {
+        Route::post('send/select/guide', 'selectGuide');
     });
 });

@@ -27,7 +27,7 @@ class BookingController extends Controller
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction =$request->input('direction', 'DESC');
 
-        $bookings = Bookings::with('packages', 'guides', 'user', 'options')->orderBy($sortBy, $direction)
+        $bookings = Bookings::with('packages', 'guides', 'user', 'options', 'notification')->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
 
         if($bookings){
@@ -278,7 +278,7 @@ class BookingController extends Controller
         }
 
         $booking = Bookings::where('id', $request->id)
-                    ->with('packages', 'guides', 'user', 'options')->first();
+                    ->with('packages', 'guides', 'user', 'options', 'notification')->first();
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
         if($booking) {
@@ -326,7 +326,7 @@ class BookingController extends Controller
         $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
         $direction =$request->input('direction', 'DESC');
 
-        $find = Bookings::where('date', $request->date)->with('packages', 'guides')
+        $find = Bookings::where('date', $request->date)->with('packages', 'guides', 'notification')
                             ->orderBy($sortBy, $direction)
                             ->paginate($pages);
 
@@ -359,7 +359,7 @@ class BookingController extends Controller
 
         if($request->ref_id != '' || $request->ref_id != null) {
             $find = Bookings::where('ref_id', $request->ref_id)
-                    ->with('packages', 'guides', 'user', 'options')
+                    ->with('packages', 'guides', 'user', 'options', 'notification')
                     ->orderBy($sortBy, $direction)
                     ->paginate($per_page, ['*'], 'page', $page);
         }else{
@@ -376,7 +376,7 @@ class BookingController extends Controller
                         ->when($guest_name, function($query) use ($guest_name){
                             return $query->where('name', 'LIKE', '%'.$guest_name.'%');
                         })
-                        ->with('packages', 'guides', 'user', 'options')
+                        ->with('packages', 'guides', 'user', 'options', 'notification')
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
         }

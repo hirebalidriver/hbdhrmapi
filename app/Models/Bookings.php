@@ -64,4 +64,8 @@ class Bookings extends Model
     public function trx() {
         return $this->hasOne(Transactions::class, 'booking_id', 'id');
     }
+
+    public function notification() {
+        return $this->hasOne(Notification::class, 'booking_id', 'id');
+    }
 }

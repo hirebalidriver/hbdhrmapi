@@ -66,6 +66,6 @@ class Bookings extends Model
     }
 
     public function notification() {
-        return $this->hasOne(Notification::class, 'booking_id', 'id');
+        return $this->hasOne(Notification::class, 'booking_id', 'id')->latest()->limit(1);
     }
 }

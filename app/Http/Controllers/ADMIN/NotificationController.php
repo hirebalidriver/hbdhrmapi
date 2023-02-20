@@ -37,6 +37,7 @@ class NotificationController extends Controller
             [
                 'title' => 'New Booking Hire Bali Driver',
                 'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
+                "sound" => "default",
             ],
             [
                 'title' => 'New Booking Hire Bali Driver',

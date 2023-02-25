@@ -126,6 +126,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(AvailabilityController::class)->group(function() {
         Route::post('availabilities', 'index');
+        Route::post('availability/off/add', 'addDayOff');
+        Route::post('availability/off/del', 'removeDayOff');
     });
 
     Route::controller(NotificationController::class)->group(function() {

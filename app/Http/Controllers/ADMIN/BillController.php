@@ -37,6 +37,7 @@ class BillController extends Controller
     {
         $rules = [
             'booking_id' => ['required'],
+            'destination_id' => ['required'],
             'people' => ['required'],
             'price' => ['required'],
             'is_susuk' => ['required'],
@@ -64,6 +65,7 @@ class BillController extends Controller
 
             $create = Bills::create([
                 'booking_id' => $request->booking_id,
+                'destination_id' => $request->destination_id,
                 'people' => $request->people,
                 'photo' => $upload,
                 'price' => $request->price,

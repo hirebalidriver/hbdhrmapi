@@ -91,6 +91,54 @@ class BillController extends Controller
 
     }
 
+    public function delete(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        DB::beginTransaction();
+
+        try{
+
+            $bill = Bills::find($request->id);
+            if(!$bill){
+                return ResponseFormatter::error(null, 'not found');
+            }
+
+            $booking = Bookings::find($bill->booking_id);
+            if(!$booking){
+                return ResponseFormatter::error(null, 'not found');
+            }
+
+            $booking->bill_total = $booking->bill_total - $bill->price;
+
+            if($bill->is_susuk) {
+                $booking->susuk_guide = $booking->susuk_guide - ($bill->price/2);
+                $booking->susuk_hbd = $booking->susuk_hbd - ($bill->price/2);
+            }else{
+                $booking->tiket_total = $booking->tiket_total - $bill->price;
+            }
+
+            $booking->save();
+
+            $bill->delete();
+
+            DB::commit();
+            return ResponseFormatter::success($bill, 'success');
+
+        }catch (Exception $e) {
+            DB::rollBack();
+            return ResponseFormatter::error(null, 'failed');
+        }
+
+    }
+
     public function detail(Request $request)
     {
 

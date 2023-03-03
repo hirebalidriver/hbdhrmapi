@@ -4,6 +4,7 @@ use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\AvailabilityController;
 use App\Http\Controllers\ADMIN\BillController;
 use App\Http\Controllers\ADMIN\BookingController;
+use App\Http\Controllers\ADMIN\DestinationController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
 use App\Http\Controllers\ADMIN\InclusionController;
@@ -124,6 +125,14 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('bill/filter', 'filter');
         Route::post('bill/add', 'add');
         Route::post('bill/delete', 'delete');
+    });
+
+    Route::controller(DestinationController::class)->group(function() {
+        Route::post('destinations', 'index');
+        Route::post('destination/find', 'find');
+        Route::post('destination/add', 'add');
+        Route::post('destination/update', 'update');
+        Route::post('destination/delete', 'delete');
     });
 
     Route::controller(AvailabilityController::class)->group(function() {

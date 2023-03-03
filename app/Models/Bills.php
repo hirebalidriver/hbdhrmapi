@@ -12,6 +12,7 @@ class Bills extends Model
     protected $fillable = [
         'booking_id',
         'destination_id',
+        'destination_name',
         'photo',
         'people',
         'price',

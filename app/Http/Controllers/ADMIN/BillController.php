@@ -17,12 +17,21 @@ class BillController extends Controller
 
     public function index(Request $request)
     {
+        $rules = [
+            'booking_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
         $direction =$request->input('direction', 'DESC');
 
-        $bookings = Bookings::with('packages', 'guides', 'user', 'options')->where('status', '>=', 2)
+        $bookings = Bills::where('booking_id', $request->booking_id)
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
 
@@ -37,7 +46,6 @@ class BillController extends Controller
     {
         $rules = [
             'booking_id' => ['required'],
-            'destination_id' => ['required'],
             'people' => ['required'],
             'price' => ['required'],
             'is_susuk' => ['required'],
@@ -66,6 +74,7 @@ class BillController extends Controller
             $create = Bills::create([
                 'booking_id' => $request->booking_id,
                 'destination_id' => $request->destination_id,
+                'destination_name' => $request->destination_name,
                 'people' => $request->people,
                 'photo' => $upload,
                 'price' => $request->price,

@@ -34,7 +34,8 @@ class TrxController extends Controller
             $user = Auth::user();
 
             $booking = Bookings::where('id', $request->booking_id)
-                            ->where('status', 3)->first();
+                            ->where('status', 2)
+                            ->orWhere('status', 3)->first();
             if(!$booking) return ResponseFormatter::error(null, 'not found booking or booking has been completed');
 
             //TOTAL FEE

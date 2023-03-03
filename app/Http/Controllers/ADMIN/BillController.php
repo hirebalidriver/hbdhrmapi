@@ -4,9 +4,12 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\GENERAL\ImageUploadController;
 use App\Models\Bills;
 use App\Models\Bookings;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class BillController extends Controller
@@ -30,11 +33,70 @@ class BillController extends Controller
         }
     }
 
+    public function add(Request $request)
+    {
+        $rules = [
+            'booking_id' => ['required'],
+            'people' => ['required'],
+            'price' => ['required'],
+            'is_susuk' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        DB::beginTransaction();
+
+        try{
+
+            $booking = Bookings::where('id', $request->booking_id)->first();
+            if(!$booking){
+                return ResponseFormatter::error(null, 'not found');
+            }
+
+            $upload = '';
+
+            if($request->photo != null || $request->photo != ''){
+                $upload = ImageUploadController::upload($request->photo, $booking->guide_id, 'bill');
+            }
+
+            $create = Bills::create([
+                'booking_id' => $request->booking_id,
+                'people' => $request->people,
+                'photo' => $upload,
+                'price' => $request->price,
+                'note' => $request->note ? $request->note : null,
+                'is_susuk' => $request->is_susuk,
+            ]);
+
+            $booking->bill_total = $booking->bill_total + $request->price;
+
+            if($request->is_susuk) {
+                $booking->susuk_guide = $booking->susuk_guide + ($request->price/2);
+                $booking->susuk_hbd = $booking->susuk_hbd + ($request->price/2);
+            }else{
+                $booking->tiket_total = $booking->tiket_total + $request->price;
+            }
+            $booking->save();
+
+            DB::commit();
+            return ResponseFormatter::success($create, 'success');
+
+        }catch (Exception $e) {
+            DB::rollBack();
+            return ResponseFormatter::error(null, 'failed');
+        }
+
+    }
+
     public function detail(Request $request)
     {
 
         $rules = [
-            'booking_id' => ['required']
+            'booking_id' => ['required'],
+
         ];
 
         $validator = Validator::make($request->all(), $rules);

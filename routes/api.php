@@ -122,6 +122,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('bills', 'index');
         Route::post('bill/detail', 'detail');
         Route::post('bill/filter', 'filter');
+        Route::post('bill/add', 'add');
     });
 
     Route::controller(AvailabilityController::class)->group(function() {

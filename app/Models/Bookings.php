@@ -16,6 +16,8 @@ class Bookings extends Model
         'time',
         'supplier',
         'date',
+        'date_end',
+        'custom',
         'note',
         'status', //0 = pending, 1 = confirm, 2 = cancel, 3 = need approve, 4 = completed, 5 = reject
         'ref_id',
@@ -42,6 +44,7 @@ class Bookings extends Model
 
     protected $casts = [
         'date' => 'datetime:d M Y',
+        'date_end' => 'datetime:d M Y',
         'time' => 'datetime:H:i',
     ];
 

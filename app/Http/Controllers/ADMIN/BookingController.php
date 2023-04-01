@@ -53,30 +53,64 @@ class BookingController extends Controller
 
         $option = Tours::where('id', $request->option_id)->first();
 
-        $create = Bookings::create([
-            'ref_id' => $request->ref_id,
-            'package_id' => $request->package_id,
-            'option_id' => $request->option_id,
-            'guide_id' => 0,
-            'date' => Carbon::parse($request->date)->format('Y-m-d'),
-            'time' => $request->time,
-            'supplier' => $request->supplier,
-            'status' => 2,
-            'note' => $request->note,
-            'note' => $request->note,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'hotel' => $request->hotel,
-            'status_payment' => $request->status_payment,
-            'collect' => $request->collect,
-            'created_by' => $user->id,
-            'country' => $request->country,
-            'adult' => $request->adult,
-            'child' => $request->child,
-            'price' => $request->price,
-            'guide_fee' => $option->guide_fee,
-            'down_payment' => $request->down_payment,
-        ]);
+        $date_start = Carbon::parse($request->date)->format('Y-m-d');
+        $date_end = null;
+        if($request->date_end){
+            $date_end = Carbon::parse($request->date_end)->format('Y-m-d');
+        }
+
+        if($request->custom) {
+            $create = Bookings::create([
+                'ref_id' => $request->ref_id,
+                'package_id' => 0,
+                'option_id' => 0,
+                'guide_id' => 0,
+                'date' => $date_start,
+                'date_end' => $date_end,
+                'time' => $request->time,
+                'supplier' => $request->supplier,
+                'status' => 2,
+                'note' => $request->note,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'hotel' => $request->hotel,
+                'status_payment' => $request->status_payment,
+                'collect' => $request->collect,
+                'created_by' => $user->id,
+                'country' => $request->country,
+                'adult' => $request->adult,
+                'child' => $request->child,
+                'price' => $request->price,
+                'guide_fee' => $request->guide_fee,
+                'down_payment' => $request->down_payment,
+                'custom' => $request->custom,
+            ]);
+        }else{
+            $create = Bookings::create([
+                'ref_id' => $request->ref_id,
+                'package_id' => $request->package_id,
+                'option_id' => $request->option_id,
+                'guide_id' => 0,
+                'date' => $date_start,
+                'date_end' => $date_end,
+                'time' => $request->time,
+                'supplier' => $request->supplier,
+                'status' => 2,
+                'note' => $request->note,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'hotel' => $request->hotel,
+                'status_payment' => $request->status_payment,
+                'collect' => $request->collect,
+                'created_by' => $user->id,
+                'country' => $request->country,
+                'adult' => $request->adult,
+                'child' => $request->child,
+                'price' => $request->price,
+                'guide_fee' => $option->guide_fee,
+                'down_payment' => $request->down_payment,
+            ]);
+        }
 
 
         if($create) {
@@ -101,9 +135,15 @@ class BookingController extends Controller
         $booking = Bookings::find($request->id);
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
+        $date_start = Carbon::parse($request->date)->format('Y-m-d');
+        $date_end = null;
+        if($request->date_end){
+            $date_end = Carbon::parse($request->date_end)->format('Y-m-d');
+        }
+
         $booking->package_id = $request->package_id;
-        // $booking->guide_id = $request->guide_id;
-        $booking->date = Carbon::parse($request->date)->format('Y-m-d');
+        $booking->date = $date_start;
+        $booking->date_end = $date_end;
         $booking->time = $request->time;
         $booking->supplier = $request->supplier;
         $booking->status = $request->status;
@@ -120,6 +160,11 @@ class BookingController extends Controller
         $booking->child = $request->child;
         $booking->price = $request->price;
         $booking->down_payment = $request->down_payment;
+
+        if($request->custom != null AND $request->custom != "") {
+            $booking->guide_fee = $request->guide_fee;
+            $booking->custom = $request->custom;
+        }
 
         if($booking->save()) {
             return ResponseFormatter::success($booking, 'success');
@@ -140,8 +185,6 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-
-
         DB::beginTransaction();
         try{
 
@@ -159,6 +202,29 @@ class BookingController extends Controller
             $booking->guide_id = $request->guide_id;
 
             $booking->save();
+
+            if($booking->date_end != null AND $booking->date_end != ''){
+
+                $date = $booking->date;
+                $interval = $date->diff($booking->date_end);
+                $days = $interval->format('%a');
+
+                for($i=0;$i<=$days;$i++){
+                    Availability::where('booking_id', $booking->id)
+                                    ->whereDate('date', $date)
+                                    ->delete();
+
+                    Availability::create([
+                                    'guide_id' => $guide->id,
+                                    'booking_id' => $booking->id,
+                                    'date' => $date,
+                                    'note' => 'tour',
+                                ]);
+
+                    $date = $date->addDays(1);
+
+                }
+            }
 
             Availability::where('booking_id', $booking->id)
                                     ->whereDate('date', $booking->date)

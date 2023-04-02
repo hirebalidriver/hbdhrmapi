@@ -142,8 +142,7 @@ class BookingController extends Controller
         }
 
         $booking->package_id = $request->package_id;
-        $booking->date = $date_start;
-        $booking->date_end = $date_end;
+
         $booking->time = $request->time;
         $booking->supplier = $request->supplier;
         $booking->status = $request->status;
@@ -164,6 +163,18 @@ class BookingController extends Controller
         if($request->custom != null AND $request->custom != "") {
             $booking->guide_fee = $request->guide_fee;
             $booking->custom = $request->custom;
+        }
+
+        if($date_start) {
+            $booking->date = $date_start;
+            $booking->date_end = $date_end;
+
+            $deleteAvai = Availability::where('booking_id', $booking->id)->delete();
+            if($deleteAvai) {
+                return ResponseFormatter::success($booking, 'success');
+            }else{
+                return ResponseFormatter::error(null, 'failed');
+            }
         }
 
         if($booking->save()) {

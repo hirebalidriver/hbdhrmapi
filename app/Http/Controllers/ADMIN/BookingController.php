@@ -14,6 +14,7 @@ use App\Services\FCMService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -53,20 +54,31 @@ class BookingController extends Controller
 
         $option = Tours::where('id', $request->option_id)->first();
 
-        $date_start = Carbon::parse($request->date)->format('Y-m-d');
-        $date_end = null;
-        if($request->date_end){
-            $date_end = Carbon::parse($request->date_end)->format('Y-m-d');
+        $count = count($request->date);
+        $sortedDate = Arr::sort($request->date);
+
+        // dd(head($sortedDate));
+
+        $date_start = Carbon::parse(head($sortedDate))->format('Y-m-d');
+
+        if($count > 1){
+            $isMulti = 1;
+            $dateAll = $sortedDate;
+            $refId0 = $request->ref_id.'_MULTIDAYS0';
+        }else{
+            $isMulti = 0;
+            $dateAll = null;
+            $refId0 = $request->ref_id;
         }
 
         if($request->custom) {
+
             $create = Bookings::create([
-                'ref_id' => $request->ref_id,
+                'ref_id' => $refId0,
                 'package_id' => 0,
                 'option_id' => 0,
                 'guide_id' => 0,
                 'date' => $date_start,
-                'date_end' => $date_end,
                 'time' => $request->time,
                 'supplier' => $request->supplier,
                 'status' => 2,
@@ -85,14 +97,49 @@ class BookingController extends Controller
                 'down_payment' => $request->down_payment,
                 'custom' => $request->custom,
             ]);
+
+            if($count > 1){
+                $sortedDate = array_diff($sortedDate, array($date_start));
+                $n = 1;
+                foreach($sortedDate as $item){
+                    $date = Carbon::parse($item)->format('Y-m-d');
+                    $create = Bookings::create([
+                        'ref_id' => $request->ref_id.'_MULTIDAYS'.$n,
+                        'package_id' => 0,
+                        'option_id' => 0,
+                        'guide_id' => 0,
+                        'date' => $date,
+                        'time' => $request->time,
+                        'supplier' => $request->supplier,
+                        'status' => 2,
+                        'note' => $request->note,
+                        'name' => $request->name,
+                        'phone' => $request->phone,
+                        'hotel' => $request->hotel,
+                        'status_payment' => $request->status_payment,
+                        'collect' => 0,
+                        'created_by' => $user->id,
+                        'country' => $request->country,
+                        'adult' => $request->adult,
+                        'child' => $request->child,
+                        'price' => 0,
+                        'guide_fee' => 0,
+                        'down_payment' => 0,
+                        'custom' => $request->custom,
+                        'is_multi_days' => $isMulti,
+                    ]);
+                    $n++;
+                }
+
+            }
+
         }else{
             $create = Bookings::create([
-                'ref_id' => $request->ref_id,
+                'ref_id' => $refId0,
                 'package_id' => $request->package_id,
                 'option_id' => $request->option_id,
                 'guide_id' => 0,
                 'date' => $date_start,
-                'date_end' => $date_end,
                 'time' => $request->time,
                 'supplier' => $request->supplier,
                 'status' => 2,
@@ -110,6 +157,40 @@ class BookingController extends Controller
                 'guide_fee' => $option->guide_fee,
                 'down_payment' => $request->down_payment,
             ]);
+
+            if($count > 1){
+                $sortedDate = array_diff($sortedDate, array($date_start));
+                $n = 1;
+                foreach($sortedDate as $item){
+                    $date = Carbon::parse($item)->format('Y-m-d');
+                    $create = Bookings::create([
+                        'ref_id' => $request->ref_id.'_MULTIDAYS'.$n,
+                        'package_id' => $request->package_id,
+                        'option_id' => $request->option_id,
+                        'guide_id' => 0,
+                        'date' => $date_start,
+                        'time' => $request->time,
+                        'supplier' => $request->supplier,
+                        'status' => 2,
+                        'note' => $request->note,
+                        'name' => $request->name,
+                        'phone' => $request->phone,
+                        'hotel' => $request->hotel,
+                        'status_payment' => $request->status_payment,
+                        'collect' => 0,
+                        'created_by' => $user->id,
+                        'country' => $request->country,
+                        'adult' => $request->adult,
+                        'child' => $request->child,
+                        'price' => 0,
+                        'guide_fee' => 0,
+                        'down_payment' => 0,
+                        'is_multi_days' => $isMulti,
+                    ]);
+                    $n++;
+                }
+
+            }
         }
 
 
@@ -118,6 +199,16 @@ class BookingController extends Controller
         }else{
             return ResponseFormatter::error(null, 'failed');
         }
+    }
+
+    function array_sort_by_column(&$array, $column, $direction = SORT_ASC) {
+        $reference_array = array();
+
+        foreach($array as $key => $row) {
+            $reference_array[$key] = $row[$column];
+        }
+
+        array_multisort($reference_array, $direction, $array);
     }
 
     public function update(Request $request)

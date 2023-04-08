@@ -40,6 +40,7 @@ class Bookings extends Model
         'tiket_total',
         'additional_price',
         'note_price',
+        'is_multi_days',
     ];
 
     protected $casts = [

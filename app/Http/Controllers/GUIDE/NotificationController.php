@@ -10,18 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
 
-        $rules = [
-            'guide_id' => ['required'],
-        ];
+        $user = auth()->guard('guide')->user();
 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
-
-
-        $query = Notification::where('guide_id', $request->guide_id)
+        $query = Notification::where('guide_id', $user->id)
                         ->where('is_open', 0)->count();
 
         if($query){

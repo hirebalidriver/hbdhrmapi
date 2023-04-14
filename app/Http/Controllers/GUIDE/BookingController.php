@@ -95,6 +95,7 @@ class BookingController extends Controller
                         ->update(['is_open' => 1]);
 
         $query = Bookings::with('packages', 'guides', 'user', 'options')
+                        ->withCount('notification')
                         ->where('guide_id', $user->id)
                         ->where('id', $request->id)
                         ->first();

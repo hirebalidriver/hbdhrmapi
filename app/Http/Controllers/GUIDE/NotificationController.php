@@ -25,9 +25,15 @@ class NotificationController extends Controller
                         ->where('is_open', 0)->count();
 
         if($query){
-            return ResponseFormatter::success($query, 'success');
+            $data = [
+                'count' => $query,
+            ];
+            return ResponseFormatter::success($data, 'success');
         }else{
-            return ResponseFormatter::error(null, 'failed');
+            $data = [
+                'count' => $query,
+            ];
+            return ResponseFormatter::error($data, 'success');
         }
 
     }

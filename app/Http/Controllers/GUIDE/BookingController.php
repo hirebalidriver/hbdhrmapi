@@ -53,7 +53,7 @@ class BookingController extends Controller
 
         if($request->ref_id != '' || $request->ref_id != null) {
             $find = Bookings::where('ref_id', $request->ref_id)
-                    ->with('packages', 'guides', 'user', 'options')
+                    // ->with('packages', 'guides', 'user', 'options')
                     ->withCount('notification')
                     ->where('guide_id', $user->id)
                     ->orderBy($sortBy, $direction)
@@ -73,7 +73,7 @@ class BookingController extends Controller
                             return $query->where('name', 'LIKE', '%'.$guest_name.'%');
                         })
                         ->where('guide_id', $user->id)
-                        ->with('packages', 'guides', 'user', 'options')
+                        // ->with('packages', 'guides', 'user', 'options')
                         ->withCount('notification')
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);

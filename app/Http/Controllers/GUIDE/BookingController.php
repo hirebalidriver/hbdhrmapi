@@ -8,6 +8,7 @@ use App\Http\Controllers\GENERAL\ImageUploadController;
 use App\Models\Bills;
 use App\Models\Bookings;
 use App\Models\Guides;
+use App\Models\Notification;
 use App\Models\Transactions;
 use Exception;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class BookingController extends Controller
         if($request->ref_id != '' || $request->ref_id != null) {
             $find = Bookings::where('ref_id', $request->ref_id)
                     ->with('packages', 'guides', 'user', 'options')
+                    ->withCount('notification')
                     ->where('guide_id', $user->id)
                     ->orderBy($sortBy, $direction)
                     ->paginate($per_page, ['*'], 'page', $page);
@@ -72,6 +74,7 @@ class BookingController extends Controller
                         })
                         ->where('guide_id', $user->id)
                         ->with('packages', 'guides', 'user', 'options')
+                        ->withCount('notification')
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
         }
@@ -86,6 +89,10 @@ class BookingController extends Controller
     public function detail(Request $request)
     {
         $user = auth()->guard('guide')->user();
+
+        $notif = Notification::where('booking_id', $request->id)
+                        ->where('guide_id', $user->id)
+                        ->update(['is_open' => 1]);
 
         $query = Bookings::with('packages', 'guides', 'user', 'options')
                         ->where('guide_id', $user->id)

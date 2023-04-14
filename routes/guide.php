@@ -4,6 +4,7 @@ use App\Http\Controllers\GUIDE\AuthController;
 use App\Http\Controllers\GUIDE\AvailabilityController;
 use App\Http\Controllers\GUIDE\BalanceController;
 use App\Http\Controllers\GUIDE\BookingController;
+use App\Http\Controllers\GUIDE\NotificationController;
 use App\Http\Controllers\GUIDE\TrxController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,5 +60,9 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
         Route::post('availability', 'index');
         Route::post('availability/add', 'add');
         Route::post('availability/delete', 'delete');
+    });
+
+    Route::controller(NotificationController::class)->group(function() {
+        Route::post('notifications/count', 'index');
     });
 });

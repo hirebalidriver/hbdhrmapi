@@ -70,6 +70,9 @@ class NotificationController extends Controller
 
         \App\Jobs\BookingMailJob::dispatch($details);
 
+        Notification::where('booking_id', $booking->id)
+                    ->where('guide_id', $guide->id)->delete();
+
         $query = Notification::create([
             'booking_id' => $booking->id,
             'guide_id' => $guide->id,

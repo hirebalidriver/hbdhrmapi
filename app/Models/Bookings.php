@@ -17,6 +17,7 @@ class Bookings extends Model
         'supplier',
         'date',
         'date_end',
+        'is_custom',
         'custom',
         'note',
         'status', //0 = pending, 1 = confirm, 2 = cancel, 3 = need approve, 4 = completed, 5 = reject

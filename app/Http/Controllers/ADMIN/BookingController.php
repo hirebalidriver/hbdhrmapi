@@ -42,6 +42,7 @@ class BookingController extends Controller
     {
         $rules = [
             'date' => ['required'],
+            'is_custom' => ['required'],
             'ref_id' => ['unique:bookings,ref_id']
         ];
 
@@ -71,7 +72,7 @@ class BookingController extends Controller
             $refId0 = $request->ref_id;
         }
 
-        if($request->custom) {
+        if($request->is_custom) {
 
             $create = Bookings::insertGetId([
                 'ref_id' => $refId0,
@@ -95,6 +96,7 @@ class BookingController extends Controller
                 'price' => $request->price,
                 'guide_fee' => $request->guide_fee,
                 'down_payment' => $request->down_payment,
+                'is_custom' => $request->is_custom,
                 'custom' => $request->custom,
                 'is_multi_days' => $isMulti,
             ]);
@@ -126,6 +128,7 @@ class BookingController extends Controller
                         'price' => 0,
                         'guide_fee' => 0,
                         'down_payment' => 0,
+                        'is_custom' => $request->is_custom,
                         'custom' => $request->custom,
                         'is_multi_days' => $create,
                     ]);
@@ -158,6 +161,7 @@ class BookingController extends Controller
                 'guide_fee' => $option->guide_fee,
                 'down_payment' => $request->down_payment,
                 'is_multi_days' => $isMulti,
+                'is_custom' => $request->is_custom,
             ]);
 
             if($count > 1){
@@ -188,6 +192,7 @@ class BookingController extends Controller
                         'guide_fee' => 0,
                         'down_payment' => 0,
                         'is_multi_days' => $create,
+                        'is_custom' => $request->is_custom,
                     ]);
                     $n++;
                 }
@@ -254,12 +259,14 @@ class BookingController extends Controller
         $booking->price = $request->price;
         $booking->down_payment = $request->down_payment;
 
-        if($request->custom != null AND $request->custom != "") {
+        if($request->is_custom) {
             $booking->guide_fee = $request->guide_fee;
+            $booking->is_custom = $request->is_custom;
             $booking->custom = $request->custom;
         }else{
             $option = Tours::where('id', $request->option_id)->first();
             $booking->guide_fee = $option->guide_fee;
+            $booking->is_custom = $request->is_custom;
             $booking->custom = null;
         }
 

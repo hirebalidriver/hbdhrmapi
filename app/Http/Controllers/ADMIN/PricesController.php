@@ -24,7 +24,7 @@ class PricesController extends Controller
 
         $query = Prices::where('tour_id', $request->tour_id)
                     ->where('type', $request->type)
-                    ->orderBy('id', 'DESC')->get();
+                    ->orderBy('people', 'ASC')->get();
 
         if($query){
             return ResponseFormatter::success($query, 'success');

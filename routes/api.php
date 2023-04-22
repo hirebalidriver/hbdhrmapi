@@ -14,6 +14,7 @@ use App\Http\Controllers\ADMIN\PackageRelationController;
 use App\Http\Controllers\ADMIN\StatistikController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ADMIN\TrxController;
+use App\Http\Controllers\FRONT\TourController;
 use App\Http\Controllers\ToursRelationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -143,5 +144,14 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(NotificationController::class)->group(function() {
         Route::post('send/select/guide', 'selectGuide');
+    });
+});
+
+
+// FRONT
+Route::group(['prefix' => 'front'], function () {
+    Route::controller(TourController::class)->group(function() {
+        Route::get('tour/detail', 'tourByID');
+        Route::get('tour/options', 'optionsByTourID');
     });
 });

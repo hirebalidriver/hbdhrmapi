@@ -18,4 +18,8 @@ class Tours extends Model
         'inclusions',
         'exclusions'
     ];
+
+    public function prices() {
+        return $this->hasMany(Prices::class, 'tour_id', 'id');
+    }
 }

@@ -43,10 +43,12 @@ return [
         'api' => [
             'driver' => 'sanctum',
             'provider' => 'users',
+            'hash' => false,
         ],
         'guide' => [
             'driver' => 'sanctum',
             'provider' => 'guides',
+            'hash' => false,
         ],
     ],
 

@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Packages extends Model
+class Prices extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'thumb',
-        'note',
-        'status',
+        "tour_id",
+        "people",
+        "people_end",
+        "type",
+        "price",
+        "is_active",
     ];
-
 }

@@ -11,11 +11,13 @@ use App\Http\Controllers\ADMIN\InclusionController;
 use App\Http\Controllers\ADMIN\NotificationController;
 use App\Http\Controllers\ADMIN\PackageController;
 use App\Http\Controllers\ADMIN\PackageRelationController;
+use App\Http\Controllers\ADMIN\PricesController;
 use App\Http\Controllers\ADMIN\StatistikController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ADMIN\TrxController;
 use App\Http\Controllers\FRONT\TourController;
 use App\Http\Controllers\ToursRelationController;
+use App\Models\Prices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +95,12 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('package/update', 'update');
         Route::post('package/find', 'find');
         Route::post('package/delete', 'delete');
+    });
+
+    Route::controller(PricesController::class)->group(function() {
+        Route::post('prices', 'index');
+        Route::post('price/add', 'add');
+        Route::post('price/delete', 'delete');
     });
 
     Route::controller(PackageRelationController::class)->group(function() {

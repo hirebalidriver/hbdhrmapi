@@ -22,4 +22,8 @@ class Tours extends Model
     public function prices() {
         return $this->hasMany(Prices::class, 'tour_id', 'id');
     }
+
+    public function times() {
+        return $this->hasMany(Times::class, 'tour_id', 'id');
+    }
 }

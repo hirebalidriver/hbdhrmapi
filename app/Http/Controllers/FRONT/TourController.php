@@ -48,7 +48,7 @@ class TourController extends Controller
         $find = Tours::select('tours.*')
                 ->join('package_relations', 'package_relations.tour_id', 'tours.id')
                 ->where('package_relations.package_id', $request->id)
-                ->with('prices')
+                ->with('prices', 'times')
                 ->where('tours.status', 1)->get();
 
 

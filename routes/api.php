@@ -13,6 +13,7 @@ use App\Http\Controllers\ADMIN\PackageController;
 use App\Http\Controllers\ADMIN\PackageRelationController;
 use App\Http\Controllers\ADMIN\PricesController;
 use App\Http\Controllers\ADMIN\StatistikController;
+use App\Http\Controllers\ADMIN\TimeController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ADMIN\TrxController;
 use App\Http\Controllers\FRONT\TourController;
@@ -152,6 +153,12 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
 
     Route::controller(NotificationController::class)->group(function() {
         Route::post('send/select/guide', 'selectGuide');
+    });
+
+    Route::controller(TimeController::class)->group(function() {
+        Route::post('times/by/tour', 'index');
+        Route::post('time/add', 'add');
+        Route::post('time/delete', 'delete');
     });
 });
 

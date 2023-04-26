@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ADMIN;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\GENERAL\ImageUploadController;
 use App\Models\Packages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,8 +40,11 @@ class PackageController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
+        $thumb = ImageUploadController::upload($request->thumb, 'web', 'package');
+
         $create = Packages::create([
             'title' => $request->title,
+            'thumb' => $thumb,
             'note' => $request->note,
             'status' => $request->status,
         ]);

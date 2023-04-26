@@ -40,11 +40,10 @@ class PackageController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $thumb = ImageUploadController::upload($request->thumb, 'web', 'package');
+
 
         $create = Packages::create([
             'title' => $request->title,
-            'thumb' => $thumb,
             'note' => $request->note,
             'status' => $request->status,
         ]);
@@ -68,7 +67,14 @@ class PackageController extends Controller
         }
 
         $update = Packages::find($request->id);
+
+        if($request->thumb) {
+            $thumb = ImageUploadController::upload($request->thumb, 'web', 'package');
+            $update->thumb = $thumb;
+        }
+
         $update->title = $request->title;
+
         $update->note = $request->note;
         $update->status = $request->status;
 

@@ -17,6 +17,7 @@ use App\Http\Controllers\ADMIN\TimeController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ADMIN\TrxController;
 use App\Http\Controllers\FRONT\TourController;
+use App\Http\Controllers\FRONT\WishlistController;
 use App\Http\Controllers\ToursRelationController;
 use App\Models\Prices;
 use Illuminate\Http\Request;
@@ -168,5 +169,12 @@ Route::group(['prefix' => 'front'], function () {
     Route::controller(TourController::class)->group(function() {
         Route::get('tour/detail', 'tourByID');
         Route::get('tour/options', 'optionsByTourID');
+    });
+
+    Route::controller(WishlistController::class)->group(function() {
+        Route::get('wishlist/detail', 'detail');
+        Route::get('wishlist/add', 'add');
+        Route::get('wishlist/booking', 'booking');
+        Route::get('wishlist/booking/detail', 'findBooking');
     });
 });

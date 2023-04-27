@@ -23,6 +23,7 @@ class Bookings extends Model
         'status', //0 = pending, 1 = confirm, 2 = cancel, 3 = need approve, 4 = completed, 5 = reject
         'ref_id',
         'name',
+        'email',
         'phone',
         'hotel',
         'status_payment',

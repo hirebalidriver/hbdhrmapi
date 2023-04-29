@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class WishlistController extends Controller
 {
@@ -33,10 +34,12 @@ class WishlistController extends Controller
                         ->first();
 
         $priceAdult = Prices::where('tour_id', $find->tour_id)
+                        ->where('type', 1)
                         ->where('people', '<=', $find->adult)
                         ->where('people_end', '>=', $find->adult)
                         ->first();
         $priceChild = Prices::where('tour_id', $find->tour_id)
+                        ->where('type', 2)
                         ->where('people', '<=', $find->child)
                         ->where('people_end', '>=', $find->child)
                         ->first();
@@ -175,9 +178,11 @@ class WishlistController extends Controller
                 'down_payment' => 0,
                 'is_multi_days' => 0,
                 'is_custom' => 0,
+                'paypalEmail' => $request->paypalEmail,
             ]);
 
             DB::commit();
+
 
             return ResponseFormatter::success($create, 'success');
 

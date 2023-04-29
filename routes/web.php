@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,9 @@ Auth::routes();
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('create-transaction', [TestController::class, 'createTransaction'])->name('createTransaction');
+Route::get('process-transaction', [TestController::class, 'processTransaction'])->name('processTransaction');
+Route::get('success-transaction', [TestController::class, 'successTransaction'])->name('successTransaction');
+Route::get('cancel-transaction', [TestController::class, 'cancelTransaction'])->name('cancelTransaction');
+

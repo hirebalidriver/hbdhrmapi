@@ -43,6 +43,7 @@ class Bookings extends Model
         'additional_price',
         'note_price',
         'is_multi_days',
+        'paypalEmail',
     ];
 
     protected $casts = [

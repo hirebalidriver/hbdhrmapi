@@ -14,6 +14,7 @@ class Packages extends Model
         'thumb',
         'note',
         'status',
+        'tour_code',
     ];
 
 }

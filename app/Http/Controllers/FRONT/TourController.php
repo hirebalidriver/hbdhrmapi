@@ -23,7 +23,7 @@ class TourController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $find = Packages::find($request->id);
+        $find = Packages::where('tour_code', $request->id)->first();
 
         if($find) {
             return ResponseFormatter::success($find, 'success');
@@ -45,9 +45,11 @@ class TourController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
+        $package = Packages::where('tour_code', $request->id)->first();
+
         $find = Tours::select('tours.*')
                 ->join('package_relations', 'package_relations.tour_id', 'tours.id')
-                ->where('package_relations.package_id', $request->id)
+                ->where('package_relations.package_id', $package->id)
                 ->with('prices', 'times')
                 ->where('tours.status', 1)->get();
 

@@ -46,6 +46,7 @@ class PackageController extends Controller
             'title' => $request->title,
             'note' => $request->note,
             'status' => $request->status,
+            'tour_code' => $request->tour_code,
         ]);
 
         if($create) {
@@ -77,6 +78,7 @@ class PackageController extends Controller
 
         $update->note = $request->note;
         $update->status = $request->status;
+        $update->tour_code = $request->tour_code;
 
 
         if($update->save()) {

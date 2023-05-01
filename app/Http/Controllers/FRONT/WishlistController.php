@@ -161,7 +161,7 @@ class WishlistController extends Controller
                 'date' => $wishlist->date,
                 'time' => $wishlist->time,
                 'supplier' => 'website',
-                'status' => 1,
+                'status' => 0,
                 'note' => $request->note,
                 'name' => $name,
                 'email' => $request->email,

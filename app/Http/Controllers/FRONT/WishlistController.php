@@ -87,7 +87,8 @@ class WishlistController extends Controller
             return ResponseFormatter::error(null, 'Time not found');
         }
 
-        $date = Carbon::parse($request->date)->format("Y-m-d");
+        $dateObject = Carbon::createFromFormat('Y-d-m', $request->date);
+        $date = Carbon::parse($dateObject)->format("Y-m-d");
 
         $query = Wishlists::create([
             'package_id' => $package->id,

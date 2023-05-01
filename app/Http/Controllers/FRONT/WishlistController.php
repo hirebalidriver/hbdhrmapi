@@ -73,7 +73,7 @@ class WishlistController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $package = Packages::find($request->package_id);
+        $package = Packages::where('tour_code',$request->package_id)->first();
         if(!$package) {
             return ResponseFormatter::error(null, 'Tour not found');
         }
@@ -88,8 +88,8 @@ class WishlistController extends Controller
         }
 
         $query = Wishlists::create([
-            'package_id' => $request->package_id,
-            'tour_id' => $request->tour_id,
+            'package_id' => $package->id,
+            'tour_id' => $tour->id,
             'time' => $time->time,
             'date' => $request->date,
             'adult' => $request->adult,

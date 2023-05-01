@@ -87,11 +87,13 @@ class WishlistController extends Controller
             return ResponseFormatter::error(null, 'Time not found');
         }
 
+        $date = Carbon::parse($request->date)->format("Y-m-d");
+
         $query = Wishlists::create([
             'package_id' => $package->id,
             'tour_id' => $tour->id,
             'time' => $time->time,
-            'date' => $request->date,
+            'date' => $date,
             'adult' => $request->adult,
             'child' => $request->child,
         ]);

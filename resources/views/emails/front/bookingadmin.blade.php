@@ -38,24 +38,23 @@
                                                 <p style="margin: 0 0 16px;">Hi Hirebalidriver,</p>
 
                                                 <h2 style='color: #077944; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                   Order #11018
+                                                   Order {{$details['ref']}}
                                                 </h2>
                                                 <h2 style='color: #2f3134; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                   Half Day Ubud Tour Ubud Unique Spots
+                                                    {{$details['tour']}}
                                                 </h2>
-                                                <p style="margin: 0 0 16px;"><strong>Option:</strong> Tour with Lunch</p>
-                                                <p style="margin: 0 0 16px;"><strong>Date:</strong> 01 January 2023</p>
-                                                <p style="margin: 0 0 16px;"><strong>Time:</strong> 8.00 AM</p>
-                                                 <p style="margin: 0 0 16px;"><strong>Name:</strong> Andre Nata</p>
-                                                 <p style="margin: 0 0 16px;"><strong>Adult:</strong> 2 x USD 59</p>
-                                                 <p style="margin: 0 0 16px;"><strong>Child:</strong> 2 x USD 35</p>
-                                                 <p style="margin: 0 0 16px;"><strong>Total:</strong> USD XXX</p>
-                                                 <p style="margin: 0 0 16px;"><strong>Email:</strong> buyer@gmail.com</p>
-                                                 <p style="margin: 0 0 16px;"><strong>Phone:</strong> Indonesia 281338123456</p>
-                                                <p style="margin: 0 0 16px;"><strong>Hotel:</strong> My Hotel</p>
-                                                <p style="margin: 0 0 16px;"><strong>Hotel address:</strong> Ubud</p>
-                                                <p style="margin: 0 0 16px;"><strong>Payment:</strong> Pay Now - Paypal (PAYPAL ID)</p>
-                                                <p style="margin: 0 0 16px;"><strong>Special requirements:</strong> Test order</p>
+                                                <p style="margin: 0 0 16px;"><strong>Option:</strong> {{$details['option']}}</p>
+                                                <p style="margin: 0 0 16px;"><strong>Date:</strong> {{$details['date']}}</p>
+                                                <p style="margin: 0 0 16px;"><strong>Time:</strong> {{$details['time']}}</p>
+                                                 <p style="margin: 0 0 16px;"><strong>Name:</strong> {{$details['name']}}</p>
+                                                 <p style="margin: 0 0 16px;"><strong>Adult:</strong> {{$details['adult']}} x USD {{$details['adult_price']}}</p>
+                                                 <p style="margin: 0 0 16px;"><strong>Child:</strong> {{$details['child']}} x USD {{$details['child_price']}}</p>
+                                                 <p style="margin: 0 0 16px;"><strong>Total:</strong> USD {{$details['total']}}</p>
+                                                 <p style="margin: 0 0 16px;"><strong>Email:</strong> {{$details['email']}}</p>
+                                                 <p style="margin: 0 0 16px;"><strong>Phone:</strong> {{$details['country']}} {{$details['phone']}}</p>
+                                                <p style="margin: 0 0 16px;"><strong>Hotel:</strong> {{$details['hotel']}}</p>
+                                                <p style="margin: 0 0 16px;"><strong>Payment:</strong> {{$details['payment']}}</p>
+                                                <p style="margin: 0 0 16px;"><strong>Special requirements:</strong> {{$details['note']}}</p>
 
                                              </div>
                                           </td>

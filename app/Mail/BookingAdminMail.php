@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class BookingCustomerMail extends Mailable
+class BookingAdminMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,6 +22,6 @@ class BookingCustomerMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Thanks! Your booking has been confirmed for Hire Bali Driver')->view('emails.front.bookingcustomer');
+        return $this->subject('New Booking Hire Bali Driver Ref ID '.$this->details['ref'])->view('emails.front.bookingadmin');
     }
 }

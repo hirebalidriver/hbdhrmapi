@@ -87,8 +87,19 @@ class WishlistController extends Controller
             return ResponseFormatter::error(null, 'Time not found');
         }
 
+        $priceAdult = Prices::where('tour_id', $request->tour_id)
+                    ->where('type', 1)
+                    ->where('people', '<=', $request->adult)
+                    ->where('people_end', '>=', $request->adult)
+                    ->first();
+        $priceChild = Prices::where('tour_id', $request->tour_id)
+                    ->where('type', 2)
+                    ->where('people', '<=', $request->child)
+                    ->where('people_end', '>=', $request->child)
+                    ->first();
+
         $dateObject = Carbon::createFromFormat('Y-d-m', $request->date);
-        $date = Carbon::parse($dateObject)->format("Y-m-d");
+        $date       = Carbon::parse($dateObject)->format("Y-m-d");
 
         $query = Wishlists::create([
             'package_id' => $package->id,
@@ -97,6 +108,8 @@ class WishlistController extends Controller
             'date' => $date,
             'adult' => $request->adult,
             'child' => $request->child,
+            'adult_price' => $priceAdult->price,
+            'child_price' => $priceChild->price,
         ]);
 
         if($query) {
@@ -156,10 +169,22 @@ class WishlistController extends Controller
             $hotel = $request->hotel.' '.$request->hotel_address;
             $totalPrice = ($wishlist->adult * $priceAdult->price) + ($wishlist->child * $priceChild->price);
 
+            // TOUR AND OPTIONS
+            $tour = Packages::where('id', $wishlist->package_id)->first();
+            $option = Tours::where('id', $wishlist->tour_id)->first();
+
+            if($request->orderId != null || $request->orderId != '') {
+                $payment = 'paid';
+                $collect = 0;
+            }else{
+                $payment = 'collect';
+                $collect = $totalPrice;
+            }
+
             $create = Bookings::insertGetId([
                 'ref_id' => $ref,
-                'package_id' => $wishlist->package_id,
-                'tour_id' => $wishlist->tour_id,
+                'package_id' => $tour->id,
+                'tour_id' => $option->id,
                 'guide_id' => 0,
                 'date' => $wishlist->date,
                 'time' => $wishlist->time,
@@ -170,22 +195,53 @@ class WishlistController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'hotel' => $hotel,
-                'status_payment' => 'collect',
-                'collect' => 0,
+                'status_payment' => $payment,
+                'collect' => $collect,
                 'created_by' => 0,
                 'country' => $request->country,
                 'adult' => $wishlist->adult,
                 'child' => $wishlist->child,
+                'adult_price' => $wishlist->adult_price,
+                'child_price' => $wishlist->child_price,
                 'price' => $totalPrice,
                 'guide_fee' => $tour->price_guide,
                 'down_payment' => 0,
                 'is_multi_days' => 0,
                 'is_custom' => 0,
                 'paypalEmail' => $request->paypalEmail,
+                'order_id' => $request->orderId,
             ]);
 
-            DB::commit();
+            $dateObject = Carbon::createFromFormat('Y-m-d', $wishlist->date);
+            $date       = Carbon::parse($dateObject)->format("M d Y");
 
+            $details = [
+                'name' => $name,
+                'tour' => $tour->title,
+                'option' => $option->title,
+                'ref' => $ref,
+                'date' => $date,
+                'time' => $wishlist->time,
+                'adult' => $wishlist->adult,
+                'child' => $wishlist->child,
+                'adult_price' => $wishlist->adult_price,
+                'child_price' => $wishlist->child_price,
+                'adult_total' => $wishlist->adult * $wishlist->adult_price,
+                'child_total' => $wishlist->child * $wishlist->child_price,
+                'total' => $totalPrice,
+                'payment' => $payment == 'collect' ? 'Pay Later' : 'Pay Now - Paypal ('.$request->orderId.')',
+                'note' => $request->note,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'country' => $request->country,
+                'hotel' => $hotel,
+            ];
+
+            \App\Jobs\BookingCustomerJob::dispatch($details);
+            \App\Jobs\BookingAdminJob::dispatch($details);
+
+
+            DB::commit();
 
             return ResponseFormatter::success($create, 'success');
 

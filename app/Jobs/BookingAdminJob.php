@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\BookingCustomerMail;
+use App\Mail\BookingAdminMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class BookingCustomerJob implements ShouldQueue
+class BookingAdminJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -24,6 +24,6 @@ class BookingCustomerJob implements ShouldQueue
 
     public function handle()
     {
-        Mail::to($this->details['email'])->send(new BookingCustomerMail($this->details));
+        Mail::to('tour@hirebalidriver.com')->send(new BookingAdminMail($this->details));
     }
 }

@@ -37,20 +37,20 @@
                                        <tr>
                                           <td valign="top" style="padding: 48px 48px 32px;">
                                              <div id="body_content_inner" style='color: #636363; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 14px; line-height: 150%; text-align: left;' align="left">
-                                                <p style="margin: 0 0 16px;">Hi Andre,</p>
-                                                <p style="margin: 0 0 16px;">Just to let you know — we've received your booking #11018, and it has been confirmed:</p>
+                                                <p style="margin: 0 0 16px;">Hi {{$details['name']}},</p>
+                                                <p style="margin: 0 0 16px;">Just to let you know — we've received your booking {{$details['ref']}}, and it has been confirmed:</p>
                                                 <p style="margin: 0 0 16px;">Pay with cash on meeting.</p>
                                                 <h2 style='color: #077944; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                   Order #11018
+                                                   Order {{$details['ref']}}
                                                 </h2>
                                                 <h2 style='color: #2f3134; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                   Tour : Half Day Ubud Tour Ubud Unique Spots
+                                                   Tour : {{$details['tour']}}
                                                 </h2>
                                                 <p style='color: #2f3134; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 16px; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                    Option : Tour with Lunch
+                                                    Option : {{$details['option']}}
                                                 </p>
                                                 <p style='color: #2f3134; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 16px; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                   Travel Date : 01 January 2023
+                                                   Travel Date : {{$details['date']}}
                                                 </p>
                                                 <div style="margin-bottom: 40px;">
                                                    <table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" width="100%">
@@ -60,10 +60,10 @@
                                                                <span class="meta-label">Adult</span>
                                                             </td>
                                                             <td class="td" style="color: #636363; border: 1px solid #e5e5e5; padding: 12px; text-align: left; vertical-align: middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; word-wrap: break-word;" align="left">
-                                                                <span class="meta-label">2 x USD 25</span>
+                                                                <span class="meta-label">{{$details['adult']}} x USD {{$details['adult_price']}}</span>
                                                              </td>
                                                              <td class="td" style="color: #636363; border: 1px solid #e5e5e5; padding: 12px; text-align: left; vertical-align: middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; word-wrap: break-word;" align="left">
-                                                                <span class="meta-label">USD 50</span>
+                                                                <span class="meta-label">USD {{$details['adult_total']}}</span>
                                                              </td>
                                                          </tr>
                                                          <tr class="order_item">
@@ -71,41 +71,40 @@
                                                                <span class="meta-label">Child</span>
                                                             </td>
                                                             <td class="td" style="color: #636363; border: 1px solid #e5e5e5; padding: 12px; text-align: left; vertical-align: middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; word-wrap: break-word;" align="left">
-                                                                <span class="meta-label">3 x USD 10</span>
+                                                                <span class="meta-label">{{$details['child']}} x USD {{$details['child_price']}}</span>
                                                              </td>
                                                              <td class="td" style="color: #636363; border: 1px solid #e5e5e5; padding: 12px; text-align: left; vertical-align: middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; word-wrap: break-word;" align="left">
-                                                                <span class="meta-label">USD 30</span>
+                                                                <span class="meta-label">USD {{$details['adult_total']}}</span>
                                                              </td>
                                                          </tr>
                                                       </tbody>
                                                       <tfoot>
                                                          <tr>
                                                             <th class="td" scope="row" colspan="2" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left; border-top-width: 4px;" align="left">Subtotal:</th>
-                                                            <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left; border-top-width: 4px;" align="left">USD260,00</td>
+                                                            <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left; border-top-width: 4px;" align="left">USD {{$details['total']}}</td>
                                                          </tr>
                                                          <tr>
                                                             <th class="td" scope="row" colspan="2" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;" align="left">Payment method:</th>
-                                                            <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;" align="left">Pay later (cash)</td>
+                                                            <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;" align="left">{{$details['payment']}}</td>
                                                          </tr>
                                                          <tr>
                                                             <th class="td" scope="row" colspan="2" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;" align="left">Total:</th>
-                                                            <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;" align="left">USD260,00</td>
+                                                            <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;" align="left">USD {{$details['total']}}</td>
                                                          </tr>
                                                       </tfoot>
                                                    </table>
                                                 </div>
-                                                <p style="margin: 0 0 16px;"><strong>Hotel:</strong> My Hotel</p>
-                                                <p style="margin: 0 0 16px;"><strong>Hotel address:</strong> Ubud</p>
-                                                <p style="margin: 0 0 16px;"><strong>Special requirements:</strong> Test order</p>
+                                                <p style="margin: 0 0 16px;"><strong>Hotel:</strong> {{$details['hotel']}}</p>
+                                                <p style="margin: 0 0 16px;"><strong>Special requirements:</strong> {{$details['note']}}</p>
                                                 <table id="addresses" cellspacing="0" cellpadding="0" border="0" style="width: 100%; vertical-align: top; margin-bottom: 40px; padding: 0;" width="100%">
                                                    <tr>
                                                       <td valign="top" width="50%" style="text-align: left; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; border: 0; padding: 0;" align="left">
                                                          <h2 style='color: #077944; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>Billing address</h2>
                                                          <address class="address" style="padding: 12px; color: #636363; border: 1px solid #e5e5e5;">
-                                                            Andre Nata
-                                                            <br><a href="tel:087860062474" style="color: #077944; font-weight: normal; text-decoration: underline;">087860062474</a>
-                                                            <br>andrenata25@gmail.com
-                                                            <br>Ubud Gianyar Bali
+                                                            {{$details['name']}}
+                                                            <br>{{$details['phone']}}</a>
+                                                            <br>{{$details['email']}}
+                                                            <br>{{$details['country']}}
                                                          </address>
                                                       </td>
                                                    </tr>

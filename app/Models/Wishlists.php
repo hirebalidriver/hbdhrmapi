@@ -18,6 +18,8 @@ class Wishlists extends Model
         "adult",
         "child",
         "payment",
+        'adult_price',
+        'child_price',
     ];
 
     public function option() {

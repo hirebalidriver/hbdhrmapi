@@ -22,6 +22,6 @@ class BookingAdminMail extends Mailable
 
     public function build()
     {
-        return $this->subject('New Booking Hire Bali Driver Ref ID '.$this->details['ref'])->view('emails.front.bookingadmin');
+        return $this->subject('New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )')->view('emails.front.bookingadmin');
     }
 }

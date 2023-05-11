@@ -10,7 +10,7 @@
             <tr>
                <td align="center" valign="top">
                   <div id="template_header_image">
-                     <p style="margin-top: 0;"><img src="https://hirebalidriver.com/wp-content/uploads/2022/08/logo-hbd-email.png" alt="Most Popular Tours in Bali – Hire Bali Driver" style="border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; max-width: 100%; margin-left: 0; margin-right: 0;" border="0"></p>
+                     <p style="margin-top: 0;"><img src="https://hirebalidriver.com/wp-content/uploads/2022/08/logo-hbd-email.png" alt="Most Popular Tours in Bali – Hire Bali Driver" style="border: none; display: inline-block; font-size: 14px; font-weight: bold; height: auto; outline: none; text-decoration: none; text-transform: capitalize; vertical-align: middle; max-width: 150px; margin-left: 0; margin-right: 0;" border="0"></p>
                   </div>
                   <table border="0" cellpadding="0" cellspacing="0" width="600" id="template_container" style="background-color: #fff; border: 1px solid #dedede; box-shadow: 0 1px 4px rgba(0,0,0,.1); border-radius: 3px;" bgcolor="#fff">
                      <tr>

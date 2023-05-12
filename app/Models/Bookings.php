@@ -64,7 +64,7 @@ class Bookings extends Model
     }
 
     public function options() {
-        return $this->hasOne(Tours::class, 'id', 'option_id');
+        return $this->hasOne(Tours::class, 'id', 'tour_id');
     }
 
     public function user() {

@@ -43,6 +43,7 @@ class ToursController extends Controller
         $create = Tours::create([
             'title' => $request->title,
             'itinerary' => $request->itinerary,
+            'description' => $request->description,
             'guide_fee' => $request->guide_fee,
             'status' => $request->status,
             'note' => $request->note,
@@ -75,6 +76,7 @@ class ToursController extends Controller
 
         $tour->title = $request->title;
         $tour->itinerary = $request->itinerary;
+        $tour->description = $request->description;
         $tour->guide_fee = $request->guide_fee;
         $tour->status = $request->status;
         $tour->note = $request->note;

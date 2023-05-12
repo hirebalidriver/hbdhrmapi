@@ -12,6 +12,7 @@ class Tours extends Model
     protected $fillable = [
         'title',
         'itinerary',
+        'description',
         'note',
         'status',
         'guide_fee',

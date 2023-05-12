@@ -153,10 +153,12 @@ class WishlistController extends Controller
         }
 
         $priceAdult = Prices::where('tour_id', $wishlist->tour_id)
+                        ->where('type', 1)
                         ->where('people', '<=', $wishlist->adult)
                         ->where('people_end', '>=', $wishlist->adult)
                         ->first();
         $priceChild = Prices::where('tour_id', $wishlist->tour_id)
+                        ->where('type', 2)
                         ->where('people', '<=', $wishlist->child)
                         ->where('people_end', '>=', $wishlist->child)
                         ->first();

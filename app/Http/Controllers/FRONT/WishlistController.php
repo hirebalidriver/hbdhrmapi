@@ -275,4 +275,53 @@ class WishlistController extends Controller
             return ResponseFormatter::error(null, 'failed');
         }
     }
+
+    public function sendEmail(Request $request)
+    {
+        $rules = [
+            'id' => ['required']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $booking = Bookings::where('id', $request->id)->first();
+
+        // TOUR AND OPTIONS
+        $tour = Packages::where('id', $booking->package_id)->first();
+        $option = Tours::where('id', $booking->tour_id)->first();
+
+        $details = [
+            'name' => $booking->name,
+            'tour' => $tour->title,
+            'option' => $option->title,
+            'ref' => $booking->ref,
+            'date' => $booking->date,
+            'time' => $booking->time,
+            'adult' => $booking->adult,
+            'child' => $booking->child,
+            'adult_price' => $booking->adult_price,
+            'child_price' => $booking->child_price,
+            'adult_total' => $booking->adult * $booking->adult_price,
+            'child_total' => $booking->child * $booking->child_price,
+            'total' => $booking->price,
+            'payment' => $booking->status_payment == 'collect' ? 'Pay Later' : 'Pay Now',
+            'note' => $booking->note,
+            'phone' => $booking->phone,
+            'email' => $booking->email,
+            'country' => $booking->country,
+            'hotel' => $booking->hotel,
+        ];
+
+        \App\Jobs\BookingCustomerJob::dispatch($details);
+
+        if($booking) {
+            return ResponseFormatter::success($booking, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+
+    }
 }

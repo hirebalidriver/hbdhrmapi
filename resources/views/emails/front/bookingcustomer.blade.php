@@ -74,7 +74,7 @@
                                                                 <span class="meta-label">{{$details['child']}} x USD {{$details['child_price']}}</span>
                                                              </td>
                                                              <td class="td" style="color: #636363; border: 1px solid #e5e5e5; padding: 12px; text-align: left; vertical-align: middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; word-wrap: break-word;" align="left">
-                                                                <span class="meta-label">USD {{$details['adult_total']}}</span>
+                                                                <span class="meta-label">USD {{$details['child_total']}}</span>
                                                              </td>
                                                          </tr>
                                                       </tbody>

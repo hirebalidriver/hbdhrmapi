@@ -176,5 +176,6 @@ Route::group(['prefix' => 'front'], function () {
         Route::get('wishlist/add', 'add');
         Route::get('wishlist/booking', 'booking');
         Route::get('wishlist/booking/detail', 'findBooking');
+        Route::get('wishlist/booking/send/mail', 'sendEmail');
     });
 });

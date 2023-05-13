@@ -293,8 +293,8 @@ class WishlistController extends Controller
         $tour = Packages::where('id', $booking->package_id)->first();
         $option = Tours::where('id', $booking->tour_id)->first();
 
-        $dateObject = Carbon::createFromFormat('Y-m-d', $booking->date);
-        $date       = Carbon::parse($dateObject)->format("M d Y");
+        // $dateObject = Carbon::createFromFormat('Y-m-d', $booking->date);
+        $date       = Carbon::parse($booking->date)->format("M d Y");
 
         $details = [
             'name' => $booking->name,

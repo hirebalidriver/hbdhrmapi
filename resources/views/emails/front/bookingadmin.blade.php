@@ -52,7 +52,7 @@
                                                  <p style="margin: 0 0 5px;"><strong>Child:</strong> {{$details['child']}} x USD {{$details['child_price']}}</p>
                                                  <p style="margin: 0 0 5px;"><strong>Total:</strong> USD {{$details['total']}}</p>
                                                  <p style="margin: 0 0 5px;"><strong>Email:</strong> {{$details['email']}}</p>
-                                                 <p style="margin: 0 0 5px;"><strong>Phone:</strong> {{$details['country']}} {{$details['phone']}}</p>
+                                                 <p style="margin: 0 0 5px;"><strong>Phone:</strong> {{$details['phone']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Hotel:</strong> {{$details['hotel']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Payment:</strong> {{$details['payment']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Special requirements:</strong> {{$details['note']}}</p>

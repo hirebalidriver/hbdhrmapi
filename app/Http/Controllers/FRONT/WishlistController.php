@@ -65,7 +65,6 @@ class WishlistController extends Controller
             'time_id' => ['required'],
             'date' => ['required'],
             'adult' => ['required'],
-            'child' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -92,11 +91,16 @@ class WishlistController extends Controller
                     ->where('people', '<=', $request->adult)
                     ->where('people_end', '>=', $request->adult)
                     ->first();
-        $priceChild = Prices::where('tour_id', $request->tour_id)
+
+        $priceChild = 0;
+        if($request->child != 0){
+            $priceChild = Prices::where('tour_id', $request->tour_id)
                     ->where('type', 2)
                     ->where('people', '<=', $request->child)
                     ->where('people_end', '>=', $request->child)
                     ->first();
+        }
+
 
         $dateObject = Carbon::createFromFormat('Y-d-m', $request->date);
         $date       = Carbon::parse($dateObject)->format("Y-m-d");
@@ -109,7 +113,7 @@ class WishlistController extends Controller
             'adult' => $request->adult,
             'child' => $request->child,
             'adult_price' => $priceAdult->price,
-            'child_price' => $priceChild->price,
+            'child_price' => $priceChild ? $priceChild->price : 0,
         ]);
 
         if($query) {

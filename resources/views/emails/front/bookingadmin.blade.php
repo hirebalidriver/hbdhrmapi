@@ -49,7 +49,9 @@
                                                  <p style="margin: 0 0 5px;"><strong>Name:</strong> {{$details['name']}}</p>
                                                  <p style="margin: 0 0 5px;"><strong>Nationality:</strong> {{$details['country']}}</p>
                                                  <p style="margin: 0 0 5px;"><strong>Adult:</strong> {{$details['adult']}} x USD {{$details['adult_price']}}</p>
-                                                 <p style="margin: 0 0 5px;"><strong>Child:</strong> {{$details['child']}} x USD {{$details['child_price']}}</p>
+                                                 @if($details['child'] != 0)
+                                                    <p style="margin: 0 0 5px;"><strong>Child:</strong> {{$details['child']}} x USD {{$details['child_price']}}</p>
+                                                 @endif
                                                  <p style="margin: 0 0 5px;"><strong>Total:</strong> USD {{$details['total']}}</p>
                                                  <p style="margin: 0 0 5px;"><strong>Email:</strong> {{$details['email']}}</p>
                                                  <p style="margin: 0 0 5px;"><strong>Phone:</strong> {{$details['phone']}}</p>

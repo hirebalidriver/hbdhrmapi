@@ -161,11 +161,16 @@ class WishlistController extends Controller
                         ->where('people', '<=', $wishlist->adult)
                         ->where('people_end', '>=', $wishlist->adult)
                         ->first();
-        $priceChild = Prices::where('tour_id', $wishlist->tour_id)
+
+        $priceChild = 0;
+        if($wishlist->child != 0){
+            $priceChild = Prices::where('tour_id', $wishlist->tour_id)
                         ->where('type', 2)
                         ->where('people', '<=', $wishlist->child)
                         ->where('people_end', '>=', $wishlist->child)
                         ->first();
+        }
+
         DB::beginTransaction();
         try{
             // CREATE BOOKING
@@ -173,7 +178,12 @@ class WishlistController extends Controller
             $ref = 'WEB'.$now.$wishlist->id;
             $name = $request->fname.' '.$request->lname;
             $hotel = $request->hotel.' '.$request->hotel_address;
-            $totalPrice = ($wishlist->adult * $priceAdult->price) + ($wishlist->child * $priceChild->price);
+            if($wishlist->child != 0){
+                $totalPrice = ($wishlist->adult * $priceAdult->price) + ($wishlist->child * $priceChild->price);
+            }else{
+                $totalPrice = $wishlist->adult * $priceAdult->price;
+            }
+
 
             // TOUR AND OPTIONS
             $tour = Packages::where('id', $wishlist->package_id)->first();

@@ -17,7 +17,9 @@ class Tours extends Model
         'status',
         'guide_fee',
         'inclusions',
-        'exclusions'
+        'exclusions',
+        'discount_name',
+        'discount'
     ];
 
     public function prices() {

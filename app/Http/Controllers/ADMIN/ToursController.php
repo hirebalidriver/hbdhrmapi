@@ -82,6 +82,8 @@ class ToursController extends Controller
         $tour->note = $request->note;
         $tour->inclusions = $request->inclusions;
         $tour->exclusions = $request->exclusions;
+        $tour->discount = $request->discount;
+        $tour->discount_name = $request->discount_name;
 
 
         if($tour->save()) {

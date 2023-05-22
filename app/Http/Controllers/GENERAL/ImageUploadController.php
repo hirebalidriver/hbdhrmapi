@@ -14,7 +14,7 @@ class ImageUploadController extends Controller
         $do = Storage::disk('s3');
         $title = SlugFormatterController::SlugFormatter($title);
 
-        $file_name = 'ubudtrips_'. $title . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $file_name = 'hbd_'. $title . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
         if(App::environment(['local', 'staging'])){
             $url = '/hirebalidriver/staging';

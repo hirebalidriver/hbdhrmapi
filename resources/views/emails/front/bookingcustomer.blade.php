@@ -39,7 +39,6 @@
                                              <div id="body_content_inner" style='color: #636363; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 14px; line-height: 150%; text-align: left;' align="left">
                                                 <p style="margin: 0 0 16px;">Hi {{$details['name']}},</p>
                                                 <p style="margin: 0 0 16px;">Just to let you know — we've received your booking {{$details['ref']}}, and it has been confirmed:</p>
-                                                <p style="margin: 0 0 16px;">Pay with cash on meeting.</p>
                                                 <h2 style='color: #077944; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
                                                    Order {{$details['ref']}}
                                                 </h2>

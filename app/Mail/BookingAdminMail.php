@@ -23,27 +23,29 @@ class BookingAdminMail extends Mailable
 
     public function build()
     {
-        return $this->from($this->details['email'], $this->details['name'])
-                    ->subject('New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )')
+        // return $this->from($this->details['email'], $this->details['name'])
+        //             ->subject('New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )')
+        //             ->view('emails.front.bookingadmin');
+        return $this->subject('New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )')
                     ->view('emails.front.bookingadmin');
     }
 
-    public function envelope()
-    {
-        return new Envelope(
-            from: new Address($this->details['email'], $this->details['name']),
-            replyTo: [
-                new Address($this->details['email'], $this->details['name']),
-            ],
-            subject: 'New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )',
-        );
-    }
+    // public function envelope()
+    // {
+    //     return new Envelope(
+    //         from: new Address($this->details['email'], $this->details['name']),
+    //         replyTo: [
+    //             new Address($this->details['email'], $this->details['name']),
+    //         ],
+    //         subject: 'New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )',
+    //     );
+    // }
 
-    public function content()
-    {
-        return new Content(
-            view: 'emails.front.bookingadmin',
-        );
-    }
+    // public function content()
+    // {
+    //     return new Content(
+    //         view: 'emails.front.bookingadmin',
+    //     );
+    // }
 
 }

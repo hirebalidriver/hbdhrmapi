@@ -33,7 +33,7 @@ class BookingAdminMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: new Address($this->details['email'], $this->details['name']),
+            // from: new Address($this->details['email'], $this->details['name']),
             replyTo: [
                 new Address($this->details['email'], $this->details['name']),
             ],

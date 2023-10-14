@@ -56,6 +56,11 @@ class BookingController extends Controller
                     // ->with('packages', 'guides', 'user', 'options')
                     ->withCount('notification')
                     ->where('guide_id', $user->id)
+                    ->where(function ($query) {
+                        $query->where('status', '=', 2)
+                              ->orWhere('status', '=', 6)
+                              ->orWhere('status', '=', 7);
+                    })
                     ->orderBy($sortBy, $direction)
                     ->paginate($per_page, ['*'], 'page', $page);
         }else{
@@ -73,7 +78,12 @@ class BookingController extends Controller
                             return $query->where('name', 'LIKE', '%'.$guest_name.'%');
                         })
                         ->where('guide_id', $user->id)
-                        // ->with('packages', 'guides', 'user', 'options')
+                        ->where(function ($query) {
+                            $query->where('status', '=', 2)
+                                  ->orWhere('status', '=', 6)
+                                  ->orWhere('status', '=', 7);
+                        })
+                        ->with('packages', 'guides', 'user', 'options')
                         ->withCount('notification')
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
@@ -208,6 +218,50 @@ class BookingController extends Controller
         $query = Bills::where('booking_id', $request->booking_id)->get();
 
         if ($query) {
+            return ResponseFormatter::success($query, 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function guideApproved(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+
+        $booking = Bookings::where('id', $request->id)->first();
+        $booking->status = 7;
+        $booking->save();
+
+        if ($booking) {
+            return ResponseFormatter::success($query, 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function guideRejected(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+
+        $booking = Bookings::where('id', $request->id)->first();
+        $booking->status = 8;
+        $booking->save();
+
+        if ($booking) {
             return ResponseFormatter::success($query, 'success');
         } else {
             return ResponseFormatter::error(null, 'failed');

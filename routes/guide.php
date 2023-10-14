@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->guide();
+});
+
 Route::get('booking', [BookingController::class, 'refid']);
 
 Route::controller(AuthController::class)->group(function() {
@@ -48,6 +52,8 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
         Route::post('booking/bill/delete', 'billDelete');
         Route::post('booking/bills', 'bills');
         Route::post('tour/completed', 'complateTour');
+        Route::post('booking/guide/approved', 'guideApproved');
+        Route::post('booking/guide/rejected', 'guideRejected');
     });
 
     Route::controller(TrxController::class)->group(function(){

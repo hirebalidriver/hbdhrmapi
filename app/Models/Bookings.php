@@ -20,7 +20,7 @@ class Bookings extends Model
         'is_custom',
         'custom',
         'note',
-        'status', //0 = pending, 1 = confirm, 2 = cancel, 3 = need approve, 4 = completed, 5 = reject
+        'status', //0 = pending, 1 = confirm, 2 = cancel, 3 = need approve, 4 = completed, 5 = reject, 6 = need approve guide, 7 = approved, 8 = guide rejected
         'ref_id',
         'name',
         'email',

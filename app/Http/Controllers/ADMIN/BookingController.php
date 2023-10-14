@@ -308,6 +308,7 @@ class BookingController extends Controller
             if($check) return ResponseFormatter::error(null, 'not available');
 
             $booking->guide_id = $request->guide_id;
+            $booking->status = 6;
 
             $booking->save();
 

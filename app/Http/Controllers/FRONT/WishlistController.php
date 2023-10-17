@@ -260,12 +260,10 @@ class WishlistController extends Controller
                 'hotel' => $hotel,
             ];
 
-            \App\Jobs\BookingCustomerJob::dispatch($details);
-            \App\Jobs\BookingAdminJob::dispatch($details);
-
             DB::commit();
 
-            
+            \App\Jobs\BookingCustomerJob::dispatch($details);
+            \App\Jobs\BookingAdminJob::dispatch($details);
 
             return ResponseFormatter::success($create, 'success');
 

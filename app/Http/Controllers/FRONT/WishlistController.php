@@ -184,6 +184,13 @@ class WishlistController extends Controller
                 $totalPrice = $wishlist->adult * $priceAdult->price;
             }
 
+            if($request->paypalEmail != null || $request->paypalEmail != "") {
+                $paypalEmail = $request->paypalEmail;
+            }else{
+                $paypalEmail = "";
+            }
+            
+
 
             // TOUR AND OPTIONS
             $tour = Packages::where('id', $wishlist->package_id)->first();
@@ -224,7 +231,7 @@ class WishlistController extends Controller
                 'down_payment' => 0,
                 'is_multi_days' => 0,
                 'is_custom' => 0,
-                'paypalEmail' => $request->paypalEmail,
+                'paypalEmail' => $paypalEmail,
                 'order_id' => $request->orderId,
             ]);
 
@@ -253,11 +260,10 @@ class WishlistController extends Controller
                 'hotel' => $hotel,
             ];
 
+            DB::commit();
+
             \App\Jobs\BookingCustomerJob::dispatch($details);
             \App\Jobs\BookingAdminJob::dispatch($details);
-
-
-            DB::commit();
 
             return ResponseFormatter::success($create, 'success');
 

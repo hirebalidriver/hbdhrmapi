@@ -38,6 +38,7 @@ class DestinationController extends Controller
         $query = Destinations::create([
             'name' => $request->name,
             'price' => $request->price,
+            'is_susuk' => $request->is_susuk,
         ]);
 
         if($query){
@@ -81,6 +82,7 @@ class DestinationController extends Controller
         $query->name = $request->name;
         $query->price = $request->price;
         $query->is_active = $request->is_active;
+        $query->is_susuk = $request->is_susuk;
 
         if($query->save()){
             return ResponseFormatter::success($query, 'success');

@@ -8,6 +8,7 @@ use App\Http\Controllers\GENERAL\ImageUploadController;
 use App\Models\Bills;
 use App\Models\Bookings;
 use App\Models\Guides;
+use App\Models\Destinations;
 use App\Models\Notification;
 use App\Models\Transactions;
 use Exception;
@@ -152,6 +153,7 @@ class BookingController extends Controller
     {
         $rules = [
             'booking_id' => ['required'],
+            'destination_id' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -166,6 +168,8 @@ class BookingController extends Controller
             $user = auth()->guard('guide')->user();
             if (!$user) return ResponseFormatter::error(null, 'not found user');
 
+            $desti = Destinations::where('id', $request->destination_id)->first();
+
             if($request->photo != null || $request->photo != ''){
                 $upload = ImageUploadController::upload($request->photo, $user->id, 'bill');
                 $create = Bills::create([
@@ -173,20 +177,24 @@ class BookingController extends Controller
                     'photo' => $upload,
                     'price' => $request->price,
                     'note' => $request->note,
-                    'is_susuk' => $request->is_susuk,
+                    'destination_id' => $desti->id,
+                    'destination_name' => $desti->name,
+                    'is_susuk' => $desti->is_susuk,
                 ]);
             }else{
                 $create = Bills::create([
                     'booking_id' => $request->booking_id,
                     'price' => $request->price,
                     'note' => $request->note,
-                    'is_susuk' => $request->is_susuk,
+                    'destination_id' => $desti->id,
+                    'destination_name' => $desti->name,
+                    'is_susuk' => $desti->is_susuk,
                 ]);
             }
 
             $booking = Bookings::where('id', $request->booking_id)->first();
             $booking->bill_total = $booking->bill_total + $request->price;
-            if($request->is_susuk) {
+            if($desti->is_susuk) {
                 $booking->susuk_guide = $booking->susuk_guide + ($request->price/2);
                 $booking->susuk_hbd = $booking->susuk_hbd + ($request->price/2);
             }else{
@@ -271,11 +279,37 @@ class BookingController extends Controller
     public function billDelete(Request $request)
     {
 
-        $query = Bills::find($request->id);
+        $rules = [
+            'booking_id' => ['required'],
+            'id' => ['required'],
+        ];
 
-        if ($query->delete()) {
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+
+        DB::beginTransaction();
+
+        try{
+            $bill = Bills::find($request->id);
+
+            $booking = Bookings::where('id', $request->booking_id)->first();
+            $booking->bill_total = $booking->bill_total - $bill->price;
+            if($bill->is_susuk) {
+                $booking->susuk_guide = $booking->susuk_guide - ($bill->price/2);
+                $booking->susuk_hbd = $booking->susuk_hbd - ($bill->price/2);
+            }else{
+                $booking->tiket_total = $booking->tiket_total - $bill->price;
+            }
+            $booking->save();
+            $bill->delete();
+
+            DB::commit();
             return ResponseFormatter::success(null, 'success');
-        } else {
+
+        }catch (Exception $e) {
+            DB::rollBack();
             return ResponseFormatter::error(null, 'failed');
         }
     }

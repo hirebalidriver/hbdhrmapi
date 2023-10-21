@@ -45,6 +45,7 @@ class TrxController extends Controller
             $trxID =  Transactions::insertGetId([
                 'booking_id' => $booking->id,
                 'guide_id' => $booking->guide_id,
+                'travel_date' => $booking->date,
                 'user_id' => $user->id,
                 'price' => $total,
                 'status' => 1,

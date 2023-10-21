@@ -8,6 +8,7 @@ use App\Http\Resources\TrxDetailResource;
 use App\Http\Resources\TrxResource;
 use App\Http\Resources\TrxTotalResource;
 use App\Models\Bookings;
+use App\Models\Destinations;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,7 @@ class TrxController extends Controller
         }
 
          $trx = Transactions::when($start, function($query) use ($start, $end){
-                                return $query->whereBetween('date', [$start, $end]);
+                                return $query->whereBetween('travel_date', [$start, $end]);
                             })
                             ->where('guide_id', $user->id)
                             ->with('booking')
@@ -64,7 +65,7 @@ class TrxController extends Controller
         }
 
          $trx = Transactions::when($start, function($query) use ($start, $end){
-                                return $query->whereBetween('date', [$start, $end]);
+                                return $query->whereBetween('travel_date', [$start, $end]);
                             })
                             ->where('guide_id', $user->id)
                             ->with('booking')
@@ -129,6 +130,17 @@ class TrxController extends Controller
 
         if($trx) {
             return ResponseFormatter::success(new TrxDetailResource($trx), 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function destinations(Request $request) {
+       
+        $destinations = Destinations::where('is_active', 1)->get();
+
+        if($destinations){
+            return ResponseFormatter::success($destinations, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

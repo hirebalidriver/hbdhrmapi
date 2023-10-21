@@ -21,6 +21,7 @@ class Transactions extends Model
         'price',
         'status',
         'date',
+        'travel_date',
     ];
 
     public function booking() {

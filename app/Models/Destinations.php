@@ -13,5 +13,6 @@ class Destinations extends Model
         'name',
         'price',
         'is_active',
+        'is_susuk',
     ];
 }

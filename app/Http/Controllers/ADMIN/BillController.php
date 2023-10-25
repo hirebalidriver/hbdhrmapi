@@ -82,13 +82,14 @@ class BillController extends Controller
                 'is_susuk' => $request->is_susuk,
             ]);
 
-            $booking->bill_total = $booking->bill_total + $request->price;
-
+            
+            $price = $request->price * $request->people;
             if($request->is_susuk) {
                 $booking->susuk_guide = $booking->susuk_guide + ($request->price/2);
                 $booking->susuk_hbd = $booking->susuk_hbd + ($request->price/2);
             }else{
-                $booking->tiket_total = $booking->tiket_total + $request->price;
+                $booking->bill_total = $booking->bill_total + $price;
+                $booking->tiket_total = $booking->tiket_total + $price;
             }
             $booking->save();
 
@@ -127,13 +128,14 @@ class BillController extends Controller
                 return ResponseFormatter::error(null, 'not found');
             }
 
-            $booking->bill_total = $booking->bill_total - $bill->price;
-
+            
+            $price = $bill->price * $bill->people;
             if($bill->is_susuk) {
                 $booking->susuk_guide = $booking->susuk_guide - ($bill->price/2);
                 $booking->susuk_hbd = $booking->susuk_hbd - ($bill->price/2);
             }else{
-                $booking->tiket_total = $booking->tiket_total - $bill->price;
+                $booking->bill_total = $booking->bill_total - $price;
+                $booking->tiket_total = $booking->tiket_total - $price;
             }
 
             $booking->save();

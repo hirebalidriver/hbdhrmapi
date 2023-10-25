@@ -37,7 +37,7 @@ class BookingController extends Controller
 
         $per_page = $request->input('per_page', 20);
         $page = $request->input('page', 1);
-        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
+        $sortBy = $request->sortBy == null ? $sortBy = 'date' : $sortBy = $request->sortBy;
         $direction =$request->input('direction', 'DESC');
 
         if($request->date_from > $request->date_end){
@@ -81,6 +81,7 @@ class BookingController extends Controller
                         ->where('guide_id', $user->id)
                         ->where(function ($query) {
                             $query->where('status', '=', 2)
+                            ->orWhere('status', '=', 3)
                                   ->orWhere('status', '=', 6)
                                   ->orWhere('status', '=', 7);
                         })
@@ -153,6 +154,7 @@ class BookingController extends Controller
     {
         $rules = [
             'booking_id' => ['required'],
+            'people' => ['required'],
             'destination_id' => ['required'],
         ];
 
@@ -176,6 +178,7 @@ class BookingController extends Controller
                     'booking_id' => $request->booking_id,
                     'photo' => $upload,
                     'price' => $request->price,
+                    'people' => $request->people,
                     'note' => $request->note,
                     'destination_id' => $desti->id,
                     'destination_name' => $desti->name,
@@ -185,6 +188,7 @@ class BookingController extends Controller
                 $create = Bills::create([
                     'booking_id' => $request->booking_id,
                     'price' => $request->price,
+                    'people' => $request->people,
                     'note' => $request->note,
                     'destination_id' => $desti->id,
                     'destination_name' => $desti->name,
@@ -192,13 +196,16 @@ class BookingController extends Controller
                 ]);
             }
 
+            $price = $request->price * $request->people;
+
             $booking = Bookings::where('id', $request->booking_id)->first();
-            $booking->bill_total = $booking->bill_total + $request->price;
+            
             if($desti->is_susuk) {
                 $booking->susuk_guide = $booking->susuk_guide + ($request->price/2);
                 $booking->susuk_hbd = $booking->susuk_hbd + ($request->price/2);
             }else{
-                $booking->tiket_total = $booking->tiket_total + $request->price;
+                $booking->bill_total = $booking->bill_total + $price;
+                $booking->tiket_total = $booking->tiket_total + $price;
             }
             $booking->save();
 
@@ -295,12 +302,13 @@ class BookingController extends Controller
             $bill = Bills::find($request->id);
 
             $booking = Bookings::where('id', $request->booking_id)->first();
-            $booking->bill_total = $booking->bill_total - $bill->price;
+            
             if($bill->is_susuk) {
                 $booking->susuk_guide = $booking->susuk_guide - ($bill->price/2);
                 $booking->susuk_hbd = $booking->susuk_hbd - ($bill->price/2);
             }else{
-                $booking->tiket_total = $booking->tiket_total - $bill->price;
+                $booking->bill_total = $booking->bill_total - ($bill->price * $bill->people);
+                $booking->tiket_total = $booking->tiket_total - ($bill->price * $bill->people);
             }
             $booking->save();
             $bill->delete();

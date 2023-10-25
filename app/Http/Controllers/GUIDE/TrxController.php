@@ -89,7 +89,7 @@ class TrxController extends Controller
                     if($bill->is_susuk == true){
                         $susuk = $susuk + $bill->price;
                     }else{
-                        $cost = $cost + $bill->price;
+                        $cost = $cost + ($bill->price*$bill->people);
                     }
                 }
 
@@ -97,10 +97,10 @@ class TrxController extends Controller
 
             $data = [
                 'guide_fee' => 'IDR '.number_format($guide_fee, 0, '.', '.'),
-                'collect' => 'IDR '.number_format($collect, 0, '.', '.'),
                 'cost' => 'IDR '.number_format($cost, 0, '.', '.'),
-                'susuk' => 'IDR '.number_format($susuk, 0, '.', '.'),
                 'additional' => 'IDR '.number_format($additional, 0, '.', '.'),
+                'susuk' => 'IDR '.number_format($susuk, 0, '.', '.'),
+                'collect' => 'IDR '.number_format($collect, 0, '.', '.'),
 
             ];
 
@@ -141,6 +141,17 @@ class TrxController extends Controller
 
         if($destinations){
             return ResponseFormatter::success($destinations, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function destinationFind(Request $request) {
+       
+        $destination = Destinations::where('id', $request->id)->first();
+
+        if($destination){
+            return ResponseFormatter::success($destination, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

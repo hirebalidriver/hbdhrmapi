@@ -38,7 +38,7 @@
                                                 <p style="margin: 0 0 5px;">Hi Hirebalidriver,</p>
 
                                                 <div style="margin: 20px 0 20px 0;">   
-                                                    <a style="background-color: #359214;
+                                                    <a style="background-color: #b11111;
                                                     color: #fff;
                                                     padding: 10px 20px;
                                                     text-decoration:none;

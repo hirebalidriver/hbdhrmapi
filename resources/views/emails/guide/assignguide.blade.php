@@ -58,11 +58,12 @@
                                                 <p style="margin: 0 0 5px;"><strong>Collect:</strong> {{$details['collect']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Special requirements:</strong> {{$details['note']}}</p>
                                                 
-                                                <div style="padding: 20 0 20 0;">   
+                                                <div style="margin: 20px 0 20px 0;">   
                                                     <a style="background-color: #4a4a4a;
                                                     color: #fff;
-                                                    padding: 8px 20px;
+                                                    padding: 10px 20px;
                                                     text-decoration:none;
+                                                    font-size: 20px;
                                                     font-weight:bold;
                                                     border-radius:5px;
                                                     cursor:pointer;" href="https://guide.hirebalidriver.com/" target="_blank">Visit Guide Portal</a>

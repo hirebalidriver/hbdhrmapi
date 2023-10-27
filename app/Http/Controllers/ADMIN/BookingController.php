@@ -354,7 +354,7 @@ class BookingController extends Controller
 
             DB::commit();
 
-            \App\Jobs\AssignGuideJob::dispatch($details);
+           
 
             return ResponseFormatter::success($booking, 'success');
 

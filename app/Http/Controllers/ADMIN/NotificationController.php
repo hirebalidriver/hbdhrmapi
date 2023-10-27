@@ -31,28 +31,17 @@ class NotificationController extends Controller
         $guide = Guides::find($booking->guide_id);
         if(!$guide) return ResponseFormatter::error(null, 'guide not found');
 
-        //get a user to get the fcm_token that already sent. from mobile apps
-        FCMService::send(
-            $guide->fcm_token,
-            [
-                'title' => 'New Booking Hire Bali Driver',
-                'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
-                "sound" => "default",
-            ],
-            [
-                'title' => 'New Booking Hire Bali Driver',
-                'body' => $booking->date->format('d M Y').' '.$booking->time->format('H:m'),
-                'route' => '/',
-            ]
-        );
+         // TOUR AND OPTIONS
+         $package = Packages::where('id', $booking->package_id)->first();
+         $option = Tours::where('id', $booking->tour_id)->first();
+        
 
         $details = [
-            'title' => "Booking Hire Bali Driver " . Carbon::parse($booking->date)->format('Y-m-d'),
             'to' => $guide->email,
             'name' => $guide->name,
-            'ref_id' => $booking->ref_id,
-            'package_id' => $booking->package_id,
-            'option_id' => $booking->option_id,
+            'ref' => $booking->ref_id,
+            'package' => $package->title,
+            'option' => $option->title,
             'date' => Carbon::parse($booking->date)->format('M d Y'),
             'time' => $booking->time->format('H:m'),
             'supplier' => $booking->supplier,
@@ -68,7 +57,7 @@ class NotificationController extends Controller
             'price' => $booking->price,
         ];
 
-        \App\Jobs\BookingMailJob::dispatch($details);
+        \App\Jobs\AssignGuideJob::dispatch($details);
 
         Notification::where('booking_id', $booking->id)
                     ->where('guide_id', $guide->id)->delete();

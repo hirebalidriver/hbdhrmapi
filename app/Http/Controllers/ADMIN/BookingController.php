@@ -383,6 +383,40 @@ class BookingController extends Controller
 
         $booking->status = $request->status;
 
+        if($request->status == 1){
+
+            $guide = Guides::find($booking->guide_id);
+            if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+
+            // TOUR AND OPTIONS
+            $package = Packages::where('id', $booking->package_id)->first();
+            $option = Tours::where('id', $booking->tour_id)->first();
+
+            $details = [
+                'to' => $guide->email,
+                'name' => $guide->name,
+                'ref' => $booking->ref_id,
+                'package' => $package->title,
+                'option' => $option->title,
+                'date' => Carbon::parse($booking->date)->format('M d Y'),
+                'time' => $booking->time->format('H:m'),
+                'supplier' => $booking->supplier,
+                'note' => $booking->note,
+                'guestName' => $booking->name,
+                'phone' => $booking->phone,
+                'hotel' => $booking->hotel,
+                'status_payment' => $booking->status_payment,
+                'collect' => $booking->collect,
+                'country' => $booking->country,
+                'adult' => $booking->adult,
+                'child' => $booking->child,
+                'price' => $booking->price,
+            ];
+
+            \App\Jobs\CancelBookingJob::dispatch($details);
+
+        }
+
         if($booking->save()) {
             return ResponseFormatter::success($booking, 'success');
         }else{

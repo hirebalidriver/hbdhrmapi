@@ -257,6 +257,9 @@ class BookingController extends Controller
         $booking->adult = $request->adult;
         $booking->child = $request->child;
         $booking->price = $request->price;
+        if($request->guide_fee != null || $request->guide_fee != 0 || $request->guide_fee != ""){
+            $booking->guide_fee = $request->guide_fee;    
+        }
         $booking->down_payment = $request->down_payment;
 
         if($request->is_custom) {

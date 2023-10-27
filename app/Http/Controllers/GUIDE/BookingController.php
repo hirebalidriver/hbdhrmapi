@@ -14,6 +14,7 @@ use App\Models\Destinations;
 use App\Models\Notification;
 use App\Models\Transactions;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -254,7 +255,6 @@ class BookingController extends Controller
 
         $booking = Bookings::where('id', $request->id)->first();
         $booking->status = 7;
-        $booking->save();
 
         $guide = Guides::find($booking->guide_id);
         if(!$guide) return ResponseFormatter::error(null, 'guide not found');
@@ -283,6 +283,9 @@ class BookingController extends Controller
             'child' => $booking->child,
             'price' => $booking->price,
         ];
+
+        
+        $booking->save();
 
         \App\Jobs\ApproveGuideJob::dispatch($details);
 

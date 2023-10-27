@@ -6,6 +6,8 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Bookings;
 use App\Models\Guides;
+use App\Models\Packages;
+use App\Models\Tours;
 use App\Models\Notification;
 use App\Services\FCMService;
 use Carbon\Carbon;

@@ -14,10 +14,10 @@
                      <tr>
                         <td align="center" valign="top">
                            <!-- Header -->
-                           <table border="0" cellpadding="0" cellspacing="0" width="100%" id="template_header" style='background-color: #077944; color: #fff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: "Times New Roman", sans-serif; border-radius: 3px 3px 0 0;' bgcolor="#077944">
+                           <table border="0" cellpadding="0" cellspacing="0" width="100%" id="template_header" style='background-color: #8b0707; color: #fff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: "Times New Roman", sans-serif; border-radius: 3px 3px 0 0;' bgcolor="#077944">
                               <tr>
                                  <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                    <h1 style='font-family: "Times New Roman", sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: left; text-shadow: 0 1px 0 #399469; color: #fff; background-color: inherit;' bgcolor="inherit">Cancelled Tour {{$details['ref']}}</h1>
+                                    <h1 style='font-family: "Times New Roman", sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: left; text-shadow: 0 1px 0 #770c0c; color: #fff; background-color: inherit;' bgcolor="inherit">Cancelled Tour {{$details['ref']}}</h1>
                                  </td>
                               </tr>
                            </table>
@@ -35,9 +35,9 @@
                                        <tr>
                                           <td valign="top" style="padding: 48px 48px 32px;">
                                              <div id="body_content_inner" style='color: #636363; font-family: "Times New Roman", sans-serif; font-size: 14px; line-height: 150%; text-align: left;' align="left">
-                                                <p style="margin: 0 0 5px;">Hi Hirebalidriver,</p>
+                                                <p style="margin: 0 0 5px;">Hi Mr.{{$details['name']}},</p>
                                                 <h2 style='color: #077944; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                   Order {{$details['ref']}}
+                                                   {{$details['ref']}}
                                                 </h2>
                                                 <h2 style='color: #2f3134; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
                                                     {{$details['package']}}

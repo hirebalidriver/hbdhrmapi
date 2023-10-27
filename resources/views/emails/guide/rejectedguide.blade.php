@@ -17,7 +17,7 @@
                            <table border="0" cellpadding="0" cellspacing="0" width="100%" id="template_header" style='background-color: #077944; color: #fff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: "Times New Roman", sans-serif; border-radius: 3px 3px 0 0;' bgcolor="#077944">
                               <tr>
                                  <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                    <h1 style='font-family: "Times New Roman", sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: left; text-shadow: 0 1px 0 #399469; color: #fff; background-color: inherit;' bgcolor="inherit">Guide Approved {{$details['ref']}}</h1>
+                                    <h1 style='font-family: "Times New Roman", sans-serif; font-size: 30px; font-weight: 300; line-height: 150%; margin: 0; text-align: left; text-shadow: 0 1px 0 #399469; color: #fff; background-color: inherit;' bgcolor="inherit">Tour Rejected {{$details['ref']}}</h1>
                                  </td>
                               </tr>
                            </table>
@@ -47,7 +47,7 @@
                                                     border-radius:5px;
                                                     text-align:center;
                                                     width: 100%;
-                                                    cursor:pointer;" href="#" target="_blank">Tour has Approved by Mr.{{$details['name']}}</a>
+                                                    cursor:pointer;" href="#" target="_blank">Tour has Rejected by Mr.{{$details['name']}}</a>
                                                 </div>
 
                                                 <h2 style='color: #077944; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>

@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Mail\AssignGuideMail;
+use Illuminate\Support\Facades\Mail;
 
 class AssignGuideJob implements ShouldQueue
 {
@@ -22,6 +24,6 @@ class AssignGuideJob implements ShouldQueue
 
     public function handle()
     {
-        Mail::to($this->details['to'])->send(new BookingAdminMail($this->details));
+        Mail::to($this->details['to'])->send(new AssignGuideMail($this->details));
     }
 }

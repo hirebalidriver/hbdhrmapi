@@ -63,6 +63,7 @@ class BookingController extends Controller
                     ->where(function ($query) {
                         $query->where('status', '=', 2)
                               ->orWhere('status', '=', 6)
+                              ->orWhere('status', '=', 1)
                               ->orWhere('status', '=', 7);
                     })
                     ->orderBy($sortBy, $direction)
@@ -84,8 +85,9 @@ class BookingController extends Controller
                         ->where('guide_id', $user->id)
                         ->where(function ($query) {
                             $query->where('status', '=', 2)
-                            ->orWhere('status', '=', 3)
+                                    ->orWhere('status', '=', 3)
                                   ->orWhere('status', '=', 6)
+                                  ->orWhere('status', '=', 1)
                                   ->orWhere('status', '=', 7);
                         })
                         ->with('packages', 'guides', 'user', 'options')

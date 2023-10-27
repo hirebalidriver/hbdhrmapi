@@ -6,11 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class BookingAdminMail extends Mailable
+class AssignGuideMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,9 +23,8 @@ class BookingAdminMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            // from: new Address($this->details['email'], $this->details['name']),
             replyTo: [
-                new Address($this->details['email'], $this->details['name']),
+                new Address('tour@hirebalidriver.com', 'Hire Bali Driver'),
             ],
             subject: 'New Booking for '.$this->details['date'].' ('.$this->details['ref'].' )',
         );
@@ -35,8 +33,7 @@ class BookingAdminMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.front.bookingadmin',
+            view: 'emails.guide.assignguide',
         );
     }
-
 }

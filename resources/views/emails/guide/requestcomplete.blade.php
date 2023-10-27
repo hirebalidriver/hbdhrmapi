@@ -36,8 +36,8 @@
                                           <td valign="top" style="padding: 48px 48px 32px;">
                                              <div id="body_content_inner" style='color: #636363; font-family: "Times New Roman", sans-serif; font-size: 14px; line-height: 150%; text-align: left;' align="left">
                                                 <p style="margin: 0 0 5px;">Hi Hirebalidriver,</p>
-                                                <h2 style='color: #2f3134; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                    Guide Name {{$details['name']}}
+                                                <h2 style='color: #2f3134; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 20px 0 18px 0; text-align: left;'>
+                                                    Guide Name : Mr.{{$details['name']}}
                                                  </h2>
                                                 <h2 style='color: #077944; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
                                                    Order {{$details['ref']}}

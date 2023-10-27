@@ -257,20 +257,16 @@ class BookingController extends Controller
         $booking->country = $request->country;
         $booking->adult = $request->adult;
         $booking->child = $request->child;
-        $booking->price = $request->price;
-        if($request->guide_fee != null || $request->guide_fee != 0 || $request->guide_fee != ""){
-            $booking->guide_fee = $request->guide_fee;    
-        }
+        $booking->price = $request->price;    
         $booking->down_payment = $request->down_payment;
 
+        $booking->guide_fee = $request->guide_fee;
+        $booking->is_custom = $request->is_custom;
+
         if($request->is_custom) {
-            $booking->guide_fee = $request->guide_fee;
-            $booking->is_custom = $request->is_custom;
+            
             $booking->custom = $request->custom;
         }else{
-            $option = Tours::where('id', $request->tour_id)->first();
-            $booking->guide_fee = $option->guide_fee;
-            $booking->is_custom = $request->is_custom;
             $booking->custom = null;
         }
 

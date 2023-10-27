@@ -27,7 +27,7 @@ class ApproveGuideMail extends Mailable
             replyTo: [
                 new Address($this->details['to'], $this->details['name']),
             ],
-            subject: 'Tour has Approved for '.$this->details['date'].' ('.$this->details['ref'].' )',
+            subject: 'Approved! Tour by '.$this->details['name'].' for '.$this->details['date'].' ('.$this->details['ref'].' )',
         );
     }
 

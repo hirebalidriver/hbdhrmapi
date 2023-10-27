@@ -55,7 +55,7 @@
                                                  <p style="margin: 0 0 5px;"><strong>Phone:</strong> {{$details['phone']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Hotel:</strong> {{$details['hotel']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Payment:</strong> {{$details['status_payment']}}</p>
-                                                <p style="margin: 0 0 5px;"><strong>Collect:</strong> {{$details['collect']}}</p>
+                                                <p style="margin: 0 0 5px;"><strong>Collect:</strong> USD {{$details['collect']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Special requirements:</strong> {{$details['note']}}</p>
                                                 
                                                 <div style="margin: 20px 0 20px 0;">   

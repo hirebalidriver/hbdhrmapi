@@ -41,7 +41,7 @@
                                                    Order {{$details['ref']}}
                                                 </h2>
                                                 <h2 style='color: #2f3134; display: block; font-family: "Times New Roman", sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;'>
-                                                    {{$details['tour']}}
+                                                    {{$details['package']}}
                                                 </h2>
                                                 <p style="margin: 0 0 5px;"><strong>Option:</strong> {{$details['option']}}</p>
                                                 <p style="margin: 0 0 5px;"><strong>Date:</strong> {{$details['date']}}</p>

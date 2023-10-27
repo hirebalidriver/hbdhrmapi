@@ -53,7 +53,7 @@ class BookingController extends Controller
 
         $user = Auth::user();
 
-        $option = Tours::where('id', $request->option_id)->first();
+        $option = Tours::where('id', $request->tour_id)->first();
 
         $count = count($request->date);
         $sortedDate = Arr::sort($request->date);
@@ -77,7 +77,7 @@ class BookingController extends Controller
             $create = Bookings::insertGetId([
                 'ref_id' => $refId0,
                 'package_id' => 0,
-                'option_id' => 0,
+                'tour_id' => 0,
                 'guide_id' => 0,
                 'date' => $date_start,
                 'time' => $request->time,
@@ -109,7 +109,7 @@ class BookingController extends Controller
                     $create = Bookings::create([
                         'ref_id' => $request->ref_id.'_MULTIDAYS'.$n,
                         'package_id' => 0,
-                        'option_id' => 0,
+                        'tour_id' => 0,
                         'guide_id' => 0,
                         'date' => $date,
                         'time' => $request->time,
@@ -141,7 +141,7 @@ class BookingController extends Controller
             $create = Bookings::insertGetId([
                 'ref_id' => $refId0,
                 'package_id' => $request->package_id,
-                'option_id' => $request->option_id,
+                'tour_id' => $request->tour_id,
                 'guide_id' => 0,
                 'date' => $date_start,
                 'time' => $request->time,
@@ -172,7 +172,7 @@ class BookingController extends Controller
                     $create = Bookings::create([
                         'ref_id' => $request->ref_id.'_MULTIDAYS'.$n,
                         'package_id' => $request->package_id,
-                        'option_id' => $request->option_id,
+                        'tour_id' => $request->tour_id,
                         'guide_id' => 0,
                         'date' => $date_start,
                         'time' => $request->time,
@@ -253,7 +253,7 @@ class BookingController extends Controller
         $booking->hotel = $request->hotel;
         $booking->status_payment = $request->status_payment;
         $booking->collect = $request->collect;
-        $booking->option_id = $request->option_id;
+        $booking->tour_id = $request->tour_id;
         $booking->country = $request->country;
         $booking->adult = $request->adult;
         $booking->child = $request->child;
@@ -268,7 +268,7 @@ class BookingController extends Controller
             $booking->is_custom = $request->is_custom;
             $booking->custom = $request->custom;
         }else{
-            $option = Tours::where('id', $request->option_id)->first();
+            $option = Tours::where('id', $request->tour_id)->first();
             $booking->guide_fee = $option->guide_fee;
             $booking->is_custom = $request->is_custom;
             $booking->custom = null;
@@ -328,14 +328,14 @@ class BookingController extends Controller
             ]);
 
             // TOUR AND OPTIONS
-            $tour = Packages::where('id', $booking->package_id)->first();
-            $option = Tours::where('id', $booking->option_id)->first();
+            $package = Packages::where('id', $booking->package_id)->first();
+            $option = Tours::where('id', $booking->tour_id)->first();
 
             $details = [
                 'to' => $guide->email,
                 'name' => $guide->name,
                 'ref' => $booking->ref_id,
-                'tour' => $tour->title,
+                'package' => $package->title,
                 'option' => $option->title,
                 'date' => Carbon::parse($booking->date)->format('M d Y'),
                 'time' => $booking->time->format('H:m'),

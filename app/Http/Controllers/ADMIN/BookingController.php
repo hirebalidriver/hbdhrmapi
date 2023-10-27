@@ -234,8 +234,9 @@ class BookingController extends Controller
         if(!$booking) return ResponseFormatter::error(null, 'not found');
 
         $date = Carbon::parse($request->date)->format('Y-m-d');
+        $dateOld = Carbon::parse($booking->date)->format('Y-m-d');
 
-        if($date != $booking->date) {
+        if($date != $dateOld) {
             $booking->guide_id = 0;
             $booking->date = $date;
             Availability::where('booking_id', $booking->id)->delete();

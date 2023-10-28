@@ -145,38 +145,38 @@ class BookingController extends Controller
 
             $booking->status = 3;
             
-            $guide = Guides::find($booking->guide_id);
-            if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+            // $guide = Guides::find($booking->guide_id);
+            // if(!$guide) return ResponseFormatter::error(null, 'guide not found');
 
             // TOUR AND OPTIONS
-            $package = Packages::where('id', $booking->package_id)->first();
-            $option = Tours::where('id', $booking->tour_id)->first();
+            // $package = Packages::where('id', $booking->package_id)->first();
+            // $option = Tours::where('id', $booking->tour_id)->first();
 
-            $details = [
-                'to' => $guide->email,
-                'name' => $guide->name,
-                'ref' => $booking->ref_id,
-                'package' => $package->title,
-                'option' => $option->title,
-                'date' => Carbon::parse($booking->date)->format('M d Y'),
-                'time' => $booking->time->format('H:m'),
-                'supplier' => $booking->supplier,
-                'note' => $booking->note,
-                'guestName' => $booking->name,
-                'phone' => $booking->phone,
-                'hotel' => $booking->hotel,
-                'status_payment' => $booking->status_payment,
-                'collect' => $booking->collect,
-                'country' => $booking->country,
-                'adult' => $booking->adult,
-                'child' => $booking->child,
-                'price' => $booking->price,
-            ];
+            // $details = [
+            //     'to' => $guide->email,
+            //     'name' => $guide->name,
+            //     'ref' => $booking->ref_id,
+            //     'package' => $package->title,
+            //     'option' => $option->title,
+            //     'date' => Carbon::parse($booking->date)->format('M d Y'),
+            //     'time' => $booking->time->format('H:m'),
+            //     'supplier' => $booking->supplier,
+            //     'note' => $booking->note,
+            //     'guestName' => $booking->name,
+            //     'phone' => $booking->phone,
+            //     'hotel' => $booking->hotel,
+            //     'status_payment' => $booking->status_payment,
+            //     'collect' => $booking->collect,
+            //     'country' => $booking->country,
+            //     'adult' => $booking->adult,
+            //     'child' => $booking->child,
+            //     'price' => $booking->price,
+            // ];
 
             
             $booking->save();
 
-            \App\Jobs\RequestCompleteGuideJob::dispatch($details);
+            // \App\Jobs\RequestCompleteGuideJob::dispatch($details);
 
             DB::commit();
             return ResponseFormatter::success(null, 'success');
@@ -290,38 +290,38 @@ class BookingController extends Controller
         $booking = Bookings::where('id', $request->id)->first();
         $booking->status = 7;
 
-        $guide = Guides::find($booking->guide_id);
-        if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+        // $guide = Guides::find($booking->guide_id);
+        // if(!$guide) return ResponseFormatter::error(null, 'guide not found');
 
         // TOUR AND OPTIONS
-        $package = Packages::where('id', $booking->package_id)->first();
-        $option = Tours::where('id', $booking->tour_id)->first();
+        // $package = Packages::where('id', $booking->package_id)->first();
+        // $option = Tours::where('id', $booking->tour_id)->first();
 
-        $details = [
-            'to' => $guide->email,
-            'name' => $guide->name,
-            'ref' => $booking->ref_id,
-            'package' => $package->title,
-            'option' => $option->title,
-            'date' => Carbon::parse($booking->date)->format('M d Y'),
-            'time' => $booking->time->format('H:m'),
-            'supplier' => $booking->supplier,
-            'note' => $booking->note,
-            'guestName' => $booking->name,
-            'phone' => $booking->phone,
-            'hotel' => $booking->hotel,
-            'status_payment' => $booking->status_payment,
-            'collect' => $booking->collect,
-            'country' => $booking->country,
-            'adult' => $booking->adult,
-            'child' => $booking->child,
-            'price' => $booking->price,
-        ];
+        // $details = [
+        //     'to' => $guide->email,
+        //     'name' => $guide->name,
+        //     'ref' => $booking->ref_id,
+        //     'package' => $package->title,
+        //     'option' => $option->title,
+        //     'date' => Carbon::parse($booking->date)->format('M d Y'),
+        //     'time' => $booking->time->format('H:m'),
+        //     'supplier' => $booking->supplier,
+        //     'note' => $booking->note,
+        //     'guestName' => $booking->name,
+        //     'phone' => $booking->phone,
+        //     'hotel' => $booking->hotel,
+        //     'status_payment' => $booking->status_payment,
+        //     'collect' => $booking->collect,
+        //     'country' => $booking->country,
+        //     'adult' => $booking->adult,
+        //     'child' => $booking->child,
+        //     'price' => $booking->price,
+        // ];
 
         
         $booking->save();
 
-        \App\Jobs\ApproveGuideJob::dispatch($details);
+        // \App\Jobs\ApproveGuideJob::dispatch($details);
 
         if ($booking) {
             return ResponseFormatter::success($query, 'success');
@@ -344,38 +344,38 @@ class BookingController extends Controller
         $booking = Bookings::where('id', $request->id)->first();
         $booking->status = 8;
         
-        $guide = Guides::find($booking->guide_id);
-        if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+        // $guide = Guides::find($booking->guide_id);
+        // if(!$guide) return ResponseFormatter::error(null, 'guide not found');
 
         // TOUR AND OPTIONS
-        $package = Packages::where('id', $booking->package_id)->first();
-        $option = Tours::where('id', $booking->tour_id)->first();
+        // $package = Packages::where('id', $booking->package_id)->first();
+        // $option = Tours::where('id', $booking->tour_id)->first();
 
-        $details = [
-            'to' => $guide->email,
-            'name' => $guide->name,
-            'ref' => $booking->ref_id,
-            'package' => $package->title,
-            'option' => $option->title,
-            'date' => Carbon::parse($booking->date)->format('M d Y'),
-            'time' => $booking->time->format('H:m'),
-            'supplier' => $booking->supplier,
-            'note' => $booking->note,
-            'guestName' => $booking->name,
-            'phone' => $booking->phone,
-            'hotel' => $booking->hotel,
-            'status_payment' => $booking->status_payment,
-            'collect' => $booking->collect,
-            'country' => $booking->country,
-            'adult' => $booking->adult,
-            'child' => $booking->child,
-            'price' => $booking->price,
-        ];
+        // $details = [
+        //     'to' => $guide->email,
+        //     'name' => $guide->name,
+        //     'ref' => $booking->ref_id,
+        //     'package' => $package->title,
+        //     'option' => $option->title,
+        //     'date' => Carbon::parse($booking->date)->format('M d Y'),
+        //     'time' => $booking->time->format('H:m'),
+        //     'supplier' => $booking->supplier,
+        //     'note' => $booking->note,
+        //     'guestName' => $booking->name,
+        //     'phone' => $booking->phone,
+        //     'hotel' => $booking->hotel,
+        //     'status_payment' => $booking->status_payment,
+        //     'collect' => $booking->collect,
+        //     'country' => $booking->country,
+        //     'adult' => $booking->adult,
+        //     'child' => $booking->child,
+        //     'price' => $booking->price,
+        // ];
 
         
         $booking->save();
 
-        \App\Jobs\RejectedGuideJob::dispatch($details);
+        // \App\Jobs\RejectedGuideJob::dispatch($details);
 
         if ($booking) {
             return ResponseFormatter::success($query, 'success');

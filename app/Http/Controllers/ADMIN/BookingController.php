@@ -521,7 +521,7 @@ class BookingController extends Controller
 
         $pages = $request->pages != null ? $request->pages : 10;
         $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
-        $direction =$request->input('direction', 'DESC');
+        $direction =$request->input('direction', 'ASC');
 
         $find = Bookings::where('date', $request->date)->with('packages', 'guides', 'notification')
                             ->orderBy($sortBy, $direction)

@@ -26,7 +26,7 @@ class BookingController extends Controller
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
-        $direction =$request->input('direction', 'DESC');
+        $direction =$request->input('direction', 'ASC');
 
         $bookings = Bookings::with('packages', 'guides', 'user', 'options', 'notification')->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
@@ -540,7 +540,7 @@ class BookingController extends Controller
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $sortBy = $request->sortBy == null ? $sortBy = 'date' : $sortBy = $request->sortBy;
-        $direction =$request->input('direction', 'DESC');
+        $direction =$request->input('direction', 'ASC');
 
         if($request->date_from > $request->date_end){
             $start = $request->date_end;

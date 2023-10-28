@@ -25,7 +25,7 @@ class BookingController extends Controller
     {
         $per_page = $request->input('per_page', 10);
         $page = $request->input('page', 1);
-        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
+        $sortBy = $request->sortBy == null ? $sortBy = 'date' : $sortBy = $request->sortBy;
         $direction =$request->input('direction', 'ASC');
 
         $bookings = Bookings::with('packages', 'guides', 'user', 'options', 'notification')->orderBy($sortBy, $direction)
@@ -520,7 +520,7 @@ class BookingController extends Controller
         }
 
         $pages = $request->pages != null ? $request->pages : 10;
-        $sortBy = $request->sortby == null ? $sortBy = 'id' : $sortBy = $request->sortby;
+        $sortBy = $request->sortby == null ? $sortBy = 'date' : $sortBy = $request->sortby;
         $direction =$request->input('direction', 'ASC');
 
         $find = Bookings::where('date', $request->date)->with('packages', 'guides', 'notification')

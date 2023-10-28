@@ -61,8 +61,7 @@ class NotificationController extends Controller
 
         \App\Jobs\AssignGuideJob::dispatch($details);
 
-        Notification::where('booking_id', $booking->id)
-                    ->where('guide_id', $guide->id)->delete();
+        Notification::where('booking_id', $booking->id)->delete();
 
         $query = Notification::create([
             'booking_id' => $booking->id,

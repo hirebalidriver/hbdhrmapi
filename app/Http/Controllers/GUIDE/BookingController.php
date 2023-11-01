@@ -61,8 +61,7 @@ class BookingController extends Controller
                     ->withCount('notification')
                     ->where('guide_id', $user->id)
                     ->where(function ($query) {
-                        $query->where('status', '=', 2)
-                              ->orWhere('status', '=', 6)
+                        $query->where('status', '=', 6)
                               ->orWhere('status', '=', 1)
                               ->orWhere('status', '=', 7);
                     })
@@ -84,8 +83,7 @@ class BookingController extends Controller
                         })
                         ->where('guide_id', $user->id)
                         ->where(function ($query) {
-                            $query->where('status', '=', 2)
-                                    ->orWhere('status', '=', 3)
+                            $query->Where('status', '=', 3)
                                   ->orWhere('status', '=', 6)
                                   ->orWhere('status', '=', 1)
                                   ->orWhere('status', '=', 7);

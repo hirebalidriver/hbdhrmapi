@@ -72,6 +72,9 @@ class NotificationController extends Controller
             'guide_id' => $guide->id,
         ]);
 
+        $booking->status = 6;
+        $booking-save();
+
         if($query) {
             return ResponseFormatter::success(null, 'success');
         }else{

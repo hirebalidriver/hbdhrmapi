@@ -72,6 +72,7 @@ class NotificationController extends Controller
             'guide_id' => $guide->id,
         ]);
 
+        $booking = Bookings::where('id',$request->booking_id)->first();
         $booking->status = 6;
         $booking-save();
 

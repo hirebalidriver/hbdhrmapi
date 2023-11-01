@@ -74,7 +74,7 @@ class NotificationController extends Controller
 
         $booking = Bookings::where('id',$request->booking_id)->first();
         $booking->status = 6;
-        $booking-save();
+        $booking->save();
 
         if($query) {
             return ResponseFormatter::success(null, 'success');

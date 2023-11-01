@@ -76,6 +76,6 @@ class Bookings extends Model
     }
 
     public function notification() {
-        return $this->hasOne(Notification::class, 'booking_id', 'id')->where('is_open', 0);
+        return $this->hasOne(Notification::class, 'booking_id', 'id');
     }
 }

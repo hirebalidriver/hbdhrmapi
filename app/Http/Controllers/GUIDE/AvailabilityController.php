@@ -33,6 +33,7 @@ class AvailabilityController extends Controller
                                 return $query->whereBetween('date', [$start, $end]);
                             })
                             ->where('guide_id', $user->id)
+                            ->where('booking_id', null)
                             ->orderBy($sortBy, $direction)
                             ->paginate($per_page, ['*'], 'page', $page);
 

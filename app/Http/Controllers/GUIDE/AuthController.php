@@ -137,6 +137,30 @@ class AuthController extends Controller
 
     }
 
+    public function updatePassword(Request $request)
+    {
+        
+        # Validation
+        $request->validate([
+            'old' => 'required',
+            'new' => 'required|confirmed',
+        ]);
+
+
+        #Match The Old Password
+        if(!Hash::check($request->old, auth()->guard('guide')->user()->password)){
+            return ResponseFormatter::error(null, 'failed');
+        }
+
+
+        #Update the new Password
+        Guides::whereId(auth()->guard('guide')->user()->id)->update([
+            'password' => Hash::make($request->new)
+        ]);
+
+        return ResponseFormatter::success(null, 'success');
+    }
+
     public function checkOTP(Request $request)
     {
         $rules = [

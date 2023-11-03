@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
     Route::controller(AuthController::class)->group(function() {
         Route::post('me', 'me');
         Route::post('profile/update', 'updateProfile');
+        Route::post('profile/update/password', 'updatePassword');
         Route::post('profile/update/fcm/token', 'updateFCMToken');
     });
 

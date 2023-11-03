@@ -137,7 +137,7 @@ class TrxController extends Controller
 
     public function destinations(Request $request) {
        
-        $destinations = Destinations::where('is_active', 1)->get();
+        $destinations = Destinations::where('is_active', 1)->orderBy("is_susuk","DESC")->get();
 
         if($destinations){
             return ResponseFormatter::success($destinations, 'success');

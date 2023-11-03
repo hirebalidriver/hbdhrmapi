@@ -51,6 +51,8 @@ Route::group(['middleware' => 'auth.guide', 'prefix' => 'auth'], function () {
         Route::post('booking/bill/upload', 'uploadBill');
         Route::post('booking/bill/delete', 'billDelete');
         Route::post('booking/bills', 'bills');
+        Route::post('booking/susuk', 'susuk');
+        Route::post('booking/bills/total/ticket', 'billsTotalTicket');
         Route::post('tour/completed', 'complateTour');
         Route::post('booking/guide/approved', 'guideApproved');
         Route::post('booking/guide/rejected', 'guideRejected');

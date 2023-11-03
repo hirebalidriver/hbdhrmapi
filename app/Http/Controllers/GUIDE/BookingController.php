@@ -265,13 +265,72 @@ class BookingController extends Controller
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
 
 
-        $query = Bills::where('booking_id', $request->booking_id)->get();
+        $query = Bills::where('booking_id', $request->booking_id)->where('is_susuk', 0)->get();
 
         if ($query) {
             return ResponseFormatter::success($query, 'success');
         } else {
             return ResponseFormatter::error(null, 'failed');
         }
+    }
+
+    public function susuk(Request $request)
+    {
+        $rules = [
+            'booking_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+
+        $query = Bills::where('booking_id', $request->booking_id)->where('is_susuk', 1)->get();
+
+        if ($query) {
+            return ResponseFormatter::success($query, 'success');
+        } else {
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function billsTotalTicket(Request $request)
+    {
+        $rules = [
+            'booking_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails())
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Validation Failed');
+
+
+        $query = Bills::where('booking_id', $request->booking_id)->where('is_susuk', 0)->get();
+
+        $total = 0;
+
+        if($query->isNotEmpty()) {
+
+            foreach($query as $item){
+                $total = $total + ($item->people * $item->price);
+            }
+
+            $data = [
+                'total' => number_format($total, 0, '.', '.'),
+
+            ];
+
+            return $data;
+        }else{
+            $data = [
+                'total' => number_format($total, 0, '.', '.'),
+
+            ];
+
+            return $data;
+        }
+
+        
     }
 
     public function guideApproved(Request $request)

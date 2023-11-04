@@ -57,6 +57,14 @@ class AvailabilityController extends Controller
 
         $user = auth()->guard('guide')->user();
 
+        $check = Availability::where('guide_id', $user->id)
+                            ->where('date', Carbon::parse($request->date)->format('Y-m-d'))
+                            ->first();
+
+        if($check) {
+            return ResponseFormatter::error(null, 'select other date');
+        }
+
         $create = Availability::create([
             'guide_id' => $user->id,
             'date' => Carbon::parse($request->date)->format('Y-m-d'),

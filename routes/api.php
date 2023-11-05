@@ -7,6 +7,7 @@ use App\Http\Controllers\ADMIN\BookingController;
 use App\Http\Controllers\ADMIN\DestinationController;
 use App\Http\Controllers\ADMIN\ExclusionController;
 use App\Http\Controllers\ADMIN\GuidesController;
+use App\Http\Controllers\ADMIN\UserController;
 use App\Http\Controllers\ADMIN\InclusionController;
 use App\Http\Controllers\ADMIN\NotificationController;
 use App\Http\Controllers\ADMIN\PackageController;
@@ -83,6 +84,16 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('guide/find', 'find');
         Route::post('guide/update', 'update');
         Route::post('guide/delete', 'delete');
+
+        Route::post('guides/availability', 'guideAvailability');
+    });
+
+    Route::controller(UserController::class)->group(function() {
+        Route::post('users', 'index');
+        Route::post('user/add', 'add');
+        Route::post('user/find', 'find');
+        Route::post('user/update', 'update');
+        Route::post('user/delete', 'delete');
 
         Route::post('guides/availability', 'guideAvailability');
     });

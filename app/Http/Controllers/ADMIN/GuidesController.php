@@ -149,6 +149,12 @@ class GuidesController extends Controller
             $guide->address = $request->address;
             $guide->status = $request->status;
 
+            if($request->password != null or $request->password != ""){
+                $guide->password = Hash::make($request->password);
+            }
+
+            $guide->save();
+
             $balance = Balances::where('guide_id', $guide->id)->first();
             if(!$balance) {
                 Balances::create([

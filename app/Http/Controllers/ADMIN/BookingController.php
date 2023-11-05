@@ -18,6 +18,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Notification;
 
 class BookingController extends Controller
 {
@@ -267,8 +268,9 @@ class BookingController extends Controller
         $booking->is_custom = $request->is_custom;
 
         if($request->is_custom) {
-            
             $booking->custom = $request->custom;
+            $booking->package_id = 0;
+            $booking->tour_id = 0;
         }else{
             $booking->custom = null;
         }
@@ -325,6 +327,9 @@ class BookingController extends Controller
                 'date' => $booking->date,
                 'note' => 'tour',
             ]);
+
+            Notification::where('guide_id', $guide->id)
+                        ->where('booking_id', $booking->id)->delete();
 
             // TOUR AND OPTIONS
             // $package = Packages::where('id', $booking->package_id)->first();

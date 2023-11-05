@@ -576,9 +576,31 @@ class BookingController extends Controller
                     ->orderBy($sortBy, $direction)
                     ->paginate($per_page, ['*'], 'page', $page);
         }else{
-
-            $find = Bookings::when($start, function($query) use ($start, $end){
-                            return $query->whereBetween('date', [$start, $end]);
+            if($request->status == 2) {
+                $find = Bookings::when($start, function($query) use ($start, $end){
+                        return $query->whereBetween('date', [$start, $end]);
+                            })
+                            ->when($supplier, function($query) use ($supplier){
+                                return $query->where('supplier', $supplier);
+                            })
+                            ->when($status, function($query) use ($status){
+                                return $query->where('status', 2)
+                                                ->orWhere('status', 3)
+                                                ->orWhere('status', 4)
+                                                ->orWhere('status', 6)
+                                                ->orWhere('status', 7)
+                                                ->orWhere('status', 8);
+                            })
+                            ->when($guest_name, function($query) use ($guest_name){
+                                return $query->where('name', 'LIKE', '%'.$guest_name.'%');
+                            })
+                            // ->where('is_multi_days', '<=', 1)
+                            ->with('packages', 'guides', 'user', 'options', 'notification')
+                            ->orderBy($sortBy, $direction)
+                            ->paginate($per_page, ['*'], 'page', $page);
+            }else{
+                $find = Bookings::when($start, function($query) use ($start, $end){
+                    return $query->whereBetween('date', [$start, $end]);
                         })
                         ->when($supplier, function($query) use ($supplier){
                             return $query->where('supplier', $supplier);
@@ -593,6 +615,8 @@ class BookingController extends Controller
                         ->with('packages', 'guides', 'user', 'options', 'notification')
                         ->orderBy($sortBy, $direction)
                         ->paginate($per_page, ['*'], 'page', $page);
+            }
+            
         }
 
         if($find) {

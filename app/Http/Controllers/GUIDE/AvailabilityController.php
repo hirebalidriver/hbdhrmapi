@@ -18,8 +18,8 @@ class AvailabilityController extends Controller
 
         $per_page = $request->input('per_page', 50);
         $page = $request->input('page', 1);
-        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
-        $direction =$request->input('direction', 'ASC');
+        $sortBy = 'date';
+        $direction = 'ASC';
 
         if($request->date_from > $request->date_end){
             $start = $request->date_end;

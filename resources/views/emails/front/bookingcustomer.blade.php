@@ -110,7 +110,7 @@
                                                       </td>
                                                    </tr>
                                                 </table>
-                                                <p style="margin: 0 0 16px;">Thanks for using hirebalidriver.com! Please contact us on +6281933116036 prior to the activity date!</p>
+                                                <p style="margin: 0 0 16px;">Thanks for using hirebalidriver.com! Please contact us on +6281237205332 prior to the activity date!</p>
                                              </div>
                                           </td>
                                        </tr>

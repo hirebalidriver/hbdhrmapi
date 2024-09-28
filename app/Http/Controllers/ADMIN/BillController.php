@@ -204,6 +204,7 @@ class BillController extends Controller
         $guest_name = $request->guest_name;
         $supplier = $request->supplier;
         $status = $request->status;
+        $created_at = $request->created_at;
 
         if($request->ref_id != '' || $request->ref_id != null) {
             $find = Bookings::where('ref_id', $request->ref_id)
@@ -214,6 +215,9 @@ class BillController extends Controller
 
             $find = Bookings::when($start, function($query) use ($start, $end){
                             return $query->whereBetween('date', [$start, $end]);
+                        })
+                        ->when($created_at, function($query) use ($created_at){
+                            return $query->whereBetween('created_at', $created_at);
                         })
                         ->when($supplier, function($query) use ($supplier){
                             return $query->where('supplier', $supplier);

@@ -233,6 +233,7 @@ class WishlistController extends Controller
                 'is_custom' => 0,
                 'paypalEmail' => $paypalEmail,
                 'order_id' => $request->orderId,
+                'created_at'=> date('Y-m-d H:i:s')
             ]);
 
             $dateObject = Carbon::createFromFormat('Y-m-d', $wishlist->date);

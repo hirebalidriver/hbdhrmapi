@@ -20,6 +20,15 @@ class Wishlists extends Model
         "payment",
         'adult_price',
         'child_price',
+        'first_name',
+        'last_name',
+        'email',
+        'phone_number',
+        'address',
+        'country',
+        'hotel',
+        'hotel_address',
+        'special_request'
     ];
 
     public function option() {

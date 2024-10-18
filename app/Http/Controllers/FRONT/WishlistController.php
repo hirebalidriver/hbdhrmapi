@@ -19,6 +19,43 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class WishlistController extends Controller
 {
+    public function index(Request $request)
+    {
+        $per_page = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $sortBy = $request->sortBy == null ? $sortBy = 'id' : $sortBy = $request->sortBy;
+        $direction =$request->input('direction', 'DESC');
+
+        $wishlists = Wishlists::orderBy($sortBy, $direction)
+                        ->paginate($per_page, ['*'], 'page', $page);
+
+        if($wishlists){
+            return ResponseFormatter::success($wishlists, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'success');
+        }
+    }
+
+    public function find(Request $request)
+    {
+        $rules = [
+            'id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+
+        $find = Wishlists::with('tour')->where('id',$request->id)->first();
+
+        if($find) {
+            return ResponseFormatter::success($find, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
     public function detail(Request $request)
     {
         $rules = [
@@ -115,6 +152,31 @@ class WishlistController extends Controller
             'adult_price' => $priceAdult->price,
             'child_price' => $priceChild ? $priceChild->price : 0,
         ]);
+
+        if($query) {
+            return ResponseFormatter::success($query, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+    
+    public function update(Request $request)
+    {
+        $rules = [
+            'first_name' => ['required'],
+            'last_name' => ['required'],
+            'email' => ['required'],
+            'phone_number' => ['required'],
+            'address' => ['required'],
+            'country' => ['required']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()){
+            return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
+        }
+        
+        $query = Wishlists::where('id',$request->id)->update($request->except(['id']));
 
         if($query) {
             return ResponseFormatter::success($query, 'success');

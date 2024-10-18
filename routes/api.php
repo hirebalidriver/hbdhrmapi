@@ -172,6 +172,11 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('time/add', 'add');
         Route::post('time/delete', 'delete');
     });
+
+    Route::controller(WishlistController::class)->group(function() {
+        Route::post('wishlists', 'index');
+        Route::post('wishlist/find', 'find');
+    });
 });
 
 
@@ -188,5 +193,6 @@ Route::group(['prefix' => 'front'], function () {
         Route::get('wishlist/booking', 'booking');
         Route::get('wishlist/booking/detail', 'findBooking');
         Route::get('wishlist/booking/send/mail', 'sendEmail');
+        Route::get('wishlist/update', 'update');
     });
 });

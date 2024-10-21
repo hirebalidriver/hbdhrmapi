@@ -51,6 +51,9 @@
                                                 <p style='color: #2f3134; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 16px; line-height: 130%; margin: 0 0 18px; text-align: left;'>
                                                    Travel Date : {{$details['date']}}
                                                 </p>
+                                                <p style='color: #2f3134; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 16px; line-height: 130%; margin: 0 0 18px; text-align: left;'>
+                                                   Travel Time : {{$details['time']}}
+                                                </p>
                                                 <div style="margin-bottom: 40px;">
                                                    <table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" width="100%">
                                                       <tbody>

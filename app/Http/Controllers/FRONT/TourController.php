@@ -4,6 +4,7 @@ namespace App\Http\Controllers\FRONT;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\BlackPeriod;
 use App\Models\Packages;
 use App\Models\Tours;
 use Illuminate\Http\Request;
@@ -56,6 +57,17 @@ class TourController extends Controller
 
         if($find) {
             return ResponseFormatter::success($find, 'success');
+        }else{
+            return ResponseFormatter::error(null, 'failed');
+        }
+    }
+
+    public function getBlackPeriod(Request $request)
+    {
+        $get = BlackPeriod::where('date', '>=', now())->get();
+
+        if($get) {
+            return ResponseFormatter::success($get, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

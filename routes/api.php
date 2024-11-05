@@ -3,6 +3,7 @@
 use App\Http\Controllers\ADMIN\AuthController;
 use App\Http\Controllers\ADMIN\AvailabilityController;
 use App\Http\Controllers\ADMIN\BillController;
+use App\Http\Controllers\ADMIN\BlackPeriodController;
 use App\Http\Controllers\ADMIN\BookingController;
 use App\Http\Controllers\ADMIN\DestinationController;
 use App\Http\Controllers\ADMIN\ExclusionController;
@@ -86,6 +87,14 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('guide/delete', 'delete');
 
         Route::post('guides/availability', 'guideAvailability');
+    });
+
+    Route::controller(BlackPeriodController::class)->group(function() {
+        Route::post('black_periods', 'index');
+        Route::post('black_period/add', 'add');
+        Route::post('black_period/find', 'find');
+        Route::post('black_period/update', 'update');
+        Route::post('black_period/delete', 'delete');
     });
 
     Route::controller(UserController::class)->group(function() {
@@ -185,6 +194,7 @@ Route::group(['prefix' => 'front'], function () {
     Route::controller(TourController::class)->group(function() {
         Route::get('tour/detail', 'tourByID');
         Route::get('tour/options', 'optionsByTourID');
+        Route::get('tour/get_black_period', 'getBlackPeriod');
     });
 
     Route::controller(WishlistController::class)->group(function() {

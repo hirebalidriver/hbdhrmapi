@@ -10,6 +10,11 @@ class Bookings extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
     protected $fillable = [
         'package_id',
         'guide_id',

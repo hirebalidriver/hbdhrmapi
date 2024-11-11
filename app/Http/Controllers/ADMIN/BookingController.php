@@ -29,15 +29,15 @@ class BookingController extends Controller
         // $sortBy = $request->sortBy == null ? $sortBy = 'date' : $sortBy = $request->sortBy;
         // $direction =$request->input('direction', 'ASC');
 
-        $sortBy ='date';
-        $direction ='ASC';
+        $sortBy = 'date';
+        $direction = 'ASC';
 
         $bookings = Bookings::with('packages', 'guides', 'user', 'options', 'notification')->orderBy($sortBy, $direction)
-                        ->paginate($per_page, ['*'], 'page', $page);
+            ->paginate($per_page, ['*'], 'page', $page);
 
-        if($bookings){
+        if ($bookings) {
             return ResponseFormatter::success($bookings, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -51,7 +51,7 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
@@ -66,17 +66,17 @@ class BookingController extends Controller
 
         $date_start = Carbon::parse(head($sortedDate))->format('Y-m-d');
 
-        if($count > 1){
+        if ($count > 1) {
             $isMulti = 1;
             $dateAll = $sortedDate;
-            $refId0 = $request->ref_id.'_MULTIDAYS0';
-        }else{
+            $refId0 = $request->ref_id . '_MULTIDAYS0';
+        } else {
             $isMulti = 0;
             $dateAll = null;
             $refId0 = $request->ref_id;
         }
 
-        if($request->is_custom) {
+        if ($request->is_custom) {
 
             $create = Bookings::insertGetId([
                 'ref_id' => $refId0,
@@ -105,13 +105,13 @@ class BookingController extends Controller
                 'is_multi_days' => $isMulti,
             ]);
 
-            if($count > 1){
+            if ($count > 1) {
                 $sortedDate = array_diff($sortedDate, array($date_start));
                 $n = 1;
-                foreach($sortedDate as $item){
+                foreach ($sortedDate as $item) {
                     $date = Carbon::parse($item)->format('Y-m-d');
                     $create = Bookings::create([
-                        'ref_id' => $request->ref_id.'_MULTIDAYS'.$n,
+                        'ref_id' => $request->ref_id . '_MULTIDAYS' . $n,
                         'package_id' => 0,
                         'tour_id' => 0,
                         'guide_id' => 0,
@@ -138,10 +138,8 @@ class BookingController extends Controller
                     ]);
                     $n++;
                 }
-
             }
-
-        }else{
+        } else {
             $create = Bookings::insertGetId([
                 'ref_id' => $refId0,
                 'package_id' => $request->package_id,
@@ -168,13 +166,13 @@ class BookingController extends Controller
                 'is_custom' => $request->is_custom,
             ]);
 
-            if($count > 1){
+            if ($count > 1) {
                 $sortedDate = array_diff($sortedDate, array($date_start));
                 $n = 1;
-                foreach($sortedDate as $item){
+                foreach ($sortedDate as $item) {
                     $date = Carbon::parse($item)->format('Y-m-d');
                     $create = Bookings::create([
-                        'ref_id' => $request->ref_id.'_MULTIDAYS'.$n,
+                        'ref_id' => $request->ref_id . '_MULTIDAYS' . $n,
                         'package_id' => $request->package_id,
                         'tour_id' => $request->tour_id,
                         'guide_id' => 0,
@@ -200,22 +198,22 @@ class BookingController extends Controller
                     ]);
                     $n++;
                 }
-
             }
         }
 
 
-        if($create) {
+        if ($create) {
             return ResponseFormatter::success($create, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
 
-    function array_sort_by_column(&$array, $column, $direction = SORT_ASC) {
+    function array_sort_by_column(&$array, $column, $direction = SORT_ASC)
+    {
         $reference_array = array();
 
-        foreach($array as $key => $row) {
+        foreach ($array as $key => $row) {
             $reference_array[$key] = $row[$column];
         }
 
@@ -230,17 +228,17 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
-        $booking = Bookings::where('id',$request->id)->first();
-        if(!$booking) return ResponseFormatter::error(null, 'not found');
+        $booking = Bookings::where('id', $request->id)->first();
+        if (!$booking) return ResponseFormatter::error(null, 'not found');
 
         $date = Carbon::parse($request->date)->format('Y-m-d');
         $dateOld = Carbon::parse($booking->date)->format('Y-m-d');
 
-        if($date != $dateOld) {
+        if ($date != $dateOld) {
             $booking->guide_id = 0;
             $booking->date = $date;
             Availability::where('booking_id', $booking->id)->delete();
@@ -261,27 +259,27 @@ class BookingController extends Controller
         $booking->country = $request->country;
         $booking->adult = $request->adult;
         $booking->child = $request->child;
-        $booking->price = $request->price;    
+        $booking->price = $request->price;
         $booking->down_payment = $request->down_payment;
 
         $booking->guide_fee = $request->guide_fee;
         $booking->is_custom = $request->is_custom;
 
-        if($request->is_custom) {
+        if ($request->is_custom) {
             $booking->custom = $request->custom;
             $booking->package_id = 0;
             $booking->tour_id = 0;
-        }else{
+        } else {
             $booking->custom = null;
         }
 
-        if($request->is_multi_days > 1) {
+        if ($request->is_multi_days > 1) {
             $booking->guide_fee = 0;
         }
 
-        if($booking->save()) {
+        if ($booking->save()) {
             return ResponseFormatter::success($booking, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -294,23 +292,23 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         DB::beginTransaction();
-        try{
+        try {
 
             $guide = Guides::find($request->guide_id);
-            if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+            if (!$guide) return ResponseFormatter::error(null, 'guide not found');
 
             $booking = Bookings::find($request->id);
-            if(!$booking) return ResponseFormatter::error(null, 'not found');
+            if (!$booking) return ResponseFormatter::error(null, 'not found');
 
             $check = Availability::where('guide_id', $guide->id)
-                                    ->whereDate('date', $booking->date)
-                                    ->first();
-            if($check) return ResponseFormatter::error(null, 'not available');
+                ->whereDate('date', $booking->date)
+                ->first();
+            if ($check) return ResponseFormatter::error(null, 'not available');
 
             $booking->guide_id = $request->guide_id;
             $booking->status = 6;
@@ -318,8 +316,8 @@ class BookingController extends Controller
             $booking->save();
 
             Availability::where('booking_id', $booking->id)
-                                    ->whereDate('date', $booking->date)
-                                    ->delete();
+                ->whereDate('date', $booking->date)
+                ->delete();
 
             Availability::create([
                 'guide_id' => $guide->id,
@@ -329,7 +327,7 @@ class BookingController extends Controller
             ]);
 
             Notification::where('guide_id', $guide->id)
-                        ->where('booking_id', $booking->id)->delete();
+                ->where('booking_id', $booking->id)->delete();
 
             // TOUR AND OPTIONS
             // $package = Packages::where('id', $booking->package_id)->first();
@@ -358,11 +356,10 @@ class BookingController extends Controller
 
             DB::commit();
 
-           
+
 
             return ResponseFormatter::success($booking, 'success');
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return ResponseFormatter::error($e, 'failed');
         }
     }
@@ -375,55 +372,56 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         $check = Bookings::where('status', '>', 2)->first();
-        if(!$check) return ResponseFormatter::error(null, 'change status failed');
+        if (!$check) return ResponseFormatter::error(null, 'change status failed');
 
         $booking = Bookings::find($request->id);
-        if(!$booking) return ResponseFormatter::error(null, 'not found');
+        if (!$booking) return ResponseFormatter::error(null, 'not found');
 
         $booking->status = $request->status;
 
-        if($request->status == 1){
+        if ($request->status == 1) {
 
             $guide = Guides::find($booking->guide_id);
-            if(!$guide) return ResponseFormatter::error(null, 'guide not found');
+            // if(!$guide) return ResponseFormatter::error(null, 'guide not found');
 
-            // TOUR AND OPTIONS
-            $package = Packages::where('id', $booking->package_id)->first();
-            $option = Tours::where('id', $booking->tour_id)->first();
+            if ($guide) {
+                // TOUR AND OPTIONS
+                $package = Packages::where('id', $booking->package_id)->first();
+                $option = Tours::where('id', $booking->tour_id)->first();
 
-            $details = [
-                'to' => $guide->email,
-                'name' => $guide->name,
-                'ref' => $booking->ref_id,
-                'package' => $package->title,
-                'option' => $option->title,
-                'date' => Carbon::parse($booking->date)->format('M d Y'),
-                'time' => $booking->time->format('H:m'),
-                'supplier' => $booking->supplier,
-                'note' => $booking->note,
-                'guestName' => $booking->name,
-                'phone' => $booking->phone,
-                'hotel' => $booking->hotel,
-                'status_payment' => $booking->status_payment,
-                'collect' => $booking->collect,
-                'country' => $booking->country,
-                'adult' => $booking->adult,
-                'child' => $booking->child,
-                'price' => $booking->price,
-            ];
+                $details = [
+                    'to' => $guide->email,
+                    'name' => $guide->name,
+                    'ref' => $booking->ref_id,
+                    'package' => $package->title,
+                    'option' => $option->title,
+                    'date' => Carbon::parse($booking->date)->format('M d Y'),
+                    'time' => $booking->time->format('H:m'),
+                    'supplier' => $booking->supplier,
+                    'note' => $booking->note,
+                    'guestName' => $booking->name,
+                    'phone' => $booking->phone,
+                    'hotel' => $booking->hotel,
+                    'status_payment' => $booking->status_payment,
+                    'collect' => $booking->collect,
+                    'country' => $booking->country,
+                    'adult' => $booking->adult,
+                    'child' => $booking->child,
+                    'price' => $booking->price,
+                ];
 
-            \App\Jobs\CancelBookingJob::dispatch($details);
-
+                \App\Jobs\CancelBookingJob::dispatch($details);
+            }
         }
 
-        if($booking->save()) {
+        if ($booking->save()) {
             return ResponseFormatter::success($booking, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -435,18 +433,18 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         DB::beginTransaction();
-            try{
+        try {
 
-            $booking = Bookings::where('id',$request->id)->first();
-            if(!$booking) return ResponseFormatter::error(null, 'not found');
+            $booking = Bookings::where('id', $request->id)->first();
+            if (!$booking) return ResponseFormatter::error(null, 'not found');
 
 
-            if($booking->is_multi_days == 1){
+            if ($booking->is_multi_days == 1) {
                 Bookings::where('is_multi_days', $booking->id)->delete();
             }
 
@@ -454,8 +452,7 @@ class BookingController extends Controller
 
             DB::commit();
             return ResponseFormatter::success(null, 'success');
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -467,18 +464,18 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         $booking = Bookings::where('id', $request->id)
-                    ->with('packages', 'guides', 'user', 'options', 'notification')
-                    ->first();
+            ->with('packages', 'guides', 'user', 'options', 'notification')
+            ->first();
 
         $multidays = null;
-        if($booking->is_multi_days == 1) {
+        if ($booking->is_multi_days == 1) {
             $multidays = Bookings::where('is_multi_days', $booking->id)
-                    ->get();
+                ->get();
         }
 
         $data = [
@@ -486,9 +483,9 @@ class BookingController extends Controller
             'multidays' => $multidays
         ];
 
-        if($booking) {
+        if ($booking) {
             return ResponseFormatter::success($data, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -500,17 +497,17 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         $booking = Bookings::where('ref_id', $request->ref_id)->get();
 
-        if(!$booking) return ResponseFormatter::error(null, 'not found');
+        if (!$booking) return ResponseFormatter::error(null, 'not found');
 
-        if($booking) {
+        if ($booking) {
             return ResponseFormatter::success($booking, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -523,23 +520,23 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         $pages = $request->pages != null ? $request->pages : 10;
         // $sortBy = $request->sortby == null ? $sortBy = 'date' : $sortBy = $request->sortby;
         // $direction =$request->input('direction', 'ASC');
-        $sortBy ='date';
-        $direction ='ASC';
+        $sortBy = 'date';
+        $direction = 'ASC';
 
         $find = Bookings::where('date', $request->date)->with('packages', 'guides', 'notification')
-                            ->orderBy($sortBy, $direction)
-                            ->paginate($pages);
+            ->orderBy($sortBy, $direction)
+            ->paginate($pages);
 
-        if($find) {
+        if ($find) {
             return ResponseFormatter::success($find, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -552,13 +549,13 @@ class BookingController extends Controller
         // $sortBy = $request->sortBy == null ? $sortBy = 'date' : $sortBy = $request->sortBy;
         // $direction =$request->input('direction', 'ASC');
 
-        $sortBy ='date';
-        $direction ='ASC';
+        $sortBy = 'created_at';
+        $direction = 'DESC';
 
-        if($request->date_from > $request->date_end){
+        if ($request->date_from > $request->date_end) {
             $start = $request->date_end;
             $end = $request->date_from;
-        }else{
+        } else {
             $start = $request->date_from;
             $end = $request->date_end;
         }
@@ -569,59 +566,58 @@ class BookingController extends Controller
 
         $multidays = null;
 
-        if($request->ref_id != '' || $request->ref_id != null) {
+        if ($request->ref_id != '' || $request->ref_id != null) {
             $find = Bookings::where('ref_id', $request->ref_id)
+                // ->where('is_multi_days', '<=', 1)
+                ->with('packages', 'guides', 'user', 'options', 'notification')
+                ->orderBy($sortBy, $direction)
+                ->paginate($per_page, ['*'], 'page', $page);
+        } else {
+            if ($request->status == 2) {
+                $find = Bookings::when($start, function ($query) use ($start, $end) {
+                    return $query->whereBetween('date', [$start, $end]);
+                })
+                    ->when($supplier, function ($query) use ($supplier) {
+                        return $query->where('supplier', $supplier);
+                    })
+                    ->when($status, function ($query) use ($status) {
+                        return $query->where('status', 2)
+                            ->orWhere('status', 3)
+                            ->orWhere('status', 4)
+                            ->orWhere('status', 6)
+                            ->orWhere('status', 7)
+                            ->orWhere('status', 8);
+                    })
+                    ->when($guest_name, function ($query) use ($guest_name) {
+                        return $query->where('name', 'LIKE', '%' . $guest_name . '%');
+                    })
                     // ->where('is_multi_days', '<=', 1)
                     ->with('packages', 'guides', 'user', 'options', 'notification')
                     ->orderBy($sortBy, $direction)
                     ->paginate($per_page, ['*'], 'page', $page);
-        }else{
-            if($request->status == 2) {
-                $find = Bookings::when($start, function($query) use ($start, $end){
-                        return $query->whereBetween('date', [$start, $end]);
-                            })
-                            ->when($supplier, function($query) use ($supplier){
-                                return $query->where('supplier', $supplier);
-                            })
-                            ->when($status, function($query) use ($status){
-                                return $query->where('status', 2)
-                                                ->orWhere('status', 3)
-                                                ->orWhere('status', 4)
-                                                ->orWhere('status', 6)
-                                                ->orWhere('status', 7)
-                                                ->orWhere('status', 8);
-                            })
-                            ->when($guest_name, function($query) use ($guest_name){
-                                return $query->where('name', 'LIKE', '%'.$guest_name.'%');
-                            })
-                            // ->where('is_multi_days', '<=', 1)
-                            ->with('packages', 'guides', 'user', 'options', 'notification')
-                            ->orderBy($sortBy, $direction)
-                            ->paginate($per_page, ['*'], 'page', $page);
-            }else{
-                $find = Bookings::when($start, function($query) use ($start, $end){
+            } else {
+                $find = Bookings::when($start, function ($query) use ($start, $end) {
                     return $query->whereBetween('date', [$start, $end]);
-                        })
-                        ->when($supplier, function($query) use ($supplier){
-                            return $query->where('supplier', $supplier);
-                        })
-                        ->when($status, function($query) use ($status){
-                            return $query->where('status', $status);
-                        })
-                        ->when($guest_name, function($query) use ($guest_name){
-                            return $query->where('name', 'LIKE', '%'.$guest_name.'%');
-                        })
-                        // ->where('is_multi_days', '<=', 1)
-                        ->with('packages', 'guides', 'user', 'options', 'notification')
-                        ->orderBy($sortBy, $direction)
-                        ->paginate($per_page, ['*'], 'page', $page);
+                })
+                    ->when($supplier, function ($query) use ($supplier) {
+                        return $query->where('supplier', $supplier);
+                    })
+                    ->when($status, function ($query) use ($status) {
+                        return $query->where('status', $status);
+                    })
+                    ->when($guest_name, function ($query) use ($guest_name) {
+                        return $query->where('name', 'LIKE', '%' . $guest_name . '%');
+                    })
+                    // ->where('is_multi_days', '<=', 1)
+                    ->with('packages', 'guides', 'user', 'options', 'notification')
+                    ->orderBy($sortBy, $direction)
+                    ->paginate($per_page, ['*'], 'page', $page);
             }
-            
         }
 
-        if($find) {
+        if ($find) {
             return ResponseFormatter::success($find, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }
@@ -633,18 +629,18 @@ class BookingController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return ResponseFormatter::error($validator->getMessageBag()->toArray(), 'Failed Validation');
         }
 
         $options = DB::table('tours')->select('tours.*')
-                        ->join('package_relations', 'package_relations.tour_id', 'tours.id')
-                        ->where('package_relations.package_id', $request->package_id)
-                        ->get();
+            ->join('package_relations', 'package_relations.tour_id', 'tours.id')
+            ->where('package_relations.package_id', $request->package_id)
+            ->get();
 
-        if($options) {
+        if ($options) {
             return ResponseFormatter::success($options, 'success');
-        }else{
+        } else {
             return ResponseFormatter::error(null, 'failed');
         }
     }

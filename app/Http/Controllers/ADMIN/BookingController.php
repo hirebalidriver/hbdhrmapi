@@ -549,7 +549,7 @@ class BookingController extends Controller
         // $sortBy = $request->sortBy == null ? $sortBy = 'date' : $sortBy = $request->sortBy;
         // $direction =$request->input('direction', 'ASC');
 
-        $sortBy = 'created_at';
+        $sortBy = 'date';
         $direction = 'DESC';
 
         if ($request->date_from > $request->date_end) {

@@ -42,7 +42,7 @@ jobs:
         envs: ENV_FILE_CONTENT,APP_KEY
         script: |
           # Stop and remove running containers
-          cd /var/www/hbdhrmapi
+          cd /root/hbdhrmapi
           docker-compose down
           
           # Remove all containers

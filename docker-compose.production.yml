@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Application Server
+  app:
+    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
+    container_name: hbdhrmapi_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./storage:/var/www/storage
+    networks:
+      - hbdhrmapi
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: hbdhrmapi_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./storage:/var/www/storage
+      - ./docker/nginx:/etc/nginx/conf.d
+    networks:
+      - hbdhrmapi
+    depends_on:
+      - app
+
+  # Redis for Queue
+  redis:
+    image: redis:alpine
+    container_name: hbdhrmapi_redis
+    restart: unless-stopped
+    networks:
+      - hbdhrmapi
+
+  # Queue Worker
+  queue-worker:
+    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
+    container_name: hbdhrmapi_queue_worker
+    restart: unless-stopped
+    command: "php artisan queue:work --tries=3"
+    volumes:
+      - ./storage:/var/www/storage
+    networks:
+      - hbdhrmapi
+    env_file:
+      - .env
+    depends_on:
+      - app
+      - redis
+
+  # Laravel Horizon (Queue Monitoring)
+  horizon:
+    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
+    container_name: hbdhrmapi_horizon
+    restart: unless-stopped
+    command: "php artisan horizon"
+    volumes:
+      - ./storage:/var/www/storage
+    networks:
+      - hbdhrmapi
+    env_file:
+      - .env
+    depends_on:
+      - app
+      - redis
+
+networks:
+  hbdhrmapi:
+    driver: bridge

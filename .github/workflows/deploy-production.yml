@@ -39,31 +39,33 @@ jobs:
         host: ${{ secrets.PRODUCTION_SERVER_IP }}
         username: ${{ secrets.PRODUCTION_SERVER_USER }}
         key: ${{ secrets.PRODUCTION_SSH_KEY }}
-        envs: ENV_FILE_CONTENT
+        envs: DOCKER_HUB_USERNAME, ENV_FILE_CONTENT # <-- PERUBAHAN 1: Tambahkan variabel di sini
         script: |
-          # Stop and remove running containers
+          # Pindah ke direktori aplikasi
           cd /root/hbdhrmapi
+          
+          # Hentikan container yang sedang berjalan
           docker-compose down
           
-          # Remove all containers
+          # (Opsional) Hapus container dan image lama untuk memastikan pembersihan total
+          # Hati-hati menggunakan perintah ini jika ada container/image lain di server Anda
           docker rm -f $(docker ps -a -q) || true
-          
-          # Remove all images
           docker rmi -f $(docker images -q) || true
           
-          # Pull the latest image
+          # Tarik image terbaru dari Docker Hub
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
           
-          # Create .env file with production values
+          # Buat file .env di server dengan konten dari GitHub Secrets
           echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
           
-          # Start services with new configuration
-          docker-compose up -d --force-recreate --build
+          # Jalankan docker-compose dengan variabel DOCKER_HUB_USERNAME
+          # <-- PERUBAHAN 2: Tambahkan variabel sebelum perintah docker-compose
+          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} docker-compose up -d --force-recreate --build
           
-          # Run migrations
+          # Jalankan migrasi database
           docker-compose exec app php artisan migrate --force
           
-          # Clear caches
+          # Bersihkan cache Laravel
           docker-compose exec app php artisan config:cache
           docker-compose exec app php artisan route:cache
           docker-compose exec app php artisan view:cache

@@ -1,0 +1,11 @@
+/node_modules
+/vendor
+/.idea
+/.vscode
+/.git
+.env
+.env.example
+docker-compose.yml
+Dockerfile
+README.md
+.gitignore

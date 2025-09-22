@@ -1,0 +1,52 @@
+name: Auto Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - master_do
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build Docker Image
+      run: |
+        docker build --no-cache -t kapamungkas/hirebalidriver:latest .
+
+    - name: Push Docker Image to Docker Hub
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+      run: |
+        echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        docker push kapamungkas/hirebalidriver:latest
+
+    - name: Deploy to DigitalOcean
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.DO_SERVER_IP }}
+        username: root
+        key: ${{ secrets.DO_SSH_KEY }}
+        script: |
+                # Hentikan dan hapus semua container yang berjalan
+                docker-compose down
+
+                # Hapus semua container (termasuk yang berhenti)
+                docker rm -f $(docker ps -a -q) || true
+                
+                # Hapus semua images (termasuk image lokal yang sudah ada)
+                docker rmi -f $(docker images -q) || true
+                
+                # Arahkan ke direktori project
+                cd /root/hrmhirebalidriver
+
+                # Tarik ulang image dari Docker Hub
+                docker pull kapamungkas/hirebalidriver:latest
+
+                # Gunakan docker-compose untuk membangun dan menjalankan container baru dengan image yang sudah di-pull
+                docker-compose up -d --force-recreate --build
+

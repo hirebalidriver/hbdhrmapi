@@ -39,33 +39,35 @@ jobs:
         host: ${{ secrets.PRODUCTION_SERVER_IP }}
         username: ${{ secrets.PRODUCTION_SERVER_USER }}
         key: ${{ secrets.PRODUCTION_SSH_KEY }}
-        envs: DOCKER_HUB_USERNAME, ENV_FILE_CONTENT # <-- PERUBAHAN 1: Tambahkan variabel di sini
         script: |
           # Pindah ke direktori aplikasi
           cd /root/hbdhrmapi
           
-          # Hentikan container yang sedang berjalan
+          # Hentikan dan hapus container lama yang terkait dengan proyek ini
           docker compose down
           
-          # (Opsional) Hapus container dan image lama untuk memastikan pembersihan total
-          # Hati-hati menggunakan perintah ini jika ada container/image lain di server Anda
-          docker rm -f $(docker ps -a -q) || true
-          docker rmi -f $(docker images -q) || true
+          # Hapus image lama dan tidak terpakai (dangling images) dengan aman
+          docker image prune -af
           
           # Tarik image terbaru dari Docker Hub
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
           
-          # Buat file .env di server dengan konten dari GitHub Secrets
+          # Buat file .env di server dari GitHub Secrets
           echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
           
-          # Jalankan docker compose dengan variabel DOCKER_HUB_USERNAME
-          # <-- PERUBAHAN 2: Tambahkan variabel sebelum perintah docker compose
-          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} docker compose up -d --force-recreate --build
+          # Jalankan container dari image yang baru ditarik. Opsi --build dihapus karena tidak perlu.
+          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} docker compose up -d --force-recreate
+          
+          # --- LANGKAH KRUSIAL UNTUK MENGHINDARI TIMEOUT ---
+          # Perbaiki izin akses folder agar Laravel bisa menulis log dan cache
+          echo "Fixing permissions..."
+          docker compose exec app chown -R www-data:www-data storage bootstrap/cache
           
           # Jalankan migrasi database
+          echo "Running database migrations..."
           docker compose exec app php artisan migrate --force
           
-          # Bersihkan cache Laravel
+          # Buat cache untuk optimasi
+          echo "Optimizing application..."
           docker compose exec app php artisan config:cache
           docker compose exec app php artisan route:cache
-          # docker compose exec app php artisan view:cache

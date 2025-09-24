@@ -10,7 +10,6 @@ services:
     volumes:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./storage:/var/www/storage
-      - app_volume:/var/www  # Named volume untuk sharing dengan nginx
     networks:
       - hbdhrmapi
     env_file:
@@ -28,7 +27,8 @@ services:
     volumes:
       - ./storage:/var/www/storage
       - ./docker/nginx:/etc/nginx/conf.d
-      - app_volume:/var/www  # Mount aplikasi dari app container
+      - ./public:/var/www/public  # Mount folder public langsung
+      - ./:/var/www              # Mount seluruh project untuk akses file lainnya
     networks:
       - hbdhrmapi
     depends_on:
@@ -50,7 +50,6 @@ services:
     command: "php artisan queue:work --tries=3"
     volumes:
       - ./storage:/var/www/storage
-      - app_volume:/var/www  # Mount aplikasi
     networks:
       - hbdhrmapi
     env_file:
@@ -67,7 +66,6 @@ services:
     command: "php artisan horizon"
     volumes:
       - ./storage:/var/www/storage
-      - app_volume:/var/www  # Mount aplikasi
     networks:
       - hbdhrmapi
     env_file:
@@ -75,10 +73,6 @@ services:
     depends_on:
       - app
       - redis
-
-# Named volumes untuk sharing data antar container
-volumes:
-  app_volume:
 
 networks:
   hbdhrmapi:

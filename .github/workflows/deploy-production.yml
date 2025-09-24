@@ -12,59 +12,51 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    - name: Deploy to Production Server
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.PRODUCTION_SERVER_IP }}
-        username: ${{ secrets.PRODUCTION_SERVER_USER }}
-        key: ${{ secrets.PRODUCTION_SSH_KEY }}
-        script: |
-          cd /root/hbdhrmapi
-          
-          # Hentikan dan hapus container lama + remove orphans
-          docker compose down --remove-orphans
-          
-          # Hapus image lama
-          docker image prune -af
-          
-          # Tarik image terbaru
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
-          
-          # Buat file .env
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
-          
-          # Jalankan container dengan volume shared public
-          docker compose up -d --force-recreate
-          
-          # ⚡ Fix permissions untuk Laravel
-          docker compose exec app mkdir -p storage bootstrap/cache app_public
-          docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
-          docker compose exec app chmod -R 775 storage bootstrap/cache app_public
-          
-          # Jalankan migrasi database
-          docker compose exec app php artisan migrate --force
-          
-          # Cache optimasi
-          docker compose exec app php artisan config:cache
-          docker compose exec app php artisan route:cache
+      - name: Deploy to Production Server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            cd /root/hbdhrmapi
+
+            docker compose down --remove-orphans
+            docker image prune -af
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
+
+            # Buat file .env dari secret
+            echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+
+            docker compose up -d --force-recreate
+
+            # ⚡ Fix permissions
+            docker compose exec app mkdir -p storage bootstrap/cache app_public
+            docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
+            docker compose exec app chmod -R 775 storage bootstrap/cache app_public
+
+            # Migrasi dan cache optimasi
+            docker compose exec app php artisan migrate --force
+            docker compose exec app php artisan config:cache
+            docker compose exec app php artisan route:cache

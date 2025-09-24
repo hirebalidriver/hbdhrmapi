@@ -40,34 +40,31 @@ jobs:
         username: ${{ secrets.PRODUCTION_SERVER_USER }}
         key: ${{ secrets.PRODUCTION_SSH_KEY }}
         script: |
-          # Pindah ke direktori aplikasi
           cd /root/hbdhrmapi
           
-          # Hentikan dan hapus container lama yang terkait dengan proyek ini
-          docker compose down
+          # Hentikan dan hapus container lama + remove orphans
+          docker compose down --remove-orphans
           
-          # Hapus image lama dan tidak terpakai (dangling images) dengan aman
+          # Hapus image lama
           docker image prune -af
           
-          # Tarik image terbaru dari Docker Hub
+          # Tarik image terbaru
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
           
-          # Buat file .env di server dari GitHub Secrets
+          # Buat file .env
           echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
           
-          # Jalankan container dari image yang baru ditarik. Opsi --build dihapus karena tidak perlu.
-          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} docker compose up -d --force-recreate
+          # Jalankan container dengan volume shared public
+          docker compose up -d --force-recreate
           
-          # --- LANGKAH KRUSIAL UNTUK MENGHINDARI TIMEOUT ---
-          # Perbaiki izin akses folder agar Laravel bisa menulis log dan cache
-          echo "Fixing permissions..."
-          docker compose exec app chown -R www-data:www-data storage bootstrap/cache
+          # ⚡ Fix permissions untuk Laravel
+          docker compose exec app mkdir -p storage bootstrap/cache app_public
+          docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
+          docker compose exec app chmod -R 775 storage bootstrap/cache app_public
           
           # Jalankan migrasi database
-          echo "Running database migrations..."
           docker compose exec app php artisan migrate --force
           
-          # Buat cache untuk optimasi
-          echo "Optimizing application..."
+          # Cache optimasi
           docker compose exec app php artisan config:cache
           docker compose exec app php artisan route:cache

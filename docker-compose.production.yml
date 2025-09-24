@@ -1,18 +1,15 @@
-# Atribut version sudah tidak diperlukan dan dihapus
-volumes:
-  app-code:
+version: '3.8'
 
 services:
   # Application Server
   app:
-    image: ${DOCK_HUB_USERNAME}/hbdhrmapi:latest # Pastikan variabel ini benar
+    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
     container_name: hbdhrmapi_app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
-      - app-code:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./docker/php/custom-www.conf:/usr/local/etc/php-fpm.d/www.conf # <-- PERBAIKAN UTAMA
+      - ./storage:/var/www/storage
     networks:
       - hbdhrmapi
     env_file:
@@ -28,7 +25,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - app-code:/var/www:ro
+      - ./storage:/var/www/storage
       - ./docker/nginx:/etc/nginx/conf.d
     networks:
       - hbdhrmapi
@@ -45,12 +42,12 @@ services:
 
   # Queue Worker
   queue-worker:
-    image: ${DOCK_HUB_USERNAME}/hbdhrmapi:latest # Pastikan variabel ini benar
+    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
     container_name: hbdhrmapi_queue_worker
     restart: unless-stopped
     command: "php artisan queue:work --tries=3"
     volumes:
-      - app-code:/var/www
+      - ./storage:/var/www/storage
     networks:
       - hbdhrmapi
     env_file:
@@ -59,14 +56,14 @@ services:
       - app
       - redis
 
-  # Laravel Horizon
+  # Laravel Horizon (Queue Monitoring)
   horizon:
-    image: ${DOCK_HUB_USERNAME}/hbdhrmapi:latest # Pastikan variabel ini benar
+    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
     container_name: hbdhrmapi_horizon
     restart: unless-stopped
     command: "php artisan horizon"
     volumes:
-      - app-code:/var/www
+      - ./storage:/var/www/storage
     networks:
       - hbdhrmapi
     env_file:

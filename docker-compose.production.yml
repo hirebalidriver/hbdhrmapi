@@ -1,15 +1,18 @@
-version: '3.8'
+# Atribut version sudah tidak diperlukan dan dihapus
+volumes:
+  app-code:
 
 services:
   # Application Server
   app:
-    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
+    image: ${DOCK_HUB_USERNAME}/hbdhrmapi:latest # Pastikan variabel ini benar
     container_name: hbdhrmapi_app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
+      - app-code:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./storage:/var/www/storage
+      - ./docker/php/custom-www.conf:/usr/local/etc/php-fpm.d/www.conf # <-- PERBAIKAN UTAMA
     networks:
       - hbdhrmapi
     env_file:
@@ -25,10 +28,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./storage:/var/www/storage
+      - app-code:/var/www:ro
       - ./docker/nginx:/etc/nginx/conf.d
-      - ./public:/var/www/public  # Mount folder public langsung
-      - ./:/var/www              # Mount seluruh project untuk akses file lainnya
     networks:
       - hbdhrmapi
     depends_on:
@@ -42,14 +43,14 @@ services:
     networks:
       - hbdhrmapi
 
-  # Queue Worker updated to use environment variable for image
+  # Queue Worker
   queue-worker:
-    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
+    image: ${DOCK_HUB_USERNAME}/hbdhrmapi:latest # Pastikan variabel ini benar
     container_name: hbdhrmapi_queue_worker
     restart: unless-stopped
     command: "php artisan queue:work --tries=3"
     volumes:
-      - ./storage:/var/www/storage
+      - app-code:/var/www
     networks:
       - hbdhrmapi
     env_file:
@@ -58,14 +59,14 @@ services:
       - app
       - redis
 
-  # Laravel Horizon (Queue Monitoring)
+  # Laravel Horizon
   horizon:
-    image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
+    image: ${DOCK_HUB_USERNAME}/hbdhrmapi:latest # Pastikan variabel ini benar
     container_name: hbdhrmapi_horizon
     restart: unless-stopped
     command: "php artisan horizon"
     volumes:
-      - ./storage:/var/www/storage
+      - app-code:/var/www
     networks:
       - hbdhrmapi
     env_file:

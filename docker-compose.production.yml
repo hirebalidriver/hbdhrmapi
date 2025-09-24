@@ -40,7 +40,7 @@ services:
     networks:
       - hbdhrmapi
 
-  # Queue Worker
+  # Queue Worker updated to use environment variable for image
   queue-worker:
     image: ${DOCKER_HUB_USERNAME}/hbdhrmapi:latest
     container_name: hbdhrmapi_queue_worker

@@ -45,7 +45,7 @@ jobs:
           cd /root/hbdhrmapi
           
           # Hentikan container yang sedang berjalan
-          docker-compose down
+          docker compose down
           
           # (Opsional) Hapus container dan image lama untuk memastikan pembersihan total
           # Hati-hati menggunakan perintah ini jika ada container/image lain di server Anda
@@ -58,14 +58,14 @@ jobs:
           # Buat file .env di server dengan konten dari GitHub Secrets
           echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
           
-          # Jalankan docker-compose dengan variabel DOCKER_HUB_USERNAME
-          # <-- PERUBAHAN 2: Tambahkan variabel sebelum perintah docker-compose
-          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} docker-compose up -d --force-recreate --build
+          # Jalankan docker compose dengan variabel DOCKER_HUB_USERNAME
+          # <-- PERUBAHAN 2: Tambahkan variabel sebelum perintah docker compose
+          DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }} docker compose up -d --force-recreate --build
           
           # Jalankan migrasi database
-          docker-compose exec app php artisan migrate --force
+          docker compose exec app php artisan migrate --force
           
           # Bersihkan cache Laravel
-          docker-compose exec app php artisan config:cache
-          docker-compose exec app php artisan route:cache
-          # docker-compose exec app php artisan view:cache
+          docker compose exec app php artisan config:cache
+          docker compose exec app php artisan route:cache
+          # docker compose exec app php artisan view:cache

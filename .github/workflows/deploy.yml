@@ -33,7 +33,7 @@ jobs:
         key: ${{ secrets.DO_SSH_KEY }}
         script: |
                 # Hentikan dan hapus semua container yang berjalan
-                docker-compose down
+                docker compose down
 
                 # Hapus semua container (termasuk yang berhenti)
                 docker rm -f $(docker ps -a -q) || true
@@ -47,6 +47,5 @@ jobs:
                 # Tarik ulang image dari Docker Hub
                 docker pull kapamungkas/hirebalidriver:latest
 
-                # Gunakan docker-compose untuk membangun dan menjalankan container baru dengan image yang sudah di-pull
-                docker-compose up -d --force-recreate --build
-
+                # Gunakan docker compose untuk membangun dan menjalankan container baru dengan image yang sudah di-pull
+                docker compose up -d --force-recreate --build

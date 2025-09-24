@@ -42,7 +42,7 @@ jobs:
         script: |
           # Stop and remove running containers
           cd /var/www/hbdhrmapi
-          docker-compose down
+          docker compose down
           
           # Remove all containers
           docker rm -f $(docker ps -a -q) || true
@@ -107,12 +107,12 @@ jobs:
           EOF
           
           # Start services with new configuration
-          docker-compose up -d --force-recreate --build
+          docker compose up -d --force-recreate --build
           
           # Run migrations
-          docker-compose exec app php artisan migrate --force
+          docker compose exec app php artisan migrate --force
           
           # Clear caches
-          docker-compose exec app php artisan config:cache
-          docker-compose exec app php artisan route:cache
-          docker-compose exec app php artisan view:cache
+          docker compose exec app php artisan config:cache
+          docker compose exec app php artisan route:cache
+          docker compose exec app php artisan view:cache

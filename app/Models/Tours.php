@@ -22,6 +22,13 @@ class Tours extends Model
         'discount'
     ];
 
+    // Accessor for IDR guide fee
+    public function getIdrGuideFeeAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->guide_fee * $conversionRate;
+    }
+
     public function prices() {
         return $this->hasMany(Prices::class, 'tour_id', 'id');
     }

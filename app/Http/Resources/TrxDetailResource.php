@@ -14,6 +14,8 @@ class TrxDetailResource extends JsonResource
      */
     public function toArray($request)
     {
+        // Get conversion rate
+        $conversionRate = \App\Models\CurrencySettings::getConversionRate();
 
         // status : 0 = pending, 1 = success, 2 = reject
         // if($this->status == 1){
@@ -34,9 +36,13 @@ class TrxDetailResource extends JsonResource
             'adult' => $this->booking->adult,
             'child' => $this->booking->child,
             'guide_fee' => 'IDR '.number_format($this->booking->guide_fee, 0, '.', '.'),
+            'guide_fee_idr' => 'IDR '.number_format($this->booking->idr_guide_fee, 0, '.', '.'),
             'susuk' => 'IDR '.number_format(($this->booking->susuk_guide+$this->booking->susuk_hbd), 0, '.', '.'),
+            'susuk_idr' => 'IDR '.number_format($this->booking->idr_susuk_guide + $this->booking->idr_susuk_hbd, 0, '.', '.'),
             'cost' => 'IDR '.number_format($this->booking->tiket_total, 0, '.', '.'),
+            'cost_idr' => 'IDR '.number_format($this->booking->idr_tiket_total, 0, '.', '.'),
             'additional' => 'IDR '.number_format($this->booking->additional_price, 0, '.', '.'),
+            'additional_idr' => 'IDR '.number_format($this->booking->idr_additional_price, 0, '.', '.'),
             'note' => $this->booking->note_price,
             // 'all' => $this->booking,
         ];

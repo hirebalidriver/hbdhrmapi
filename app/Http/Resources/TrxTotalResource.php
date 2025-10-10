@@ -17,7 +17,8 @@ class TrxTotalResource extends JsonResource
         $guide_fee = $this->booking->guide_fee;
 
         return [
-            'guide_fee' => 'IDR '.$guide_fee,
+            'guide_fee' => 'IDR '.number_format($guide_fee, 0, '.', '.'),
+            'guide_fee_idr' => 'IDR '.number_format($this->booking->idr_guide_fee, 0, '.', '.'),
         ];
     }
 }

@@ -24,6 +24,13 @@ class Transactions extends Model
         'travel_date',
     ];
 
+    // Accessor for IDR price
+    public function getIdrPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->price * $conversionRate;
+    }
+
     public function booking() {
         return $this->hasOne(Bookings::class, 'id', 'booking_id');
     }

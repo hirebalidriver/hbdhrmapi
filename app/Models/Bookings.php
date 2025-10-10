@@ -60,6 +60,67 @@ class Bookings extends Model
         'time' => 'datetime:H:i',
     ];
 
+    // Accessors for IDR prices
+    public function getIdrPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->price * $conversionRate;
+    }
+
+    public function getIdrDownPaymentAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->down_payment * $conversionRate;
+    }
+
+    public function getIdrGuideFeeAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->guide_fee * $conversionRate;
+    }
+
+    public function getIdrBillTotalAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->bill_total * $conversionRate;
+    }
+
+    public function getIdrSusukHbdAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->susuk_hbd * $conversionRate;
+    }
+
+    public function getIdrSusukGuideAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->susuk_guide * $conversionRate;
+    }
+
+    public function getIdrTiketTotalAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->tiket_total * $conversionRate;
+    }
+
+    public function getIdrAdditionalPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->additional_price * $conversionRate;
+    }
+
+    public function getIdrAdultPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->adult_price * $conversionRate;
+    }
+
+    public function getIdrChildPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->child_price * $conversionRate;
+    }
+
     public function packages() {
         return $this->hasOne(Packages::class, 'id', 'package_id');
     }

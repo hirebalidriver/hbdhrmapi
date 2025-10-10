@@ -20,7 +20,8 @@ class GuideResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'balance' => 'IDR '.$balance->balance,
+            'balance' => 'IDR '.number_format($balance->balance, 0, '.', '.'),
+            'balance_idr' => 'IDR '.number_format($balance->balance * \App\Models\CurrencySettings::getConversionRate(), 0, '.', '.'),
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'password' => $this->password,

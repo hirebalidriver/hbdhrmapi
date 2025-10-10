@@ -17,4 +17,11 @@ class Prices extends Model
         "price",
         "is_active",
     ];
+
+    // Accessor for IDR price
+    public function getIdrPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return (int)($this->price * $conversionRate);
+    }
 }

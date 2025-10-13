@@ -13,7 +13,7 @@ services:
     networks:
       - hbdhrmapi_dev
     env_file:
-      - .env
+      - .env.dev
     depends_on:
       - redis
 

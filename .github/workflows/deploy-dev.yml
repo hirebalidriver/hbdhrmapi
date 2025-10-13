@@ -47,7 +47,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:dev
 
             # Buat file .env dari secret
-            echo "${{ secrets.DEV_ENV_FILE_CONTENT }}" > .env
+            echo "${{ secrets.DEV_ENV_FILE_CONTENT }}" > .env.dev
 
             docker compose up -d --force-recreate
 

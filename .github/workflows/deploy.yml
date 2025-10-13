@@ -8,44 +8,54 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: digitalocean
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Build Docker Image
-      run: |
-        docker build --no-cache -t kapamungkas/hirebalidriver:latest .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Push Docker Image to Docker Hub
-      env:
-        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-      run: |
-        echo "$DOCKER_HUB_TOKEN" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-        docker push kapamungkas/hirebalidriver:latest
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-    - name: Deploy to DigitalOcean
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.DO_SERVER_IP }}
-        username: root
-        key: ${{ secrets.DO_SSH_KEY }}
-        script: |
-                # Hentikan dan hapus semua container yang berjalan
-                docker compose down
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-                # Hapus semua container (termasuk yang berhenti)
-                docker rm -f $(docker ps -a -q) || true
-                
-                # Hapus semua images (termasuk image lokal yang sudah ada)
-                docker rmi -f $(docker images -q) || true
-                
-                # Arahkan ke direktori project
-                cd /root/hrmhirebalidriver
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DO_SERVER_IP }}
+          username: ${{ secrets.DO_SERVER_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /root/hrmhirebalidriver
 
-                # Tarik ulang image dari Docker Hub
-                docker pull kapamungkas/hirebalidriver:latest
+            docker compose down --remove-orphans
+            docker image prune -af
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
 
-                # Gunakan docker compose untuk membangun dan menjalankan container baru dengan image yang sudah di-pull
-                docker compose up -d --force-recreate --build
+            # Buat file .env dari secret
+            echo "${{ secrets.DO_ENV_FILE_CONTENT }}" > .env
+
+            docker compose up -d --force-recreate
+
+            # ⚡ Fix permissions
+            docker compose exec app mkdir -p storage bootstrap/cache app_public
+            docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
+            docker compose exec app chmod -R 775 storage bootstrap/cache app_public
+
+            # Migrasi dan cache optimasi
+            docker compose exec app php artisan migrate --force
+            docker compose exec app php artisan config:cache
+            docker compose exec app php artisan route:cache

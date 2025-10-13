@@ -9,110 +9,54 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: staging
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:staging
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:staging
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    - name: Deploy to Staging Server
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.STAGING_SERVER_IP }}
-        username: ${{ secrets.STAGING_SERVER_USER }}
-        key: ${{ secrets.STAGING_SSH_KEY }}
-        envs: ENV_FILE_CONTENT,APP_KEY
-        script: |
-          # Stop and remove running containers
-          cd /var/www/hbdhrmapi
-          docker compose down
-          
-          # Remove all containers
-          docker rm -f $(docker ps -a -q) || true
-          
-          # Remove all images
-          docker rmi -f $(docker images -q) || true
-          
-          # Pull the staging image
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:staging
-          
-          # Create .env file with staging values
-          cat > .env << EOF
-          APP_NAME=Laravel
-          APP_ENV=staging
-          APP_KEY=${{ secrets.APP_KEY }}
-          APP_DEBUG=true
-          APP_URL=${{ secrets.STAGING_APP_URL }}
-          SPA_URL=${{ secrets.STAGING_SPA_URL }}
-          
-          LOG_CHANNEL=stack
-          LOG_DEPRECATIONS_CHANNEL=null
-          LOG_LEVEL=debug
-          
-          DB_CONNECTION=mysql
-          DB_HOST=${{ secrets.STAGING_DB_HOST }}
-          DB_PORT=${{ secrets.STAGING_DB_PORT }}
-          DB_DATABASE=${{ secrets.STAGING_DB_DATABASE }}
-          DB_USERNAME=${{ secrets.STAGING_DB_USERNAME }}
-          DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
-          
-          BROADCAST_DRIVER=log
-          CACHE_DRIVER=redis
-          FILESYSTEM_DISK=s3
-          QUEUE_CONNECTION=redis
-          SESSION_DRIVER=redis
-          SESSION_LIFETIME=120
-          SESSION_DOMAIN=${{ secrets.STAGING_SESSION_DOMAIN }}
-          
-          SANCTUM_STATEFUL_DOMAINS=${{ secrets.STAGING_SANCTUM_STATEFUL_DOMAINS }}
-          
-          REDIS_HOST=redis
-          REDIS_PASSWORD=null
-          REDIS_PORT=6379
-          REDIS_SCHEME=tcp
-          
-          MAIL_MAILER=${{ secrets.STAGING_MAIL_MAILER }}
-          MAIL_HOST=${{ secrets.STAGING_MAIL_HOST }}
-          MAIL_PORT=${{ secrets.STAGING_MAIL_PORT }}
-          MAIL_USERNAME=${{ secrets.STAGING_MAIL_USERNAME }}
-          MAIL_PASSWORD=${{ secrets.STAGING_MAIL_PASSWORD }}
-          MAIL_ENCRYPTION=${{ secrets.STAGING_MAIL_ENCRYPTION }}
-          MAIL_FROM_ADDRESS=${{ secrets.STAGING_MAIL_FROM_ADDRESS }}
-          MAIL_FROM_NAME="${{ secrets.STAGING_MAIL_FROM_NAME }}"
-          
-          AWS_ACCESS_KEY_ID=${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY=${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION=${{ secrets.STAGING_AWS_DEFAULT_REGION }}
-          AWS_BUCKET=${{ secrets.STAGING_AWS_BUCKET }}
-          AWS_USE_PATH_STYLE_ENDPOINT=false
-          
-          FIREBASE_SERVER_KEY=${{ secrets.STAGING_FIREBASE_SERVER_KEY }}
-          EOF
-          
-          # Start services with new configuration
-          docker compose up -d --force-recreate --build
-          
-          # Run migrations
-          docker compose exec app php artisan migrate --force
-          
-          # Clear caches
-          docker compose exec app php artisan config:cache
-          docker compose exec app php artisan route:cache
-          docker compose exec app php artisan view:cache
+      - name: Deploy to Staging Server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.STAGING_SERVER_IP }}
+          username: ${{ secrets.STAGING_SERVER_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /var/www/hbdhrmapi
+
+            docker compose down --remove-orphans
+            docker image prune -af
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:staging
+
+            # Buat file .env dari secret
+            echo "${{ secrets.STAGING_ENV_FILE_CONTENT }}" > .env
+
+            docker compose up -d --force-recreate
+
+            # ⚡ Fix permissions
+            docker compose exec app mkdir -p storage bootstrap/cache app_public
+            docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
+            docker compose exec app chmod -R 775 storage bootstrap/cache app_public
+
+            # Migrasi dan cache optimasi
+            docker compose exec app php artisan migrate --force
+            docker compose exec app php artisan config:cache
+            docker compose exec app php artisan route:cache

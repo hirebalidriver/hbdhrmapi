@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.PRODUCTION_SERVER_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           script: |
-            cd /var/www/hbdhrmapi-dev
+            cd  /root/hbdhrmapi-dev
 
             docker compose  down --remove-orphans
             docker image prune -af

@@ -7,7 +7,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./storage:/var/www/storage
+      - .:/var/www  # <-- TAMBAHKAN BARIS INI
     networks:
       - hbdhrmapi_dev
     env_file:
@@ -23,7 +23,7 @@ services:
     ports:
       - "8001:80"
     volumes:
-      - ./storage:/var/www/storage
+      - .:/var/www  # <-- TAMBAHKAN BARIS INI
       - ./docker/nginx:/etc/nginx/conf.d
     networks:
       - hbdhrmapi_dev
@@ -47,7 +47,7 @@ services:
     restart: unless-stopped
     command: "php artisan queue:work --tries=3"
     volumes:
-      - ./storage:/var/www/storage
+      - .:/var/www  # <-- TAMBAHKAN BARIS INI
     networks:
       - hbdhrmapi_dev
     env_file:
@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
     command: "php artisan horizon"
     volumes:
-      - ./storage:/var/www/storage
+      - .:/var/www  # <-- TAMBAHKAN BARIS INI
     networks:
       - hbdhrmapi_dev
     env_file:

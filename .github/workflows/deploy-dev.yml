@@ -46,9 +46,9 @@ jobs:
             docker image prune -af
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:dev
             # Tulis DOCKER_HUB_USERNAME terlebih dahulu
-            echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" > .env.dev
+            echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" > .env
             # Buat file .env dari secret
-            echo "${{ secrets.DEV_ENV_FILE_CONTENT }}" > .env.dev
+            echo "${{ secrets.DEV_ENV_FILE_CONTENT }}" > .env
 
             docker compose up -d --force-recreate
 

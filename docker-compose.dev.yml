@@ -24,6 +24,7 @@ services:
       - "8001:80"
     volumes:
       - ./storage:/var/www/storage
+      - ./.env:/var/www/.env  # Add this line
       - ./docker/nginx:/etc/nginx/conf.d
     networks:
       - hbdhrmapi_dev
@@ -48,6 +49,7 @@ services:
     command: "php artisan queue:work --tries=3"
     volumes:
       - ./storage:/var/www/storage
+      - ./.env:/var/www/.env  # Add this line
     networks:
       - hbdhrmapi_dev
     env_file:
@@ -64,6 +66,7 @@ services:
     command: "php artisan horizon"
     volumes:
       - ./storage:/var/www/storage
+      - ./.env:/var/www/.env  # Add this line
     networks:
       - hbdhrmapi_dev
     env_file:

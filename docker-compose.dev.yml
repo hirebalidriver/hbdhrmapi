@@ -8,6 +8,7 @@ services:
     volumes:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./storage:/var/www/storage
+      - ./.env:/var/www/.env  # Add this line
     networks:
       - hbdhrmapi_dev
     env_file:

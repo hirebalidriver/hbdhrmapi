@@ -52,8 +52,8 @@ jobs:
 
             docker compose up -d --force-recreate
 
-            # ⚡ Fix permissions
-            docker compose exec app mkdir -p storage bootstrap/cache app_public
+            # ⚡️ Setup direktori dan izin (versi lebih ringkas)
+            docker compose exec app mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache app_public
             docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
             docker compose exec app chmod -R 775 storage bootstrap/cache app_public
 

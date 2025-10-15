@@ -4,7 +4,7 @@ This document explains how to set up and use the deployment workflows for the HB
 
 ## Deployment Workflows
 
-There are two deployment workflows available:
+There are three deployment workflows available:
 
 1. **Production Deployment** (`.github/workflows/deploy-production.yml`)
    - Triggers on pushes to `main` or `production` branches
@@ -13,6 +13,10 @@ There are two deployment workflows available:
 2. **Staging Deployment** (`.github/workflows/deploy-staging.yml`)
    - Triggers on pushes to `develop` or `staging` branches
    - Deploys to the staging environment
+
+3. **Development Deployment** (`.github/workflows/deploy-dev.yml`)
+   - Triggers on pushes to `dev` or `development` branches
+   - Deploys to the development environment
 
 ## Required Secrets
 
@@ -79,6 +83,12 @@ For the deployment workflows to function correctly, you need to set the followin
 - `STAGING_AWS_BUCKET` - AWS S3 bucket name (staging)
 - `STAGING_FIREBASE_SERVER_KEY` - Firebase server key for push notifications (staging)
 
+### Development Environment Variables
+- `DEV_SERVER_IP` - IP address of your development server
+- `DEV_SERVER_USER` - SSH username for your development server
+- `DEV_SSH_KEY` - Private SSH key for accessing the development server
+- `DEV_ENV_FILE_CONTENT` - Complete .env.dev file content for development
+
 ## Deployment Process
 
 1. **Build Process**:
@@ -88,11 +98,12 @@ For the deployment workflows to function correctly, you need to set the followin
 
 2. **Deployment Process**:
    - Connects to the server via SSH
-   - Stops and removes existing containers
-   - Removes all Docker images
+   - Stops and removes existing containers with `--remove-orphans`
+   - Prunes unused Docker images
    - Pulls the latest image from Docker Hub
    - Creates a new `.env` file with the appropriate environment variables
-   - Starts services with `docker-compose up -d --force-recreate --build`
+   - Starts services with `docker-compose up -d --force-recreate`
+   - Sets proper permissions for storage directories
    - Runs database migrations
    - Clears application caches
 
@@ -105,24 +116,24 @@ If you need to deploy manually, you can use these commands on your server:
 cd /var/www/hbdhrmapi
 
 # Stop services
-docker-compose down
+docker-compose down --remove-orphans
 
-# Remove containers
-docker rm -f $(docker ps -a -q) || true
-
-# Remove images
-docker rmi -f $(docker images -q) || true
+# Remove unused images
+docker image prune -af
 
 # Pull the latest image
 docker pull your-docker-hub-username/hbdhrmapi:latest
 
 # Create .env file with your environment variables
-cat > .env << EOF
-# Your environment variables here
-EOF
+echo "your-env-content-here" > .env
 
 # Start services
-docker-compose up -d --force-recreate --build
+docker-compose up -d --force-recreate
+
+# Set proper permissions
+docker-compose exec app mkdir -p storage bootstrap/cache app_public
+docker-compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
+docker-compose exec app chmod -R 775 storage bootstrap/cache app_public
 
 # Run migrations
 docker-compose exec app php artisan migrate --force
@@ -130,7 +141,6 @@ docker-compose exec app php artisan migrate --force
 # Clear caches
 docker-compose exec app php artisan config:cache
 docker-compose exec app php artisan route:cache
-docker-compose exec app php artisan view:cache
 ```
 
 ## Troubleshooting

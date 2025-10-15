@@ -51,12 +51,17 @@ class TourController extends Controller
         $find = Tours::select('tours.*')
                 ->join('package_relations', 'package_relations.tour_id', 'tours.id')
                 ->where('package_relations.package_id', $package->id)
-                ->with('prices', 'times')
+                ->with(['prices', 'times'])
                 ->where('tours.status', 1)->get();
 
+        // Transform the result using TourResource
+        $transformedData = $find->map(function ($tour) {
+            return new \App\Http\Resources\TourResource($tour);
+        });
 
-        if($find) {
-            return ResponseFormatter::success($find, 'success');
+
+        if($transformedData) {
+            return ResponseFormatter::success($transformedData, 'success');
         }else{
             return ResponseFormatter::error(null, 'failed');
         }

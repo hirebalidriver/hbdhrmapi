@@ -1,14 +1,15 @@
-name: Auto Deploy to DigitalOcean
+name: Deploy to Developments
 
 on:
   push:
     branches:
-      - master_do
+      - dev
+      - development
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: digitalocean
+    environment: production
 
     steps:
       - name: Checkout Code
@@ -28,30 +29,31 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:dev
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Deploy to DigitalOcean
+      - name: Deploy to Development Server
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.DO_SERVER_IP }}
-          username: ${{ secrets.DO_SERVER_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
           script: |
-            cd /root/hrmhirebalidriver
+            cd  /root/hbdhrmapi-dev
 
-            docker compose down --remove-orphans
+            docker compose  down --remove-orphans
             docker image prune -af
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:latest
-
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hbdhrmapi:dev
+            # Tulis DOCKER_HUB_USERNAME terlebih dahulu
+            echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" > .env
             # Buat file .env dari secret
-            echo "${{ secrets.DO_ENV_FILE_CONTENT }}" > .env
+            echo "${{ secrets.DEV_ENV_FILE_CONTENT }}" > .env
 
             docker compose up -d --force-recreate
 
-            # ⚡ Fix permissions
-            docker compose exec app mkdir -p storage bootstrap/cache app_public
+            # ⚡️ Setup direktori dan izin (versi lebih ringkas)
+            docker compose exec app mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache app_public
             docker compose exec app chown -R www-data:www-data storage bootstrap/cache app_public
             docker compose exec app chmod -R 775 storage bootstrap/cache app_public
 

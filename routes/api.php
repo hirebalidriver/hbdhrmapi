@@ -18,6 +18,7 @@ use App\Http\Controllers\ADMIN\StatistikController;
 use App\Http\Controllers\ADMIN\TimeController;
 use App\Http\Controllers\ADMIN\ToursController;
 use App\Http\Controllers\ADMIN\TrxController;
+use App\Http\Controllers\CurrencySettingsController;
 use App\Http\Controllers\FRONT\TourController;
 use App\Http\Controllers\FRONT\WishlistController;
 use App\Http\Controllers\ToursRelationController;
@@ -186,6 +187,11 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'auth'], function () {
         Route::post('wishlists', 'index');
         Route::post('wishlist/find', 'find');
     });
+    
+    Route::controller(CurrencySettingsController::class)->group(function() {
+        Route::post('currency-settings', 'index');
+        Route::post('currency-settings/update', 'update');
+    });
 });
 
 
@@ -204,5 +210,9 @@ Route::group(['prefix' => 'front'], function () {
         Route::get('wishlist/booking/detail', 'findBooking');
         Route::get('wishlist/booking/send/mail', 'sendEmail');
         Route::get('wishlist/update', 'update');
+    });
+
+    Route::controller(CurrencySettingsController::class)->group(function() {
+        Route::get('currency-settings', 'index');
     });
 });

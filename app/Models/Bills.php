@@ -19,4 +19,11 @@ class Bills extends Model
         'note',
         'is_susuk',
     ];
+
+    // Accessor for IDR price
+    public function getIdrPriceAttribute()
+    {
+        $conversionRate = CurrencySettings::getConversionRate();
+        return $this->price * $conversionRate;
+    }
 }
